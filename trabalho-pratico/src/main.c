@@ -1,7 +1,6 @@
 #include <processInput.h>
 #include <stdlib.h>
 #include <stdio.h>
-#define DEFAULT 500
 
 int main (int argc, char** argv) {
     if (argc != 3) {
@@ -23,7 +22,7 @@ int main (int argc, char** argv) {
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
         cmd = getCommand (str, cmd);
-        //if (cmd->querry == 1) querry1 (cmd) 
+        //if (cmd->querry == 1) querry1 (cmd, argv[2]) 
     }
 
     fclose (fp);

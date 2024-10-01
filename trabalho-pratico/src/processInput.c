@@ -1,17 +1,14 @@
 #include <processInput.h>
+#include <query1.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-//1 Uid
-//2 int "string" <- filtro
-//3 int int <- idades max/min
-
 
 CMD* getCommand (char* line, CMD* cmd) {
     char *token = strsep(&line, " ");
-    cmd->querry = atoi(token);
+    cmd->query = atoi(token);
 
-    if (cmd->querry == 1) {
+    if (cmd->query == 1) {
         cmd->id = atoi (line+1);
 
         cmd->topN = -1;
@@ -19,16 +16,15 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->ageMin = -1;
         cmd->ageMax = -1;
     }
-    else if (cmd->querry == 2) {
+    else if (cmd->query == 2) {
         token = strsep (&line, " ");
         cmd->topN = atoi(token);
         if (line && line[0] != '\0') {
-            token = strsep(&line, "\"");
-            token = strsep(&line, "\""); 
+            token = strsep(&line+1, "\"");
             cmd->paises = malloc(strlen(token) + 1);
             if (cmd->paises != NULL) strcpy(cmd->paises, token); 
             else {
-                perror ("Malloc Error\n");
+                perror ("Malloc Error");
                 return NULL;
             }
         }
@@ -37,7 +33,7 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->ageMin = -1;
         cmd->ageMax = -1;
         }
-    else if (cmd->querry == 3) { // add verify to make sure ageMin < ageMax and that ageMin >= 0
+    else if (cmd->query == 3) { // add verify to make sure ageMin < ageMax and that ageMin >= 0
         token = strsep (&line, " ");
         cmd->ageMin = atoi(token);
         cmd->ageMax = atoi(line);
@@ -47,8 +43,26 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->paises = NULL;
     }
     else {
-        perror ("Error getting the command from input\n");
+        perror ("Error getting the command from input");
         return NULL;
     }
     return cmd;
+}
+
+void getData (char **argv, dataType dt) {
+    FILE* fp = fopen (argv, "r");
+    if (!fp) {
+        perror("Error: File didn't open");
+        return 1;
+    }
+
+    char str[DEFAULT];
+    while (fgets (str, sizeof str, fp) != NULL){
+        parseData (str, dt);
+    }
+    fclose(fp);
+}
+
+void parseData (char *str, dataType dt) {
+   // filtra ()
 }
