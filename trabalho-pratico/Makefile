@@ -1,5 +1,5 @@
 CC =gcc
-CFLAGS =-c -g -Iinclude
+CFLAGS =-c -g -Wall -Wextra -Iinclude 
 
 LDFLAGS =
 
@@ -7,10 +7,13 @@ OBJDIR =obj
 
 all: dirs main
 
-main: $(OBJDIR)/main.o $(OBJDIR)/query1.o $(OBJDIR)/query2.o $(OBJDIR)/query3.o 
+main: $(OBJDIR)/main.o $(OBJDIR)/query1.o $(OBJDIR)/query2.o $(OBJDIR)/query3.o $(OBJDIR)/processInput.o 
 	$(CC) $^ $(LDFLAGS) -o $@
 
 $(OBJDIR)/main.o: src/main.c 
+	$(CC) $(CFLAGS) $< -o $@
+
+$(OBJDIR)/processInput.o: src/processInput.c 
 	$(CC) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/query1.o: src/query1.c
@@ -25,7 +28,7 @@ $(OBJDIR)/query3.o: src/query3.c
 
 clean:
 	rm -r obj
-	rm main
+	rm main input
 
 dirs: 
 	mkdir -p $(OBJDIR) 
