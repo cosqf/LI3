@@ -1,4 +1,6 @@
 #include <stdio.h>
+#ifndef _MUSICS_H_
+#define _MUSICS_H_
 
 typedef struct {
     int hours;     //hh (00-99)
@@ -15,3 +17,5 @@ typedef struct {
     int year;            //– ano de lançamento;
     char* lyrics;        //– letra da música.
 } Music;
+
+#endif  

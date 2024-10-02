@@ -1,4 +1,6 @@
 #include <stdio.h>
+#ifndef _USERS_H_
+#define _USERS_H_
 
 typedef struct {
     int year;    //aaaa (<=2024)
@@ -17,3 +19,4 @@ typedef struct {
     int* liked_musics_id;     //– lista de identificadores únicos das músicas gostadas pelo utilizador.
 } User;
 
+#endif  

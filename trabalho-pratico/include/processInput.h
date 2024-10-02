@@ -1,3 +1,4 @@
+#include <users.h>
 #ifndef _PROCESSINPUT_H_
 #define _PROCESSINPUT_H_
 
@@ -15,11 +16,16 @@ typedef struct cmd {
 
 CMD* getCommand(char* , CMD* );
 
-void getData (char *, DataType );
-
-void parseDataU (char *);
+User* parseDataU (char *, User *);
 
 void parseDataA (char *);
 
 void parseDataM (char *);
+
+Date parseDate(char*);
+
+int* parseIDs(char *) ;
+
+void getData (char *, DataType );
+
 #endif  
