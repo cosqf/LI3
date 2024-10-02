@@ -7,7 +7,7 @@ int main (int argc, char** argv) {
         perror ("Wrong number of arguments");
         return 1;
     }
-    FILE* fp = fopen (argv[1], "r");
+    FILE* fp = fopen (argv[2], "r");
         if (!fp) {
             perror("Error: File didn't open");
             return 1;
@@ -22,7 +22,7 @@ int main (int argc, char** argv) {
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
         cmd = getCommand (str, cmd);
-        //if (cmd->querry == 1) querry1 (cmd, argv[2]) 
+        //if (cmd->querry == 1) querry1 ("Dados-fase1/dataset/sem_erros/", argv[1]) 
     }
 
     fclose (fp);

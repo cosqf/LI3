@@ -49,8 +49,12 @@ CMD* getCommand (char* line, CMD* cmd) {
     return cmd;
 }
 
-void getData (char **argv, dataType dt) {
-    FILE* fp = fopen (argv, "r");
+void getData (char *path, DataType dt) {
+    if (dt == Users) strcat (path, "users.csv");
+    else if (dt == Artists) strcat (path, "artists.csv");
+    else if (dt == Music) strcat (path, "musics.csv");
+    
+    FILE* fp = fopen (path, "r");
     if (!fp) {
         perror("Error: File didn't open");
         return 1;
@@ -58,11 +62,22 @@ void getData (char **argv, dataType dt) {
 
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-        parseData (str, dt);
+        if (dt == Users) parseDataU (str);
+        else if (dt == Artists) pardataA (str);
+        else parseDataM (str);
     }
     fclose(fp);
 }
 
-void parseData (char *str, dataType dt) {
+void parseDataU (char *str) {
+    
+   // filtra ()
+}
+
+void parseDataA (char *str) {
+   // filtra ()
+}
+
+void parseDataM (char *str) {
    // filtra ()
 }
