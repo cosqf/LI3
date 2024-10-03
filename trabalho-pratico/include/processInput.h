@@ -2,7 +2,7 @@
 #ifndef _PROCESSINPUT_H_
 #define _PROCESSINPUT_H_
 
-#define DEFAULT 500
+#define DEFAULT 1000
 typedef enum dataType {Users = 1, Artists, Music} DataType;
 
 typedef struct cmd {
@@ -24,8 +24,10 @@ void parseDataM (char *);
 
 Date parseDate(char*);
 
-int* parseIDs(char *) ;
+int* parseIDs(char *, User *);
 
 void getData (char *, DataType );
+
+char * trimString (char *);
 
 #endif  
