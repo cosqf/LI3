@@ -26,14 +26,11 @@ int main (int argc, char** argv) {
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
         cmd = getCommand (str, cmd);
-        if (cmd->query == 1) query1 (argv[1]);
+        //if (cmd->query == 1) query1 (argv[1]);
     }
 
     fclose (fp);
 
-    if (cmd) { // fazer função para dar free em tudo?
-        if (cmd->paises) free (cmd->paises);
-        free (cmd);
-    }
+    if (cmd) freeCmd (cmd);
 
 }

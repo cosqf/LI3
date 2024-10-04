@@ -5,9 +5,9 @@
 #include <stdlib.h>
 
 void getData (char *path) {
-    getDataUser (path);
+    //getDataUser (path);
     getDataArtist (path);
-    getDataMusic (path);
+    //getDataMusic (path);
 }
 
 void getDataUser (char *path) {
@@ -29,11 +29,12 @@ void getDataUser (char *path) {
         user = parseDataU (str, user);
         // filtra (user)
         // poeNaHash (user);
-        printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %s\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->buffer, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
-        for (int i = 0; i<user->liked_musics_count; i++) printf ("%d\t", user->liked_musics_id[i]); //DEBUG
-        printf ("\n\n"); //DEBUG
+        //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %s\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->buffer, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
+        //for (int i = 0; i<user->liked_musics_count; i++) printf ("%d\t", user->liked_musics_id[i]); //DEBUG
+        //printf ("\n\n"); //DEBUG
     }
     fclose(fp);
+    freeUser (user);
 }
 
 void getDataArtist (char *path) {
@@ -43,20 +44,21 @@ void getDataArtist (char *path) {
         perror("Error: File didn't open");
         exit(EXIT_FAILURE);
     }
-    short int i = 0;
+    short unsigned int i = 0;
     char str[DEFAULT];
-    User *artist = malloc (sizeof (Artists));
+    Artist *artist = malloc (sizeof (Artist));
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
             i++;
             continue; // skip first line
-        }
-
-        artist = parseDataU (str, artist);
+        } 
+        artist = parseDataA (str, artist);
         // filtra (artist)
         // poeNaHash (music);
+        // free (artist) ?
     }
     fclose(fp);
+    freeArtist (artist);
 }
 
 void getDataMusic (char *path) {
@@ -68,14 +70,14 @@ void getDataMusic (char *path) {
     }
     short int i = 0;
     char str[DEFAULT];
-    User *music = malloc (sizeof (Artists));
+    Music *music = malloc (sizeof (Music));
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
             i++;
             continue; // skip first line
         }
 
-        music = parseDataU (str, music);
+        music = parseDataM (str, music);
         // filtra (music)
         // poeNaHash (music);
     }
@@ -90,5 +92,15 @@ void freeUser(User *user) {
         free(user->country);
         free(user->liked_musics_id); 
         free(user);
+    }
+}
+
+void freeArtist(Artist *artist) {
+    if (artist) {
+        free (artist->name);
+        free (artist->description);
+        if (artist->id_constituent_counter>0) free (artist->id_constituent);
+        free (artist->country);
+        free (artist);
     }
 }

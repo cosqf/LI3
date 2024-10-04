@@ -7,5 +7,6 @@ void getDataUser (char *);
 void getDataArtist (char *);
 void getDataMusic (char *);
 void freeUser(User *);
+void freeArtist(Artist *);
 
 #endif

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #ifndef _USERS_H_
 #define _USERS_H_
 
@@ -17,7 +18,7 @@ typedef struct {
     Date birth_date;          //– data de nascimento;
     char* buffer;             //– buffer;
     char* country;            //– país onde a conta do utilizador foi registada;
-    int subscription_type;    //– tipo de subscrição, i.e., normal(0) ou premium(1);
+    bool subscription_type;    //– tipo de subscrição, i.e., normal(0) ou premium(1);
     int* liked_musics_id;     //– lista de identificadores únicos das músicas gostadas pelo utilizador.
     int liked_musics_count;
 } User;
