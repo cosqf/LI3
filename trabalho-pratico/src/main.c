@@ -1,4 +1,5 @@
 #include <processInput.h>
+#include <query1.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -22,7 +23,7 @@ int main (int argc, char** argv) {
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
         cmd = getCommand (str, cmd);
-        //if (cmd->querry == 1) querry1 ("Dados-fase1/dataset/sem_erros/", argv[1]) 
+        if (cmd->query == 1) query1 (argv[1]);
     }
 
     fclose (fp);

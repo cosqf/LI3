@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+#ifndef _ARTISTS_H_
+#define _ARTISTS_H_
+
 typedef struct {
     char* id;                  //– identificador único do artista;
     char* name;                //– nome do artista;
@@ -9,3 +12,5 @@ typedef struct {
     char* country;             //– nacionalidade do artista.
     int type;                  //– tipo de artista, i.e., individual(0) ou grupo musical(1)
 } artist;
+
+#endif  
