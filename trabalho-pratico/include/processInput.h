@@ -26,8 +26,6 @@ Date parseDate(char*);
 
 int* parseIDs(char *, User *);
 
-void getData (char *, DataType );
-
 char * trimString (char *);
 
 #endif  

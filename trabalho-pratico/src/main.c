@@ -1,4 +1,5 @@
 #include <processInput.h>
+#include <getdata.h>
 #include <query1.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -19,6 +20,8 @@ int main (int argc, char** argv) {
         perror ("Malloc Error");
             return 1;
     }
+
+    getData (argv[1]);
 
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
