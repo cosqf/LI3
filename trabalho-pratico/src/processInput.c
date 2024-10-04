@@ -1,5 +1,4 @@
 #include <processInput.h>
-#include <query1.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +6,6 @@
 CMD* getCommand (char* line, CMD* cmd) {
     char *token = strsep(&line, " ");
     cmd->query = atoi(token);
-
     if (cmd->query == 1) {
         cmd->id = atoi (line+1);
 
@@ -33,6 +31,7 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->ageMin = -1;
         cmd->ageMax = -1;
         }
+
     else if (cmd->query == 3) { // add verify to make sure ageMin < ageMax and that ageMin >= 0
         token = strsep (&line, " ");
         cmd->ageMin = atoi(token);
@@ -49,34 +48,6 @@ CMD* getCommand (char* line, CMD* cmd) {
     return cmd;
 }
 
-void getData (char *path) {
-    FILE* fp = fopen (path, "r");
-    if (!fp) {
-        perror("Error: File didn't open");
-        exit(EXIT_FAILURE);
-    }
-    short int i = 0;
-    char str[DEFAULT];
-    User *user = malloc (sizeof (User));
-    while (fgets (str, sizeof str, fp) != NULL){
-        if (i==0) {
-            i++;
-            continue; // skip first line
-        }
-
-        user = parseDataU (str, user);
-        // filtra (user)
-        // poeNaHash (user);
-        // printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
-        // for (int i = 0; i<user->liked_musics_count; i++) printf ("%d\t", user->liked_musics_id[i]); DEBUG
-        // printf ("\n\n"); DEBUG
-
-
-        parseDataA (str);
-        parseDataM (str);
-    }
-    fclose(fp);
-}
 
 User* parseDataU(char *str, User *user) {
     if (!str || !user) return NULL; 
@@ -113,7 +84,13 @@ User* parseDataU(char *str, User *user) {
 
     // Parsing the birth date
     token = strsep(&str, ";");
-    
+
+    if (token) user->buffer = strdup(trimString(token));
+    else {
+        perror("Date parsing error");
+        return NULL;
+    }
+    /*
     if (token) {
         Date date = parseDate(trimString(token)); 
         if (date.error == 1) {
@@ -126,7 +103,7 @@ User* parseDataU(char *str, User *user) {
         perror("Birth date parsing error");
         return NULL;
     }
-
+*/
     // Parsing the country
     token = strsep(&str, ";");
     if (token) user->country = strdup(trimString(token));
@@ -156,8 +133,6 @@ User* parseDataU(char *str, User *user) {
     return user;
 }
 
-
-
 char *trimString(char *str) {
     if (!str) return NULL;
 
@@ -176,6 +151,7 @@ char *trimString(char *str) {
 Date parseDate(char* dateStr) {
     Date date;
     if (sscanf(dateStr, "%d/%d/%d", &date.year, &date.month, &date.day) != 3) date.error = 1;
+    else date.error = 0;
     return date;
 }
 

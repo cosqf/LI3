@@ -4,6 +4,4 @@
 
 void query1(char *);
 
-void freeUser(User *);
-
 #endif  
