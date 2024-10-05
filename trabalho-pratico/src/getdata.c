@@ -5,9 +5,9 @@
 #include <stdlib.h>
 
 void getData (char *path) {
-    //getDataUser (path);
+    getDataUser (path);
     getDataArtist (path);
-    //getDataMusic (path);
+    getDataMusic (path);
 }
 
 void getDataUser (char *path) {
@@ -78,8 +78,12 @@ void getDataMusic (char *path) {
         }
 
         music = parseDataM (str, music);
+        //printf ("%d, %s, %d, %s, %s, %d, %s\n", music->id, music->title, music->artist_id_counter, music->buffer, music->genre, music->year, music->lyrics); // DEBUG
+        //for (int i=0; i < music->artist_id_counter; i++) printf ("%d ", music->artist_id[i]);
+        //printf ("\n\n");
         // filtra (music)
         // poeNaHash (music);
+        // free (music) ?
     }
     fclose(fp);
 }

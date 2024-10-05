@@ -159,7 +159,7 @@ Artist* parseDataA (char *str, Artist *artist) {
         return NULL;
     }
 
-    // Parsing Description
+    // Parsing description
     token = strsep(&str, ";");
     if (token) artist->description = strdup(trimString(token));
     else {
@@ -202,6 +202,64 @@ Artist* parseDataA (char *str, Artist *artist) {
 }
 
 Music* parseDataM (char *str, Music *music) {
+    if (!str || !music) return NULL; 
+
+    char *token = NULL;
+
+    // Parsing the user ID, skipping the S
+    token = trimString(strsep(&str, ";"));
+    if (token && token[0] == 'S') music->id = atoi(token + 1);
+    else {
+        perror ("Id parsing error");
+        return NULL;
+    }   
+    // Parsing title
+    token = strsep(&str, ";");
+    if (token) music->title = strdup(trimString(token));
+    else {
+        perror("Title parsing error");
+        return NULL;
+    }
+    // Parsing the ID constituents
+    token = strsep(&str, ";");
+    music->artist_id = parseIDs(token, music, Musics);
+    if (music->artist_id == NULL && music->artist_id_counter != 0) {
+        perror("ID constituents parsing error");
+        return NULL;
+    }
+    // Parsing the duration
+    token = strsep(&str, ";");
+    if (token) music->buffer = strdup(trimString(token));
+    else {
+        perror("Duration parsing error");
+        return NULL;
+    }
+
+    // Parsing the genre
+    token = strsep(&str, ";");
+    if (token) music->genre = strdup(trimString(token));
+    else {
+        perror("Genre parsing error");
+        return NULL;
+    }
+
+    // Parsing the year
+    token = strsep(&str, ";");
+    if (token) music->year = atoi(trimString(token));
+    else {
+        perror("Year parsing error");
+        return NULL;
+    }
+
+    // Parsing lyrics
+    token = strsep(&str, ";");
+    if (token) music->lyrics = strdup(trimString(token));
+    else {
+        perror("Lyrics parsing error");
+        return NULL;
+    }
+
+    return music;
 }
 
 
@@ -265,6 +323,9 @@ void updateCount(void* IDnum, DataType type, int count) {
     } else if (type == Artists) {
         Artist *artist = (Artist*)IDnum;
         artist->id_constituent_counter = count;
+    } else if (type == Musics) {
+        Music *music = (Music*)IDnum;
+        music->artist_id_counter = count;
     }
 }
 
