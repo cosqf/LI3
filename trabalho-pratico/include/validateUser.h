@@ -6,12 +6,14 @@
 
 int isletter(char);
 
-int isdigit(char);
+int isDigit(char);
 
 int isstr(char*, int);
 
 int validEmail(char*);
 
 Date parseDate(char*);
+
+User* parseDataU (char *, User *);
 
 #endif  

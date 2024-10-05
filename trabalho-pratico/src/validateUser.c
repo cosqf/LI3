@@ -4,6 +4,7 @@
 #include <users.h>
 #include <processInput.h>
 
+
 // Checks if the given character is an undercase letter
 int isletter(char a){
     if (a >= 'a' && a <= 'z') return 1;
@@ -12,7 +13,7 @@ int isletter(char a){
 
 
 // Checks if the given character is a digit
-int isdigit(char a){
+int isDigit(char a){
     if (a >= '0' && a <= '9') return 1;
     return 0;
 }
@@ -24,7 +25,7 @@ int isstr(char* str, int flag) {
     
     int i;
 
-    if (flag == 1) for (i = 0; isletter(str[i]) || isdigit(str[i]); i++);
+    if (flag == 1) for (i = 0; isletter(str[i]) || isDigit(str[i]); i++);
 
     else for (i = 0; isletter(str[i]); i++);
     
@@ -36,7 +37,9 @@ int isstr(char* str, int flag) {
 
 // Validates the user's email, ensuring it's in the correct format (username@lstr.rstr)
 int validEmail(char* email){
-    char* username, lstr, rstr;
+    char* username = {0};
+    char* lstr = {0};
+    char* rstr = {0};
 /*
     char* atSign = strchr(email, '@');  // Search for the '@'
     if (!atSign) return 0;              // If no '@' is found, the email is invalid
@@ -44,11 +47,11 @@ int validEmail(char* email){
     char* dot = strrchr(atSign, '.');    // Search for the '.'
     if (!dot) return 0;                  // If no '.' is found, the email is invalid
 */
-    if (sscanf(email, "%s@%s.%s", &username, &lstr, &rstr) != 3) return 0;
+    if (sscanf(email, "%s@%s.%s", username, lstr, rstr) != 3) return 0;
 
     if (!isstr(username, 1) || !isstr(lstr, 0) || !isstr(rstr, 0)) return 0;
 
-    if (strlen(rstr) < 2 || (rstr) > 3) return 0;
+    if (strlen(rstr) < 2 || strlen(rstr) > 3) return 0;
 
     return 1;
 }
@@ -164,31 +167,4 @@ User* parseDataU(char *str, User *user) {
     }
 
     return user;
-}
-
-
-int* parseIDs(char *line, User *user) {
-    if (line == NULL) return NULL;
-
-    char * token = NULL;
-    int *ids = NULL;
-    int count;
-
-    int len = strlen (line);
-    line [len - 1] = '\0';
-    line = trimString (line);
-
-    for (count = 0; (token = strsep (&line, ",")) != NULL; count ++) {
-        token = trimString (token);
-        if (token != NULL && token[0] == 'S') {
-            ids = realloc (ids, sizeof(int) * (count + 1));
-            if (ids == NULL) {
-                perror ("Realloc error");
-                exit (EXIT_FAILURE);
-            }
-            ids[count] = atoi (token + 1);
-        }
-    }
-    user->liked_musics_count = count;
-    return ids;
 }
