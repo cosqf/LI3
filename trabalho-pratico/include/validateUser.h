@@ -12,8 +12,8 @@ int isstr(char*, int);
 
 int validEmail(char*);
 
-Date parseDate(char*);
+Date ALTparseDate(char*);
 
-User* parseDataU (char *, User *);
+User* ALTparseDataU (char *, User *);
 
 #endif  

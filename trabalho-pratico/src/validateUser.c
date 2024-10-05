@@ -58,7 +58,7 @@ int validEmail(char* email){
 
 
 // Validating the user's birthdate, ensuring it's in the correct format and not more recent than 09/09/2024
-Date parseDate(char* dateStr) {
+Date ALTparseDate(char* dateStr) {
     Date date;
 
     if (sscanf(dateStr, "%d/%d/%d", &date.year, &date.month, &date.day) != 3) date.error = 1;
@@ -73,7 +73,7 @@ Date parseDate(char* dateStr) {
 }
 
 
-User* parseDataU(char *str, User *user) {
+User* ALTparseDataU(char *str, User *user) {
     if (!str || !user) return NULL; 
 
     char *token = NULL;
