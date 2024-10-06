@@ -1,13 +1,13 @@
 CC =gcc
-CFLAGS =-c -g -Wall -Wextra -Iinclude 
+CFLAGS = -c -g -Wall -Wextra -Iinclude -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
 
-LDFLAGS =
+LDFLAGS = `pkg-config --libs glib-2.0`
 
 OBJDIR =obj
 
 all: dirs main
 
-main: $(OBJDIR)/main.o $(OBJDIR)/query1.o $(OBJDIR)/query2.o $(OBJDIR)/query3.o $(OBJDIR)/processInput.o $(OBJDIR)/getdata.o
+main: $(OBJDIR)/main.o $(OBJDIR)/query1.o $(OBJDIR)/query2.o $(OBJDIR)/query3.o $(OBJDIR)/processInput.o $(OBJDIR)/getdata.o $(OBJDIR)/hashtable.o $(OBJDIR)/validateUser.o
 	$(CC) $^ $(LDFLAGS) -o $@
 
 $(OBJDIR)/main.o: src/main.c 
@@ -28,6 +28,11 @@ $(OBJDIR)/query3.o: src/query3.c
 $(OBJDIR)/getdata.o: src/getdata.c
 	$(CC) $(CFLAGS) $< -o $@ 
 
+$(OBJDIR)/hashtable.o: src/hashtable.c
+	$(CC) $(CFLAGS) $< -o $@ 
+
+$(OBJDIR)/validateUser.o: src/validateUser.c
+	$(CC) $(CFLAGS) $< -o $@ 
 
 clean:
 	rm -r obj
