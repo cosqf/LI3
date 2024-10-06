@@ -108,3 +108,14 @@ void freeArtist(Artist *artist) {
         free (artist);
     }
 }
+
+void freeMusic (Music *music) {
+    if (music) {
+        free (music->title);
+        if (music->artist_id_counter > 0) free (music->artist_id);
+        if (music->buffer) free (music->buffer);
+        free (music->genre);
+        free (music->lyrics);
+        free (music);
+    }
+}
