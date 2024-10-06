@@ -37,9 +37,11 @@ int isstr(char* str, int flag) {
 
 // Validates the user's email, ensuring it's in the correct format (username@lstr.rstr)
 int validEmail(char* email){
-    char* username = {0};
-    char* lstr = {0};
-    char* rstr = {0};
+    int length = strlen(email);
+
+    char* username = (char*)malloc(length + 1);
+    char* lstr = (char*)malloc(length + 1);
+    char* rstr = (char*)malloc(length + 1);
 /*
     char* atSign = strchr(email, '@');  // Search for the '@'
     if (!atSign) return 0;              // If no '@' is found, the email is invalid
@@ -47,13 +49,24 @@ int validEmail(char* email){
     char* dot = strrchr(atSign, '.');    // Search for the '.'
     if (!dot) return 0;                  // If no '.' is found, the email is invalid
 */
-    if (sscanf(email, "%s@%s.%s", username, lstr, rstr) != 3) return 0;
+    if (sscanf(email, "%[^@]@%[^.].%s", username, lstr, rstr) == 3){
+        
+        if (isstr(username, 1) && isstr(lstr, 0) && isstr(rstr, 0)){
 
-    if (!isstr(username, 1) || !isstr(lstr, 0) || !isstr(rstr, 0)) return 0;
+            if (strlen(rstr) == 2 || strlen(rstr) == 3){
+                free(username);
+                free(lstr);
+                free(rstr);
+                return 1;
+            }
+        }
+    }
 
-    if (strlen(rstr) < 2 || strlen(rstr) > 3) return 0;
+    free(username);
+    free(lstr);
+    free(rstr);
 
-    return 1;
+    return 0;
 }
 
 
@@ -84,7 +97,7 @@ User* ALTparseDataU(char *str, User *user) {
 
     // Parsing the email
     token = strsep(&str, ";");
-    if (token && validEmail(token)) user->email = strdup(trimString(token));
+    if (token && validEmail(trimString(token))) user->email = strdup(trimString(token));
     else {
         perror("Email parsing error");
         return NULL;
@@ -110,10 +123,8 @@ User* ALTparseDataU(char *str, User *user) {
     token = strsep(&str, ";");
 
     if (token) {
-        //user->buffer = strdup(trimString(token));
-        user->birth_date = parseDate(strdup(trimString(token)));
-        //free(user->buffer);
-        //user->buffer = NULL;
+        user->buffer = strdup(trimString(token));
+        user->birth_date = ALTparseDate(strdup(trimString(token)));
         if (user->birth_date.error == 1) {
             perror("Invalid birthdate");
             return NULL;
@@ -122,20 +133,7 @@ User* ALTparseDataU(char *str, User *user) {
         perror("Date parsing error");
         return NULL;
     }
-    /*
-    if (token) {
-        Date date = parseDate(trimString(token)); 
-        if (date.error == 1) {
-            perror("Date parsing error");
-            return NULL; 
-        }
 
-        user->birth_date = date;
-    } else {
-        perror("Birth date parsing error");
-        return NULL;
-    }
-*/
     // Parsing the country
     token = strsep(&str, ";");
     if (token) user->country = strdup(trimString(token));
@@ -148,7 +146,7 @@ User* ALTparseDataU(char *str, User *user) {
     token = strsep(&str, ";");
     if (token) {
         if (strcmp (trimString(token), "normal") == 0) user->subscription_type = 0;
-        if (strcmp (trimString(token), "premium") == 0) user->subscription_type = 1;
+        else if (strcmp (trimString(token), "premium") == 0) user->subscription_type = 1;
         else {
             perror("Invalid subscription type");
             return NULL;
