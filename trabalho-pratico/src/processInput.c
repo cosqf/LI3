@@ -1,4 +1,5 @@
 #include <processInput.h>
+#include <artists.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +19,8 @@ CMD* getCommand (char* line, CMD* cmd) {
         token = strsep (&line, " ");
         cmd->topN = atoi(token);
         if (line && line[0] != '\0') {
-            token = strsep(&line+1, "\"");
+            line ++;
+            token = strsep(&line, "\"");
             cmd->paises = malloc(strlen(token) + 1);
             if (cmd->paises != NULL) strcpy(cmd->paises, token); 
             else {
@@ -57,7 +59,10 @@ User* parseDataU(char *str, User *user) {
     // Parsing the user ID, skipping the U 
     token = trimString(strsep(&str, ";"));
     if (token && token[0] == 'U') user->username = atoi(token + 1);
-
+    else {
+        perror ("Id parsing error");
+        return NULL;
+    }
     // Parsing the email
     token = strsep(&str, ";");
     if (token) user->email = strdup(trimString(token));
@@ -124,7 +129,7 @@ User* parseDataU(char *str, User *user) {
     }
 
     // Parsing the liked music IDs
-    user->liked_musics_id = parseIDs(str, user);
+    user->liked_musics_id = parseIDs(str, user, Users);
     if (user->liked_musics_id == NULL) {
         perror("Liked music IDs parsing error");
         return NULL;
@@ -132,6 +137,131 @@ User* parseDataU(char *str, User *user) {
 
     return user;
 }
+
+Artist* parseDataA (char *str, Artist *artist) {
+     if (!str || !artist) return NULL; 
+
+    char *token = NULL;
+
+    // Parsing the user ID, skipping the A 
+    token = trimString(strsep(&str, ";"));
+    if (token && token[0] == 'A') artist->id = atoi(token + 1);
+    else {
+        perror ("Id parsing error");
+        return NULL;
+    }
+
+    // Parsing name
+    token = strsep(&str, ";");
+    if (token) artist->name = strdup(trimString(token));
+    else {
+        perror("Name parsing error");
+        return NULL;
+    }
+
+    // Parsing description
+    token = strsep(&str, ";");
+    if (token) artist->description = strdup(trimString(token));
+    else {
+        perror("Description parsing error");
+        return NULL;
+    }
+
+    // Parsing recipe per stream
+    token = strsep(&str, ";");
+    if (token) artist->recipe_per_stream = atof(trimString(token));
+    else {
+        perror("Recipe parsing error");
+        return NULL;
+    }
+
+    // Parsing the ID constituents
+    token = strsep(&str, ";");
+    artist->id_constituent = parseIDs(token, artist, Artists);
+    if (artist->id_constituent == NULL && artist->id_constituent_counter != 0) {
+        perror("ID constituents parsing error");
+        return NULL;
+    }
+
+    // Parsing the country
+    token = strsep(&str, ";");
+    if (token) artist->country = strdup(trimString(token));
+    else {
+        perror("Country parsing error");
+        return NULL;
+    }
+
+    // Parsing the type
+    token = strsep(&str, ";");
+    if (token) artist->type = atoi(trimString(token));
+    else {
+        perror("Type parsing error");
+        return NULL;
+    }
+   return artist;
+}
+
+Music* parseDataM (char *str, Music *music) {
+    if (!str || !music) return NULL; 
+
+    char *token = NULL;
+
+    // Parsing the user ID, skipping the S
+    token = trimString(strsep(&str, ";"));
+    if (token && token[0] == 'S') music->id = atoi(token + 1);
+    else {
+        perror ("Id parsing error");
+        return NULL;
+    }   
+    // Parsing title
+    token = strsep(&str, ";");
+    if (token) music->title = strdup(trimString(token));
+    else {
+        perror("Title parsing error");
+        return NULL;
+    }
+    // Parsing the ID constituents
+    token = strsep(&str, ";");
+    music->artist_id = parseIDs(token, music, Musics);
+    if (music->artist_id == NULL && music->artist_id_counter != 0) {
+        perror("ID constituents parsing error");
+        return NULL;
+    }
+    // Parsing the duration
+    token = strsep(&str, ";");
+    if (token) music->buffer = strdup(trimString(token));
+    else {
+        perror("Duration parsing error");
+        return NULL;
+    }
+
+    // Parsing the genre
+    token = strsep(&str, ";");
+    if (token) music->genre = strdup(trimString(token));
+    else {
+        perror("Genre parsing error");
+        return NULL;
+    }
+
+    // Parsing the year
+    token = strsep(&str, ";");
+    if (token) music->year = atoi(trimString(token));
+    else {
+        perror("Year parsing error");
+        return NULL;
+    }
+
+    // Parsing lyrics
+    token = strsep(&str, ";");
+    if (token) music->lyrics = strdup(trimString(token));
+    else {
+        perror("Lyrics parsing error");
+        return NULL;
+    }
+
+    return music;
+}
+
 
 char *trimString(char *str) {
     if (!str) return NULL;
@@ -155,20 +285,25 @@ Date parseDate(char* dateStr) {
     return date;
 }
 
-int* parseIDs(char *line, User *user) {
+int* parseIDs(char *line, void* IDnum, DataType type) {
     if (line == NULL) return NULL;
 
     char * token = NULL;
     int *ids = NULL;
-    int count;
+    int count=0;
 
     int len = strlen (line);
     line [len - 1] = '\0';
     line = trimString (line);
 
+    if (strlen (line) == 0) {
+        updateCount (IDnum, type, count);
+        return NULL;
+    }
+
     for (count = 0; (token = strsep (&line, ",")) != NULL; count ++) {
         token = trimString (token);
-        if (token != NULL && token[0] == 'S') {
+        if (token != NULL && (token[0] == 'S' || token[0] == 'A') ) {
             ids = realloc (ids, sizeof(int) * (count + 1));
             if (ids == NULL) {
                 perror ("Realloc error");
@@ -177,14 +312,24 @@ int* parseIDs(char *line, User *user) {
             ids[count] = atoi (token + 1);
         }
     }
-    user->liked_musics_count = count;
+    updateCount (IDnum, type, count);
     return ids;
 }
 
-void parseDataA (char *str) {
-   // filtra ()
+void updateCount(void* IDnum, DataType type, int count) {
+    if (type == Users) {
+        User *user = (User*)IDnum;
+        user->liked_musics_count = count;
+    } else if (type == Artists) {
+        Artist *artist = (Artist*)IDnum;
+        artist->id_constituent_counter = count;
+    } else if (type == Musics) {
+        Music *music = (Music*)IDnum;
+        music->artist_id_counter = count;
+    }
 }
 
-void parseDataM (char *str) {
-   // filtra ()
+void freeCmd (CMD *cmd) {
+    if (cmd->paises) free (cmd->paises);
+    free (cmd);
 }

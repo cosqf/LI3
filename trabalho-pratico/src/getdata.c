@@ -35,6 +35,7 @@ void getDataUser (char *path) {
         //printf ("\n\n"); //DEBUG
     }
     fclose(fp);
+    freeUser (user);
 }
 
 void getDataArtist (char *path) {
@@ -44,20 +45,21 @@ void getDataArtist (char *path) {
         perror("Error: File didn't open");
         exit(EXIT_FAILURE);
     }
-    short int i = 0;
+    short unsigned int i = 0;
     char str[DEFAULT];
-    User *artist = malloc (sizeof (Artists));
+    Artist *artist = malloc (sizeof (Artist));
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
             i++;
             continue; // skip first line
-        }
-
-        artist = parseDataU (str, artist);
+        } 
+        artist = parseDataA (str, artist);
         // filtra (artist)
         // poeNaHash (music);
+        // free (artist) ?
     }
     fclose(fp);
+    freeArtist (artist);
 }
 
 void getDataMusic (char *path) {
@@ -69,16 +71,20 @@ void getDataMusic (char *path) {
     }
     short int i = 0;
     char str[DEFAULT];
-    User *music = malloc (sizeof (Artists));
+    Music *music = malloc (sizeof (Music));
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
             i++;
             continue; // skip first line
         }
 
-        music = parseDataU (str, music);
+        music = parseDataM (str, music);
+        //printf ("%d, %s, %d, %s, %s, %d, %s\n", music->id, music->title, music->artist_id_counter, music->buffer, music->genre, music->year, music->lyrics); // DEBUG
+        //for (int i=0; i < music->artist_id_counter; i++) printf ("%d ", music->artist_id[i]);
+        //printf ("\n\n");
         // filtra (music)
         // poeNaHash (music);
+        // free (music) ?
     }
     fclose(fp);
 }
@@ -91,5 +97,26 @@ void freeUser(User *user) {
         free(user->country);
         free(user->liked_musics_id); 
         free(user);
+    }
+}
+
+void freeArtist(Artist *artist) {
+    if (artist) {
+        free (artist->name);
+        free (artist->description);
+        if (artist->id_constituent_counter>0) free (artist->id_constituent);
+        free (artist->country);
+        free (artist);
+    }
+}
+
+void freeMusic (Music *music) {
+    if (music) {
+        free (music->title);
+        if (music->artist_id_counter > 0) free (music->artist_id);
+        if (music->buffer) free (music->buffer);
+        free (music->genre);
+        free (music->lyrics);
+        free (music);
     }
 }

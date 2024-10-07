@@ -12,8 +12,10 @@ typedef struct {
 typedef struct {
     int id;              //– identificador único da música;
     char* title;         //– nome da música;
-    char* artist_id;     //– lista de identificadores dos autores da música;
+    int* artist_id;     //– lista de identificadores dos autores da música;
+    unsigned int artist_id_counter; 
     Duration duration;   //– tempo de duração;
+    char* buffer;
     char* genre;         //– género da música;
     int year;            //– ano de lançamento;
     char* lyrics;        //– letra da música.
