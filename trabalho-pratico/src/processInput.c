@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <utils.h>
 
 CMD* getCommand (char* line, CMD* cmd) {
     char *token = strsep(&line, " ");
@@ -265,21 +266,6 @@ Music* parseDataM (char *str, Music *music) {
 }
 
 
-char *trimString(char *str) { // Trims a string, removing symbols from each end
-    if (!str) return NULL;
-
-    while (*str == '"' || *str == ' ' || *str == '[' || *str == ']' || *str == '\'') {
-        str++;
-    }
-
-    int len = strlen(str);
-    while (len > 0 && (str[len - 1] == '"' || str[len - 1] == ' ' || str[len - 1] == '[' || str[len - 1] == ']' || str[len - 1] == '\'')) {
-        str[--len] = '\0';
-    }
-
-    return str;
-}
-
 Date parseDate(char* dateStr) {
     Date date;
     if (sscanf(dateStr, "%d/%d/%d", &date.year, &date.month, &date.day) != 3) date.error = 1;
@@ -316,22 +302,4 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
     }
     updateCount (IDnum, type, count);
     return ids;
-}
-
-void updateCount(void* IDnum, DataType type, int count) {
-    if (type == Users) {
-        User *user = (User*)IDnum;
-        user->liked_musics_count = count;
-    } else if (type == Artists) {
-        Artist *artist = (Artist*)IDnum;
-        artist->id_constituent_counter = count;
-    } else if (type == Musics) {
-        Music *music = (Music*)IDnum;
-        music->artist_id_counter = count;
-    }
-}
-
-void freeCmd (CMD *cmd) {
-    if (cmd->paises) free (cmd->paises);
-    free (cmd);
 }

@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <utils.h>
+#include <freeFunctions.h>
 
 void getData (char *path) {
     getDataUser (path);
@@ -29,17 +31,13 @@ char * changePath(char *path, DataType type) {
 void getDataUser (char *path) {
     char* userPath = changePath (path, Users);
 
-    FILE* fp = fopen (userPath, "r");
-    if (!fp) {
-        perror("Error: File didn't open");
-        exit(EXIT_FAILURE);
-    }
-    short int i = 0;
+    FILE* fp = openFile (userPath);
+    bool i = 0;
     char str[DEFAULT];
     
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
-            i++;
+            i = 1;
             continue; // skip first line
         }
         User *user = malloc (sizeof (User));
@@ -58,17 +56,14 @@ void getDataUser (char *path) {
 void getDataArtist (char *path) {
     char *artistPath = changePath (path, Artists);
 
-    FILE* fp = fopen (artistPath, "r");
-    if (!fp) {
-        perror("Error: File didn't open");
-        exit(EXIT_FAILURE);
-    }
-    short unsigned int i = 0;
+    
+    FILE* fp = openFile (artistPath);
+    bool i = 0;
     char str[DEFAULT];
     
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
-            i++;
+            i = 1;
             continue; // skip first line
         }
         Artist *artist = malloc (sizeof (Artist));
@@ -83,16 +78,12 @@ void getDataArtist (char *path) {
 
 void getDataMusic (char *path) {
     char *musicPath = changePath (path, Musics);
-    FILE* fp = fopen (musicPath, "r");
-    if (!fp) {
-        perror("Error: File didn't open");
-        exit(EXIT_FAILURE);
-    }
-    short int i = 0;
+    FILE* fp = openFile (musicPath);
+    bool i = 0;
     char str[DEFAULT];
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
-            i++;
+            i = 1;
             continue; // skip first line
         }
         Music *music = malloc (sizeof (Music));
@@ -106,37 +97,4 @@ void getDataMusic (char *path) {
     }
     fclose(fp);
     free (musicPath);
-}
-
-void freeUser(User *user) {
-    if (user) {
-        free(user->email);
-        free(user->first_name);
-        free(user->last_name);
-        free(user->country);
-        free(user->liked_musics_id);
-        if (user->buffer) free (user->buffer);
-        free(user);
-    }
-}
-
-void freeArtist(Artist *artist) {
-    if (artist) {
-        free (artist->name);
-        free (artist->description);
-        if (artist->id_constituent_counter>0) free (artist->id_constituent);
-        free (artist->country);
-        free (artist);
-    }
-}
-
-void freeMusic (Music *music) {
-    if (music) {
-        free (music->title);
-        if (music->artist_id_counter > 0) free (music->artist_id);
-        if (music->buffer) free (music->buffer);
-        free (music->genre);
-        free (music->lyrics);
-        free (music);
-    }
 }

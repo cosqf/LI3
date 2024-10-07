@@ -2,20 +2,16 @@
 #include <getdata.h>
 #include <query1.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <utils.h>
+#include <freeFunctions.h>
 
-int main (int argc, char** argv) {
+
+int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
     if (argc != 3) {
         perror ("Wrong number of arguments");
         return 1;
     }
-    FILE* fp = fopen (argv[2], "r");
-        if (!fp) {
-            perror("Error: File didn't open");
-            return 1;
-        }
-
-    
+    FILE *fp = openFile (argv[2]);
 
     getData (argv[1]);
 
@@ -24,7 +20,7 @@ int main (int argc, char** argv) {
         CMD *cmd = malloc (sizeof(CMD));
         if (cmd == NULL) {
             perror ("Malloc Error");
-                return 1;
+            return 1;
         }
         cmd = getCommand (str, cmd);
         //if (cmd->query == 1) query1 (argv[1]);
@@ -32,7 +28,4 @@ int main (int argc, char** argv) {
     }
 
     fclose (fp);
-
-    
-
 }
