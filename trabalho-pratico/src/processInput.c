@@ -3,19 +3,22 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <utils.h>
 
 CMD* getCommand (char* line, CMD* cmd) {
     char *token = strsep(&line, " ");
     cmd->query = atoi(token);
-    if (cmd->query == 1) {
+    switch (cmd->query){
+    case 1:
         cmd->id = atoi (line+1);
 
         cmd->topN = -1;
         cmd->paises = NULL;
         cmd->ageMin = -1;
         cmd->ageMax = -1;
-    }
-    else if (cmd->query == 2) {
+        break;
+
+    case 2:
         token = strsep (&line, " ");
         cmd->topN = atoi(token);
         if (line && line[0] != '\0') {
@@ -32,9 +35,9 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->id = -1;
         cmd->ageMin = -1;
         cmd->ageMax = -1;
-        }
+        break;
 
-    else if (cmd->query == 3) { // add verify to make sure ageMin < ageMax and that ageMin >= 0
+    case 3:
         token = strsep (&line, " ");
         cmd->ageMin = atoi(token);
         cmd->ageMax = atoi(line);
@@ -42,8 +45,8 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->id = -1;
         cmd->topN = -1;
         cmd->paises = NULL;
-    }
-    else {
+        break;
+    default:
         perror ("Error getting the command from input");
         return NULL;
     }
@@ -263,21 +266,6 @@ Music* parseDataM (char *str, Music *music) {
 }
 
 
-char *trimString(char *str) {
-    if (!str) return NULL;
-
-    while (*str == '"' || *str == ' ' || *str == '[' || *str == ']' || *str == '\'') {
-        str++;
-    }
-
-    int len = strlen(str);
-    while (len > 0 && (str[len - 1] == '"' || str[len - 1] == ' ' || str[len - 1] == '[' || str[len - 1] == ']' || str[len - 1] == '\'')) {
-        str[--len] = '\0';
-    }
-
-    return str;
-}
-
 Date parseDate(char* dateStr) {
     Date date;
     if (sscanf(dateStr, "%d/%d/%d", &date.year, &date.month, &date.day) != 3) date.error = 1;
@@ -314,22 +302,4 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
     }
     updateCount (IDnum, type, count);
     return ids;
-}
-
-void updateCount(void* IDnum, DataType type, int count) {
-    if (type == Users) {
-        User *user = (User*)IDnum;
-        user->liked_musics_count = count;
-    } else if (type == Artists) {
-        Artist *artist = (Artist*)IDnum;
-        artist->id_constituent_counter = count;
-    } else if (type == Musics) {
-        Music *music = (Music*)IDnum;
-        music->artist_id_counter = count;
-    }
-}
-
-void freeCmd (CMD *cmd) {
-    if (cmd->paises) free (cmd->paises);
-    free (cmd);
 }
