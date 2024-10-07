@@ -1,5 +1,6 @@
 #include <processInput.h>
 #include <getdata.h>
+#include <validateUser.h> //ALTparseDataU (l30)
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
