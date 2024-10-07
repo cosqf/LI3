@@ -160,7 +160,7 @@ User* ALTparseDataU(char *str, User *user) {
     }
 
     // Parsing the liked music IDs
-    user->liked_musics_id = parseIDs(str, user);
+    user->liked_musics_id = parseIDs(str, user, Users);
     if (user->liked_musics_id == NULL) {
         perror("Liked music IDs parsing error");
         return NULL;

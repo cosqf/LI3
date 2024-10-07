@@ -7,15 +7,17 @@
 CMD* getCommand (char* line, CMD* cmd) {
     char *token = strsep(&line, " ");
     cmd->query = atoi(token);
-    if (cmd->query == 1) {
+    switch (cmd->query){
+    case 1:
         cmd->id = atoi (line+1);
 
         cmd->topN = -1;
         cmd->paises = NULL;
         cmd->ageMin = -1;
         cmd->ageMax = -1;
-    }
-    else if (cmd->query == 2) {
+        break;
+
+    case 2:
         token = strsep (&line, " ");
         cmd->topN = atoi(token);
         if (line && line[0] != '\0') {
@@ -32,9 +34,9 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->id = -1;
         cmd->ageMin = -1;
         cmd->ageMax = -1;
-        }
+        break;
 
-    else if (cmd->query == 3) { // add verify to make sure ageMin < ageMax and that ageMin >= 0
+    case 3:
         token = strsep (&line, " ");
         cmd->ageMin = atoi(token);
         cmd->ageMax = atoi(line);
@@ -42,8 +44,8 @@ CMD* getCommand (char* line, CMD* cmd) {
         cmd->id = -1;
         cmd->topN = -1;
         cmd->paises = NULL;
-    }
-    else {
+        break;
+    default:
         perror ("Error getting the command from input");
         return NULL;
     }
@@ -263,7 +265,7 @@ Music* parseDataM (char *str, Music *music) {
 }
 
 
-char *trimString(char *str) {
+char *trimString(char *str) { // Trims a string, removing symbols from each end
     if (!str) return NULL;
 
     while (*str == '"' || *str == ' ' || *str == '[' || *str == ']' || *str == '\'') {
