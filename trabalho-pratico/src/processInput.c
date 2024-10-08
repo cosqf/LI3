@@ -1,5 +1,6 @@
 #include <processInput.h>
 #include <validateUser.h>
+#include <validation.h>
 #include <artists.h>
 #include <string.h>
 #include <stdio.h>
@@ -242,8 +243,15 @@ Music* parseDataM (char *str, Music *music) {
     }
     // Parsing the duration
     token = strsep(&str, ";");
-    if (token) music->buffer = strdup(trimString(token));
-    else {
+
+    if (token) {
+        music->buffer = strdup(trimString(token));
+        music->duration = parseDuration(trimString(token));
+        if (music->duration.error == 1) {
+            perror("Invalid duration");
+            return NULL;
+        }
+    } else {
         perror("Duration parsing error");
         return NULL;
     }

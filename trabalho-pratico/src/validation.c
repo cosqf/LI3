@@ -5,7 +5,7 @@
 //SYNTAX VALIDATION
 
 
-Duration validDuration(char* dur){
+Duration parseDuration(char* dur){
     Duration duration;
 
     if (sscanf(dur, "%d:%d:%d", &duration.hours, &duration.minutes, &duration.seconds) != 3) duration.error = 1;

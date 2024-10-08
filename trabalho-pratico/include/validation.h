@@ -5,6 +5,6 @@
 #ifndef _VALIDATION_H_
 #define _VALIDATION_H_
 
-int validDuration(Duration);
+Duration parseDuration(char*);
 
 #endif
