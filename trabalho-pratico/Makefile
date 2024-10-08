@@ -2,9 +2,9 @@ CC =gcc
 
 EXEC := programa-principal
 
-CFLAGS = -c -g -Wall -Wextra -Iinclude -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+CFLAGS := -c -g -Og -std=gnu99 -Wall -Wextra -Iinclude `pkg-config --libs glib-2.0`
 
-LDFLAGS = `pkg-config --libs glib-2.0`
+LDFLAGS := `pkg-config --libs glib-2.0` -lm
 
 SRC := $(shell find src/ -name "*.c")
 
