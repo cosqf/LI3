@@ -1,5 +1,6 @@
 #include <processInput.h>
 #include <getdata.h>
+#include <hashtable.h>
 #include <validateUser.h> //ALTparseDataU (l30)
 #include <string.h>
 #include <stdio.h>
@@ -45,7 +46,14 @@ void getDataUser (char *path) {
 
         user = parseDataU (str, user);
         // filtra (user)
-        // poeNaHash (user);
+        g_hash_table_insert(hashUser, &user->username, user);
+
+
+        //Exemplo de como dar print do que está na hashtable. Utilizado para testar
+        // User *myLookup = (User *) g_hash_table_lookup(hashUser, &user->username);
+        // printf("Username: %d, Email: %s, Primeiro Nome: %s\n", myLookup->username, myLookup->email, myLookup->first_name);
+       
+        
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %s\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->buffer, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
         //for (int i = 0; i<user->liked_musics_count; i++) printf ("%d\t", user->liked_musics_id[i]); //DEBUG
         //printf ("\n\n"); //DEBUG

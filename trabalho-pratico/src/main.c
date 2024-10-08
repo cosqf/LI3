@@ -1,5 +1,6 @@
 #include <processInput.h>
 #include <getdata.h>
+#include <hashtable.h>
 #include <query1.h>
 #include <stdlib.h>
 #include <utils.h>
@@ -13,6 +14,7 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
     }
     FILE *fp = openFile (argv[2]);
 
+    initialize_hash_table();
     getData (argv[1]);
 
     char str[DEFAULT];

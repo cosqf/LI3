@@ -2,7 +2,7 @@ CC =gcc
 
 EXEC := programa-principal
 
-CFLAGS := -c -g -Og -std=gnu99 -Wall -Wextra -Iinclude `pkg-config --libs glib-2.0`
+CFLAGS := -c -g -Og -std=gnu99 -Wall -Wextra -Iinclude `pkg-config --cflags glib-2.0`
 
 LDFLAGS := `pkg-config --libs glib-2.0` -lm
 
