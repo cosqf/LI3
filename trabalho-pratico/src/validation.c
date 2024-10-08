@@ -1,6 +1,33 @@
 #include <stdio.h>
 #include <musics.h>
+#include <utils.h>
 
+void createErrorFile (DataType type) {
+    switch (type){
+    case Users:
+        
+        break;
+    case Musics:
+
+        break;
+
+    case Artists:
+
+        break;
+
+    default:
+        break;
+    }
+}
+
+void insertErrorFileUser (UserRaw *user){
+    printf ("debugging:\n");
+    printf ("%s;%s;%s;%s;%s\n\n", user->email, user->first_name, user->last_name, user->birth_date, user->country);
+}; // email;first_name;last_name;age;country
+
+void insertErrorFileMusics (){};
+
+void insertErrorFileArtists (){};
 
 //SYNTAX VALIDATION
 

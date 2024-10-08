@@ -5,7 +5,7 @@
 #define _PROCESSINPUT_H_
 
 #define DEFAULT 2000
-typedef enum dataType {Users = 1, Artists, Musics} DataType;
+typedef enum {Users = 1, Artists, Musics} DataType;
 
 typedef struct cmd {
     int query;     // 1, 2, or 3
@@ -24,7 +24,9 @@ void getCommandQuery2 (char* line, CMD* cmd, char* token) ;
 
 void getCommandQuery3 (char* line, CMD* cmd, char* token);
 
-User* parseDataU (char *, User *);
+UserRaw * fetchData (char *str, UserRaw *user);
+
+User* parseDataU(User *user, UserRaw *raw);
 
 Artist* parseDataA (char *, Artist *);
 

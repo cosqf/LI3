@@ -11,12 +11,11 @@ void freeCmd (CMD *cmd) {
 
 void freeUser(User *user) {
     if (user) {
-        free(user->email);
-        free(user->first_name);
-        free(user->last_name);
-        free(user->country);
-        free(user->liked_musics_id);
-        if (user->buffer) free (user->buffer);
+        if (user->email) free (user->email);
+        if (user->first_name) free (user->first_name);
+        if (user->last_name) free (user->last_name);
+        if (user->country) free (user->country);
+        if (user->liked_musics_id) free (user->liked_musics_id);
         free(user);
     }
 }
@@ -39,5 +38,19 @@ void freeMusic (Music *music) {
         free (music->genre);
         free (music->lyrics);
         free (music);
+    }
+}
+
+
+void freeUserRaw(UserRaw *user) {
+    if (user) {
+        if (user->username) free (user->username);
+        if (user->email) free (user->email);
+        if (user->first_name) free (user->first_name);
+        if (user->last_name) free (user->last_name);
+        if (user->country) free (user->country);
+        if (user->subscription_type) free (user->subscription_type);
+        if (user->liked_musics_id) free (user->liked_musics_id);
+        free(user);
     }
 }

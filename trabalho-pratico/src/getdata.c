@@ -1,6 +1,6 @@
 #include <processInput.h>
 #include <getdata.h>
-#include <validateUser.h> //ALTparseDataU (l30)
+#include <validation.h> 
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,8 +9,8 @@
 
 void getData (char *path) {
     getDataUser (path);
-    getDataArtist (path);
-    getDataMusic (path);
+    //getDataArtist (path);
+    //getDataMusic (path);
 }
 
 char * changePath(char *path, DataType type) {
@@ -40,10 +40,18 @@ void getDataUser (char *path) {
             i = 1;
             continue; // skip first line
         }
-        User *user = malloc (sizeof (User));
-        if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
+        UserRaw *userRaw = malloc (sizeof (UserRaw));
+        if (mallocErrorCheck (userRaw)) exit (EXIT_FAILURE);
 
-        user = parseDataU (str, user);
+        userRaw = fetchData (str, userRaw);
+        if (!userRaw) {
+            perror ("Fetching User error");
+            exit (EXIT_FAILURE);
+        }
+        User *user = malloc (sizeof (User));
+        user = parseDataU (user, userRaw);
+        if (!user) insertErrorFileUser (userRaw);
+
         // filtra (user)
         // poeNaHash (user);
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %s\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->buffer, user->country, user->subscription_type, user->liked_musics_count); //DEBUG

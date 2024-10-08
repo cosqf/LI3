@@ -7,4 +7,10 @@
 
 Duration parseDuration(char*);
 
+void insertErrorFileUser (UserRaw *user);
+
+void insertErrorFileMusics ();
+
+void insertErrorFileArtists ();
+
 #endif

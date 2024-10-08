@@ -23,7 +23,7 @@ CMD* getCommand (char* line, CMD* cmd) {
         getCommandQuery3 (line, cmd, token);
         break;
     default:
-        perror ("Error getting the command from input");
+        perror ("Error Fetching the command from input");
         return NULL;
     }
     return cmd;
@@ -67,87 +67,105 @@ void getCommandQuery3 (char* line, CMD* cmd, char* token) {
         cmd->paises = NULL;
 }
 
-
-User* parseDataU(char *str, User *user) {
-    if (!str || !user) return NULL; 
-
+UserRaw * fetchData (char *str, UserRaw *user) {
+    if (!str || !user) return NULL;
     char *token = NULL;
-
-    // Parsing the user ID, skipping the U 
-    token = trimString(strsep(&str, ";"));
-    if (token && token[0] == 'U') user->username = atoi(token + 1);
-    else {
-        perror ("Id parsing error");
-        return NULL;
-    }
-    // Parsing the email
-    token = strsep(&str, ";");
-    if (token && validEmail(trimString(token))) user->email = strdup(trimString(token));
-    else {
-        perror("Email parsing error");
-        return NULL;
-    }
-
-    // Parsing first name
-    token = strsep(&str, ";");
-    if (token) user->first_name = strdup(trimString(token));
-    else {
-        perror("First name parsing error");
-        return NULL;
-    }
-
-    // Parsing last name
-    token = strsep(&str, ";");
-    if (token) user->last_name = strdup(trimString(token));
-    else {
-        perror("Last name parsing error");
-        return NULL;
-    }
-
-    // Parsing the birth date
-    token = strsep(&str, ";");
-
-    if (token) {
-        user->buffer = strdup(trimString(token));
-        user->birth_date = parseDate(trimString(token));
-        if (user->birth_date.error == 1) {
-            perror("Invalid birthdate");
-            return NULL;
-        }
-    } else {
-        perror("Date parsing error");
-        return NULL;
-    }
     
-    // Parsing the country
-    token = strsep(&str, ";");
-    if (token) user->country = strdup(trimString(token));
+    // Fetching the ID
+    token = trimString(strsep(&str, ";"));
+    if (token) user->username = strdup(token);
     else {
-        perror("Country parsing error");
+        perror ("Id fetching error");
         return NULL;
     }
 
-    // Parsing the subscription type
-    token = strsep(&str, ";");
-    if (token) {
-        if (strcmp (trimString(token), "normal") == 0) user->subscription_type = 0;
-        else if (strcmp (trimString(token), "premium") == 0) user->subscription_type = 1;
-        else {
-            perror("Invalid subscription type");
-            return NULL;
-        }
-    }
+    // Fetching the email
+    token = trimString(strsep(&str, ";"));
+    if (token) user->email = strdup(token);
     else {
-        perror("Subscription type parsing error");
+        perror ("Email fetching error");
         return NULL;
     }
 
-    // Parsing the liked music IDs
-    user->liked_musics_id = parseIDs(str, user, Users);
-    if (user->liked_musics_id == NULL) {
-        perror("Liked music IDs parsing error");
+    // Fetching first name
+    token = trimString(strsep(&str, ";"));
+    if (token) user->first_name = strdup(token);
+    else {
+        perror ("First name fetching error");
         return NULL;
     }
+
+    // Fetching last name
+    token = trimString(strsep(&str, ";"));
+    if (token) user->last_name = strdup(token);
+    else {
+        perror ("Last name fetching error");
+        return NULL;
+    }
+
+    // Fetching birth date
+    token = trimString(strsep(&str, ";"));
+    if (token) user->birth_date = strdup(token);
+    else {
+        perror ("Birth date fetching error");
+        return NULL;
+    }
+
+    // Fetching country
+    token = trimString(strsep(&str, ";"));
+    if (token) user->country = strdup(token);
+    else {
+        perror ("Country fetching error");
+        return NULL;
+    }
+
+    // Fetching subscription type
+
+    token = trimString(strsep(&str, ";"));
+    if (token) user->subscription_type = strdup(token);
+    else {
+        perror ("Subscription type fetching error");
+        return NULL;
+    }
+
+    // Fetching liked musics ID
+
+    token = trimString(strsep(&str, ";"));
+    if (token) user->liked_musics_id = strdup(token);
+    else {
+        perror ("liked musics ID fetching error");
+        return NULL;
+    }
+    return user;
+}
+
+User* parseDataU(User *user, UserRaw *raw) {
+    char * username = trimString (raw->username);
+    user->username = atoi (username + 1);
+
+    if (validEmail (raw->email)) {
+        user->email = strdup (raw->email);
+    }
+    else return NULL;
+
+    user->first_name = strdup (raw->first_name);
+
+    user->last_name = strdup (raw->last_name);
+
+    Date birthday = parseDate (raw->birth_date);
+    if (birthday.error == 1) return NULL;
+    else user->birth_date = birthday;
+
+    user->country = strdup (raw->country);
+
+    char* subscription = raw->subscription_type;
+    if (strcmp (subscription, "normal") == 0) user->subscription_type = 0;
+    else if (strcmp (subscription, "premium") == 0) user->subscription_type = 1;
+    else return NULL;
+    
+    int * ids = parseIDs (raw->liked_musics_id, user, Users);
+    if (ids) user->liked_musics_id = ids;
+    else return NULL;
 
     return user;
 }
