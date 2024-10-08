@@ -16,6 +16,14 @@ FILE* openFile (char * argv) {
     return fp;
 }
 
+bool mallocErrorCheck (void* add) {
+    if (add == NULL) {
+        perror ("Malloc error");
+        return 1;
+    }
+    else return 0;
+}
+
 char *trimString(char *str) { // Trims a string, removing symbols from each end
     if (!str) return NULL;
 

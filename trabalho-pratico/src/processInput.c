@@ -10,47 +10,59 @@ CMD* getCommand (char* line, CMD* cmd) {
     cmd->query = atoi(token);
     switch (cmd->query){
     case 1:
-        cmd->id = atoi (line+1);
-
-        cmd->topN = -1;
-        cmd->paises = NULL;
-        cmd->ageMin = -1;
-        cmd->ageMax = -1;
+        getCommandQuery1 (line, cmd);
         break;
 
     case 2:
-        token = strsep (&line, " ");
-        cmd->topN = atoi(token);
-        if (line && line[0] != '\0') {
-            line ++;
-            token = strsep(&line, "\"");
-            cmd->paises = malloc(strlen(token) + 1);
-            if (cmd->paises != NULL) strcpy(cmd->paises, token); 
-            else {
-                perror ("Malloc Error");
-                return NULL;
-            }
-        }
-        else cmd->paises = NULL;
-        cmd->id = -1;
-        cmd->ageMin = -1;
-        cmd->ageMax = -1;
+        getCommandQuery2 (line, cmd, token);
         break;
 
     case 3:
-        token = strsep (&line, " ");
-        cmd->ageMin = atoi(token);
-        cmd->ageMax = atoi(line);
-        
-        cmd->id = -1;
-        cmd->topN = -1;
-        cmd->paises = NULL;
+        getCommandQuery3 (line, cmd, token);
         break;
     default:
         perror ("Error getting the command from input");
         return NULL;
     }
     return cmd;
+}
+
+void getCommandQuery1 (char* line, CMD* cmd) {
+    cmd->id = atoi (line+1);
+
+    cmd->topN = -1;
+    cmd->paises = NULL;
+    cmd->ageMin = -1;
+    cmd->ageMax = -1;
+}
+
+void getCommandQuery2 (char* line, CMD* cmd, char* token) {
+    token = strsep (&line, " ");
+    cmd->topN = atoi(token);
+    if (line && line[0] != '\0') {
+        line ++;
+        token = strsep(&line, "\"");
+        cmd->paises = malloc(strlen(token) + 1);
+        if (cmd->paises != NULL) strcpy(cmd->paises, token); 
+        else {
+            perror ("Malloc Error");
+            exit (EXIT_FAILURE);
+        }
+    }
+    else cmd->paises = NULL;
+    cmd->id = -1;
+    cmd->ageMin = -1;
+    cmd->ageMax = -1;
+}
+
+void getCommandQuery3 (char* line, CMD* cmd, char* token) {
+    token = strsep (&line, " ");
+        cmd->ageMin = atoi(token);
+        cmd->ageMax = atoi(line);
+        
+        cmd->id = -1;
+        cmd->topN = -1;
+        cmd->paises = NULL;
 }
 
 

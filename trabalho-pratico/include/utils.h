@@ -5,6 +5,8 @@
 
 FILE* openFile (char * argv);
 
+bool mallocErrorCheck (void* add);
+
 char *trimString(char *str);
 
 void updateCount(void* IDnum, DataType type, int count);

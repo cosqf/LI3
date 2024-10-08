@@ -41,6 +41,8 @@ void getDataUser (char *path) {
             continue; // skip first line
         }
         User *user = malloc (sizeof (User));
+        if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
+
         user = parseDataU (str, user);
         // filtra (user)
         // poeNaHash (user);
@@ -67,6 +69,7 @@ void getDataArtist (char *path) {
             continue; // skip first line
         }
         Artist *artist = malloc (sizeof (Artist));
+        if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
         artist = parseDataA (str, artist);
         // filtra (artist)
         // poeNaHash (music);
@@ -87,6 +90,7 @@ void getDataMusic (char *path) {
             continue; // skip first line
         }
         Music *music = malloc (sizeof (Music));
+        if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
         music = parseDataM (str, music);
         //printf ("%d, %s, %d, %s, %s, %d, %s\n", music->id, music->title, music->artist_id_counter, music->buffer, music->genre, music->year, music->lyrics); // DEBUG
         //for (int i=0; i < music->artist_id_counter; i++) printf ("%d ", music->artist_id[i]);

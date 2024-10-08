@@ -18,6 +18,12 @@ typedef struct cmd {
 
 CMD* getCommand(char* , CMD* );
 
+void getCommandQuery1 (char* line, CMD* cmd);
+
+void getCommandQuery2 (char* line, CMD* cmd, char* token) ;
+
+void getCommandQuery3 (char* line, CMD* cmd, char* token);
+
 User* parseDataU (char *, User *);
 
 Artist* parseDataA (char *, Artist *);
