@@ -1,4 +1,5 @@
 #include <processInput.h>
+#include <validateUser.h>
 #include <artists.h>
 #include <string.h>
 #include <stdio.h>
@@ -68,7 +69,7 @@ User* parseDataU(char *str, User *user) {
     }
     // Parsing the email
     token = strsep(&str, ";");
-    if (token) user->email = strdup(trimString(token));
+    if (token && validEmail(trimString(token))) user->email = strdup(trimString(token));
     else {
         perror("Email parsing error");
         return NULL;
@@ -93,25 +94,18 @@ User* parseDataU(char *str, User *user) {
     // Parsing the birth date
     token = strsep(&str, ";");
 
-    if (token) user->buffer = strdup(trimString(token));
-    else {
+    if (token) {
+        user->buffer = strdup(trimString(token));
+        user->birth_date = parseDate(trimString(token));
+        if (user->birth_date.error == 1) {
+            perror("Invalid birthdate");
+            return NULL;
+        }
+    } else {
         perror("Date parsing error");
         return NULL;
     }
-    /*
-    if (token) {
-        Date date = parseDate(trimString(token)); 
-        if (date.error == 1) {
-            perror("Date parsing error");
-            return NULL; 
-        }
-
-        user->birth_date = date;
-    } else {
-        perror("Birth date parsing error");
-        return NULL;
-    }
-*/
+    
     // Parsing the country
     token = strsep(&str, ";");
     if (token) user->country = strdup(trimString(token));
@@ -124,7 +118,11 @@ User* parseDataU(char *str, User *user) {
     token = strsep(&str, ";");
     if (token) {
         if (strcmp (trimString(token), "normal") == 0) user->subscription_type = 0;
-        else user->subscription_type = 1;
+        else if (strcmp (trimString(token), "premium") == 0) user->subscription_type = 1;
+        else {
+            perror("Invalid subscription type");
+            return NULL;
+        }
     }
     else {
         perror("Subscription type parsing error");
@@ -265,11 +263,19 @@ Music* parseDataM (char *str, Music *music) {
     return music;
 }
 
-
+// Validating the user's birthdate, ensuring it's in the correct format and not more recent than 09/09/2024
 Date parseDate(char* dateStr) {
     Date date;
+
     if (sscanf(dateStr, "%d/%d/%d", &date.year, &date.month, &date.day) != 3) date.error = 1;
+    else if (date.year > 2024) date.error = 1;
+    else if (date.year == 2024){
+        if (date.month > 9) date.error = 1;
+        if (date.month == 9 && (date.day < 1 || date.day > 9)) date.error = 1;
+    }
+    else if (date.month < 1 || date.month > 12 || date.day < 1 || date.day > 31) date.error = 1;
     else date.error = 0;
+
     return date;
 }
 

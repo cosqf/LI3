@@ -42,13 +42,7 @@ int validEmail(char* email){
     char* username = (char*)malloc(length + 1);
     char* lstr = (char*)malloc(length + 1);
     char* rstr = (char*)malloc(length + 1);
-/*
-    char* atSign = strchr(email, '@');  // Search for the '@'
-    if (!atSign) return 0;              // If no '@' is found, the email is invalid
 
-    char* dot = strrchr(atSign, '.');    // Search for the '.'
-    if (!dot) return 0;                  // If no '.' is found, the email is invalid
-*/
     if (sscanf(email, "%[^@]@%[^.].%s", username, lstr, rstr) == 3){
         
         if (isstr(username, 1) && isstr(lstr, 0) && isstr(rstr, 0)){
@@ -70,99 +64,3 @@ int validEmail(char* email){
 }
 
 
-// Validating the user's birthdate, ensuring it's in the correct format and not more recent than 09/09/2024
-Date ALTparseDate(char* dateStr) {
-    Date date;
-
-    if (sscanf(dateStr, "%d/%d/%d", &date.year, &date.month, &date.day) != 3) date.error = 1;
-    else if (date.year > 2024) date.error = 1;
-    else if (date.year == 2024){
-        if (date.month > 9) date.error = 1;
-        if (date.month == 9 && (date.day < 1 || date.day > 9)) date.error = 1;
-    }
-    else if (date.month < 1 || date.month > 12 || date.day < 1 || date.day > 31) date.error = 1;
-
-    return date;
-}
-
-
-User* ALTparseDataU(char *str, User *user) {
-    if (!str || !user) return NULL; 
-
-    char *token = NULL;
-
-    // Parsing the user ID, skipping the U 
-    token = trimString(strsep(&str, ";"));
-    if (token && token[0] == 'U') user->username = atoi(token + 1);
-
-    // Parsing the email
-    token = strsep(&str, ";");
-    if (token && validEmail(trimString(token))) user->email = strdup(trimString(token));
-    else {
-        perror("Email parsing error");
-        return NULL;
-    }
-
-    // Parsing first name
-    token = strsep(&str, ";");
-    if (token) user->first_name = strdup(trimString(token));
-    else {
-        perror("First name parsing error");
-        return NULL;
-    }
-
-    // Parsing last name
-    token = strsep(&str, ";");
-    if (token) user->last_name = strdup(trimString(token));
-    else {
-        perror("Last name parsing error");
-        return NULL;
-    }
-
-    // Parsing the birth date
-    token = strsep(&str, ";");
-
-    if (token) {
-        user->buffer = strdup(trimString(token));
-        user->birth_date = ALTparseDate(strdup(trimString(token)));
-        if (user->birth_date.error == 1) {
-            perror("Invalid birthdate");
-            return NULL;
-        }
-    } else {
-        perror("Date parsing error");
-        return NULL;
-    }
-
-    // Parsing the country
-    token = strsep(&str, ";");
-    if (token) user->country = strdup(trimString(token));
-    else {
-        perror("Country parsing error");
-        return NULL;
-    }
-
-    // Parsing the subscription type
-    token = strsep(&str, ";");
-    if (token) {
-        if (strcmp (trimString(token), "normal") == 0) user->subscription_type = 0;
-        else if (strcmp (trimString(token), "premium") == 0) user->subscription_type = 1;
-        else {
-            perror("Invalid subscription type");
-            return NULL;
-        }
-    }
-    else {
-        perror("Subscription type parsing error");
-        return NULL;
-    }
-
-    // Parsing the liked music IDs
-    user->liked_musics_id = parseIDs(str, user, Users);
-    if (user->liked_musics_id == NULL) {
-        perror("Liked music IDs parsing error");
-        return NULL;
-    }
-
-    return user;
-}
