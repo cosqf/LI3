@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <parsingUtils.h>
+#include <stdbool.h>
+
 #ifndef _UTILS_H_
 #define _UTILS_H_
 

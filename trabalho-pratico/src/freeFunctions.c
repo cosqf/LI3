@@ -9,7 +9,7 @@ void freeCmd (CMD *cmd) {
     if (cmd->paises) free (cmd->paises);
     free (cmd);
 }
-
+/*
 void freeUser(User *user) {
     if (user) {
         if (user->email) free (user->email);
@@ -80,3 +80,4 @@ void freeMusicRaw(MusicRaw *music) {
         free(music);
     }
 }
+*/
