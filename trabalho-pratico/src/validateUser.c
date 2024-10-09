@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <users.h>
-#include <processInput.h>
+#include <parsingUtils.h>
 
 
 // Checks if the given character is an undercase letter

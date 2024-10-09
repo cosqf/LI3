@@ -4,7 +4,7 @@
 #include <users.h>
 #include <musics.h>
 #include <artists.h>
-#include <processInput.h>
+#include <parsingUtils.h>
 #include <string.h>
 
 FILE* openFile (char * argv) { 

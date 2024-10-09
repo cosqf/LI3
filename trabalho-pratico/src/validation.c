@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <musics.h>
 #include <utils.h>
+#include <artists.h>
 
 void createErrorFile (DataType type) {
     switch (type){
@@ -21,13 +22,18 @@ void createErrorFile (DataType type) {
 }
 
 void insertErrorFileUser (UserRaw *user){
-    printf ("debugging:\n");
-    printf ("%s;%s;%s;%s;%s\n\n", user->email, user->first_name, user->last_name, user->birth_date, user->country);
+    printf ("debugging user: %s;%s;%s;%s;%s\n\n", user->email, user->first_name, user->last_name, user->birth_date, user->country);
 }; // email;first_name;last_name;age;country
 
-void insertErrorFileMusics (){};
+void insertErrorFileMusics (MusicRaw *music){
+    printf ("debugging music: %s;%s;%s;%s;%s;%s;%s\n\n",music->id, music->title, music->artist_id, music->duration, music->genre, music->year, music->lyrics);
+};
 
-void insertErrorFileArtists (){};
+void insertErrorFileArtists (ArtistRaw *artist){
+    printf ("debugging artist: %s;%s;%s;%s;%s;%s;%s\n\n", artist->id, artist->name, artist->description, artist->recipe_per_stream, artist->id_constituent, artist->country, artist->type);
+};
+
+
 
 //SYNTAX VALIDATION
 
@@ -37,8 +43,9 @@ Duration parseDuration(char* dur){
 
     if (sscanf(dur, "%d:%d:%d", &duration.hours, &duration.minutes, &duration.seconds) != 3) duration.error = 1;
 
-    else if(duration.hours < 0 || duration.hours > 99 || duration.minutes < 0 || duration.minutes > 59 || duration.seconds < 0 || duration.seconds > 59) duration.error = 0;
+    else if(duration.hours < 0 || duration.hours > 99 || duration.minutes < 0 || duration.minutes > 59 || duration.seconds < 0 || duration.seconds > 59) duration.error = 1;
     
+    else duration.error = 0;
     return duration;
 }
 

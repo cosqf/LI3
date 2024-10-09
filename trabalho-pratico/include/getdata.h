@@ -3,11 +3,12 @@
 #define _GETDATA_H_
 
 void getData (char *path);
+
 void getDataUser (char *);
+
 void getDataArtist (char *);
+
 void getDataMusic (char *);
-void freeUser(User *);
-void freeArtist(Artist *);
-void freeMusic (Music *music);
+
 char * changePath(char *path, DataType type);
 #endif

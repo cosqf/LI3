@@ -1,9 +1,10 @@
-#include <processInput.h>
+#include <parsingUtils.h>
 #include <getdata.h>
 #include <query1.h>
 #include <stdlib.h>
 #include <utils.h>
 #include <freeFunctions.h>
+#include <parsingCmd.h>
 
 
 int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd

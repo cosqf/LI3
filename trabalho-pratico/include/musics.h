@@ -15,10 +15,19 @@ typedef struct {
     int* artist_id;     //– lista de identificadores dos autores da música;
     unsigned int artist_id_counter; 
     Duration duration;   //– tempo de duração;
-    char* buffer;
     char* genre;         //– género da música;
     int year;            //– ano de lançamento;
     char* lyrics;        //– letra da música.
 } Music;
+
+typedef struct {
+    char* id;              //– identificador único da música;
+    char* title;         //– nome da música;
+    char* artist_id;     //– lista de identificadores dos autores da música;
+    char* duration;   //– tempo de duração;
+    char* genre;         //– género da música;
+    char* year;            //– ano de lançamento;
+    char* lyrics;        //– letra da música.
+} MusicRaw;
 
 #endif  
