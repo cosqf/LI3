@@ -86,7 +86,7 @@ Artist* fetchDataA (char *str, Artist *artist) {
 
     // Fetching the ID
     token = trimString(strsep(&str, ";"));
-    if (token) setArtistID (artist, toketrimString(token));
+    if (token) setArtistID (artist, trimString(token));
     else {
         perror ("Id parsing error");
         return NULL;
@@ -134,7 +134,7 @@ Artist* fetchDataA (char *str, Artist *artist) {
 
     // Fetching the type
     token = strsep(&str, ";");
-    if (token) setArtistDescription (artist, trimString(token));
+    if (token) setArtistType (artist, trimString(token));
     else {
         perror("Type parsing error");
         return NULL;

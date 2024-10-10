@@ -2,18 +2,19 @@
 #include <string.h>
 #include <parsingUtils.h>
 #include <utils.h>
-#include <users.h>
+#include "users.h"
+#include <string.h>
 
 /* The User struct */
-typedef struct {
-    char* username;           //– identificador único do utilizador;
-    char* email;              //– email de registo do utilizador;
-    char* first_name;         //– primeiro nome do utilizador;
-    char* last_name;          //– apelido do utilizador;
-    char* birth_date;         //– data de nascimento;
-    char* country;            //– país onde a conta do utilizador foi registada;
-    char* subscription_type;  //– tipo de subscrição, i.e., normal(0) ou premium(1);
-    char* liked_musics_id;    //– lista de identificadores únicos das músicas gostadas pelo utilizador.
+typedef struct user {
+    char* username;                    //– identificador único do utilizador;
+    char* email;                       //– email de registo do utilizador;
+    char* first_name;                  //– primeiro nome do utilizador;
+    char* last_name;                   //– apelido do utilizador;
+    char* birth_date;                  //– data de nascimento;
+    char* country;                     //– país onde a conta do utilizador foi registada;
+    char* subscription_type;           //– tipo de subscrição, i.e., normal(0) ou premium(1);
+    char* liked_musics_id;             //– lista de identificadores únicos das músicas gostadas pelo utilizador.
     unsigned int liked_musics_count;   //– número de quantas músicas o utlizador gosta
 } User;
 
@@ -34,7 +35,7 @@ User* createUser() {
 }
 
 /* Destroy a User and free all allocated memory */
-void destroyUser(User* user) {
+void deleteUser(User* user) {
     if (user) {
         free(user->username);
         free(user->email);
@@ -46,6 +47,25 @@ void destroyUser(User* user) {
         free(user->liked_musics_id);
         free(user);
     }
+}
+
+void printUser(const User* user) {
+    if (user == NULL) {
+        printf("User is NULL\n");
+        return;
+    }
+
+    printf("Username: %s, Email: %s, First Name: %s, Last Name: %s, Birth Date: %s, "
+           "Country: %s, Subscription Type: %s, Liked Musics ID: %s, Liked Musics Count: %u\n",
+           user->username ? user->username : "N/A",
+           user->email ? user->email : "N/A",
+           user->first_name ? user->first_name : "N/A",
+           user->last_name ? user->last_name : "N/A",
+           user->birth_date ? user->birth_date : "N/A",
+           user->country ? user->country : "N/A",
+           user->subscription_type ? user->subscription_type : "N/A",
+           user->liked_musics_id ? user->liked_musics_id : "N/A",
+           user->liked_musics_count);
 }
 
 // GETTER
@@ -105,49 +125,49 @@ int getUserLikedCounter (User* user) {
 
 /* Setter for username */
 void setUserName(User* user, const char* username) {
-    free(user->username);  
+    if (user->username) free(user->username);  
     user->username = strdup(username);
 }
 
 /* Setter for email */
 void setUserEmail(User* user, const char* email) {
-    free(user->email);  
+    if (user->email) free(user->email);  
     user->email = strdup(email);  // 
 }
 
 /* Setter for first_name */
 void setUserFirstName(User* user, const char* first_name) {
-    free(user->first_name);  
+    if (user->first_name) free(user->first_name);  
     user->first_name = strdup(first_name);
 }
 
 /* Setter for last_name */
 void setUserLastName(User* user, const char* last_name) {
-    free(user->last_name);  
+    if (user->last_name) free (user->last_name);  
     user->last_name = strdup(last_name);
 }
 
 /* Setter for birth_date */
 void setUserBirthDate(User* user, const char* birth_date) {
-    free(user->birth_date);  
+    if (user->birth_date) free (user->birth_date);  
     user->birth_date = strdup(birth_date);
 }
 
 /* Setter for country */
 void setUserCountry(User* user, const char* country) {
-    free(user->country);  
+    if (user->country) free(user->country);  
     user->country = strdup(country);
 }
 
 /* Setter for subscription_type */
 void setUserSubscriptionType(User* user, const char* subscription_type) {
-    free(user->subscription_type);  
+    if (user->subscription_type) free(user->subscription_type);  
     user->subscription_type = strdup(subscription_type);
 }
 
 /* Setter for liked_musics_id */
 void setUserLikedMusicsID(User* user, const char* liked_musics_id) {
-    free(user->liked_musics_id);  
+    if (user->liked_musics_id) free(user->liked_musics_id);  
     user->liked_musics_id = strdup(liked_musics_id);
 }
 

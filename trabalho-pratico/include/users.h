@@ -5,10 +5,11 @@
 #ifndef _USERS_H_
 #define _USERS_H_
 
-typedef struct User User;
+typedef struct user User;
 
 User* createUser();
-void destroyUser(User* user);
+void deleteUser(User* user);
+void printUser(const User* user);
 
 // GETTERs
 int getUserName(User* user);

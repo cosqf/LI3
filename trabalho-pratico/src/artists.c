@@ -3,7 +3,7 @@
 #include <artists.h>
 #include <parsingUtils.h>
 
-typedef struct {
+typedef struct artist {
     char* id;                       //– identificador único do artista;
     char* name;                     //– nome do artista;
     char* description;              //– detalhes do artista;
@@ -43,6 +43,26 @@ void deleteArtist(Artist* artist) {
         free(artist);
     }
 }
+
+
+void printArtist(const Artist* artist) {
+    if (artist == NULL) {
+        printf("Artist is NULL\n");
+        return;
+    }
+
+    printf("ID: %s, Name: %s, Description: %s, Recipe per Stream: %s, Constituent IDs: %s, "
+           "Constituent Count: %u, Country: %s, Type: %s\n",
+           artist->id ? artist->id : "N/A",
+           artist->name ? artist->name : "N/A",
+           artist->description ? artist->description : "N/A",
+           artist->recipe_per_stream ? artist->recipe_per_stream : "N/A",
+           artist->id_constituent ? artist->id_constituent : "N/A",
+           artist->id_constituent_counter,
+           artist->country ? artist->country : "N/A",
+           artist->type ? artist->type : "N/A");
+}
+
 
 // GETTERs
 
@@ -91,31 +111,31 @@ int getArtistType(Artist* artist) {
 
 /* Setter for id */
 void setArtistID(Artist* artist, const char* id) {
-    free(artist->id);
+    if (artist->id) free(artist->id);
     artist->id = strdup(id);
 }
 
 /* Setter for name */
 void setArtistName(Artist* artist, const char* name) {
-    free(artist->name);
+    if (artist->name) free (artist->name);
     artist->name = strdup(name);
 }
 
 /* Setter for description */
 void setArtistDescription(Artist* artist, const char* description) {
-    free(artist->description);
+    if (artist->description) free(artist->description);
     artist->description = strdup(description);
 }
 
 /* Setter for recipe_per_stream */
 void setArtistRecipePerStream(Artist* artist, const char* recipe_per_stream) {
-    free(artist->recipe_per_stream);
+    if (artist->recipe_per_stream) free(artist->recipe_per_stream);
     artist->recipe_per_stream = strdup(recipe_per_stream);
 }
 
 /* Setter for id_constituent */
 void setArtistIDConstituent(Artist* artist, const char* id_constituent) {
-    free(artist->id_constituent);
+    if (artist->id_constituent) free(artist->id_constituent);
     artist->id_constituent = strdup(id_constituent);
 }
 
@@ -126,12 +146,12 @@ void setArtistIDConstituentCounter(Artist* artist, unsigned int id_constituent_c
 
 /* Setter for country */
 void setArtistCountry(Artist* artist, const char* country) {
-    free(artist->country);
+    if (artist->country) free(artist->country);
     artist->country = strdup(country);
 }
 
 /* Setter for type */
 void setArtistType(Artist* artist, const char* type) {
-    free(artist->type);
+    if (artist->type) free(artist->type);
     artist->type = strdup(type);
 }

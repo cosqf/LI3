@@ -7,15 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <utils.h>
-#include <freeFunctions.h>
 #include <parsingDatatypes.h>
 #include <users.h>
 #include <artists.h>
 #include <musics.h>
 
 void getData (char *path) {
-    //getDataUser (path);
-    //getDataArtist (path);
+    getDataUser (path);
+    getDataArtist (path);
     getDataMusic (path);
 }
 
@@ -46,12 +45,12 @@ void getDataUser (char *path) {
             i = 1;
             continue; // skip first line
         }
-        User *user = malloc (sizeof (Users));
+        User *user = createUser();
         if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
 
         user = fetchDataU (str, user);
         if (!user) insertErrorFileUser (user);
-        else g_hash_table_insert(hashUser, getUserName (user), user);
+        //else g_hash_table_insert(hashUser, getUserName (user), user);
 
 
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
@@ -61,10 +60,8 @@ void getDataUser (char *path) {
         // printf("Username: %d, Email: %s, Primeiro Nome: %s\n", myLookup->username, myLookup->email, myLookup->first_name);
        
         
-        //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %s\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->buffer, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
-        //for (int i = 0; i<user->liked_musics_count; i++) printf ("%d\t", user->liked_musics_id[i]); //DEBUG
-        //printf ("\n\n"); //DEBUG
-        freeUser (user);
+        //printUser (user); 
+        deleteUser (user);
     }
     fclose(fp);
     free (userPath);
@@ -83,13 +80,14 @@ void getDataArtist (char *path) {
             i = 1;
             continue; // skip first line
         }
-        Artist *artist = malloc (sizeof (Artists));
+        Artist *artist = createArtist();
         if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
         artist = fetchDataA (str, artist);
         if (!artist) insertErrorFileArtists (artist);
         // poeNaHash (music);
-
-        freeArtist (artist);
+        
+        //printArtist (artist);
+        deleteArtist (artist);
     }
     fclose(fp);
     free (artistPath);
@@ -105,18 +103,16 @@ void getDataMusic (char *path) {
             i = 1;
             continue; // skip first line
         }
-        Music *music = malloc (sizeof (Musics));
+        Music *music = createMusic ();
         if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
         music = fetchDataM (str, music);
         if (!music) insertErrorFileMusics (music);
 
-        //printf ("%d, %s, %d, %s, %s, %d, %s\n", music->id, music->title, music->artist_id_counter, music->buffer, music->genre, music->year, music->lyrics); // DEBUG
-        //for (int i=0; i < music->artist_id_counter; i++) printf ("%d ", music->artist_id[i]);
-        //printf ("\n\n");
+        //printMusic (music);
         
         // poeNaHash (music);
-        freeMusic (music);
+        deleteMusic (music);
     }
     fclose(fp);
     free (musicPath);

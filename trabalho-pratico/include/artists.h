@@ -1,16 +1,19 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #ifndef _ARTISTS_H_
 #define _ARTISTS_H_
 
-typedef struct Artist Artist;
+typedef struct artist Artist;
 
 /* Creator: Initializes the Artist struct with NULL/default values */
 Artist* createArtist();
 
 /* Destructor: Frees the memory of an Artist struct */
 void deleteArtist(Artist* artist);
+
+void printArtist(const Artist* artist);
 
 /* Getters */
 int getArtistID(Artist* artist);

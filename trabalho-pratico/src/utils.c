@@ -17,8 +17,8 @@ FILE* openFile (char * argv) {
     return fp;
 }
 
-bool mallocErrorCheck (void* add) {
-    if (add == NULL) {
+bool mallocErrorCheck (void* address) {
+    if (address == NULL) {
         perror ("Malloc error");
         return 1;
     }
@@ -43,7 +43,7 @@ char *trimString(char *str) { // Trims a string, removing symbols from each end
 void updateCount(void* IDnum, DataType type, int count) {
     if (type == Users) {
         User *user = (User*)IDnum;
-        setUserLikedCounter (user, count);
+        setUserLikedMusicsCount (user, count);
 
     } else if (type == Artists) {
         Artist *artist = (Artist*)IDnum;
@@ -51,6 +51,6 @@ void updateCount(void* IDnum, DataType type, int count) {
 
     } else if (type == Musics) {
         Music *music = (Music*)IDnum;
-        setUserLikedMusicsCount (music, count);
+        setMusicArtistIDCount (music, count);
     }
 }
