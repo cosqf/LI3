@@ -2,7 +2,7 @@
 #include <getdata.h>
 #include <validation.h> 
 #include <hashtable.h>
-#include <validateUser.h> //ALTparseDataU (l30)
+#include <validateUser.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,8 +14,8 @@
 
 void getData (char *path) {
     getDataUser (path);
-    getDataArtist (path);
-    getDataMusic (path);
+    //getDataArtist (path);
+    //getDataMusic (path);
 }
 
 char * changePath(char *path, DataType type) {
@@ -35,8 +35,9 @@ char * changePath(char *path, DataType type) {
 
 void getDataUser (char *path) {
     char* userPath = changePath (path, Users);
-
     FILE* fp = openFile (userPath);
+    FILE * ferror = openErrorFileUser ();
+
     bool i = 0;
     char str[DEFAULT];
     
@@ -48,8 +49,8 @@ void getDataUser (char *path) {
         User *user = createUser();
         if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
 
-        user = fetchDataU (str, user);
-        if (!user) insertErrorFileUser (user);
+        user = fetchDataU (str, user, ferror);
+        //if (validU (user)) ...
         //else g_hash_table_insert(hashUser, getUserName (user), user);
 
 
@@ -64,14 +65,16 @@ void getDataUser (char *path) {
         deleteUser (user);
     }
     fclose(fp);
+    fclose(ferror);
     free (userPath);
 }
 
 void getDataArtist (char *path) {
     char *artistPath = changePath (path, Artists);
 
-    
     FILE* fp = openFile (artistPath);
+    FILE * ferror = openErrorFileArtists ();
+
     bool i = 0;
     char str[DEFAULT];
     
@@ -83,7 +86,7 @@ void getDataArtist (char *path) {
         Artist *artist = createArtist();
         if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
         artist = fetchDataA (str, artist);
-        if (!artist) insertErrorFileArtists (artist);
+        // if (validA (artist)) ...
         // poeNaHash (music);
         
         //printArtist (artist);
@@ -95,7 +98,10 @@ void getDataArtist (char *path) {
 
 void getDataMusic (char *path) {
     char *musicPath = changePath (path, Musics);
+
     FILE* fp = openFile (musicPath);
+    FILE * ferror = openErrorFileMusics ();
+
     bool i = 0;
     char str[DEFAULT];
     while (fgets (str, sizeof (str), fp) != NULL){
@@ -107,8 +113,7 @@ void getDataMusic (char *path) {
         if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
         music = fetchDataM (str, music);
-        if (!music) insertErrorFileMusics (music);
-
+        // if (validM (music)) ...
         //printMusic (music);
         
         // poeNaHash (music);

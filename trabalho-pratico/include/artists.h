@@ -17,13 +17,17 @@ void printArtist(const Artist* artist);
 
 /* Getters */
 int getArtistID(Artist* artist);
+char* getArtistIDString(Artist* artist);
 char* getArtistName(Artist* artist);
 char* getArtistDescription(Artist* artist);
 float getArtistRecipePerStream(Artist* artist);
+char* getArtistRecipePerStreamString(Artist* artist);
 int* getArtistIDConstituent(Artist* artist);
+char* getArtistIDConstituentString(Artist* artist);
 unsigned int getArtistIDConstituentCounter(Artist* artist);
 char* getArtistCountry(Artist* artist);
 int getArtistType(Artist* artist);
+char* getArtistTypeString(Artist* artist);
 
 /* Setters */
 void setArtistID(Artist* artist, const char* id);

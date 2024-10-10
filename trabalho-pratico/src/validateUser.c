@@ -36,7 +36,7 @@ int isstr(char* str, int flag) {
 
 
 // Validates the user's email, ensuring it's in the correct format (username@lstr.rstr)
-int validEmail(char* email){
+bool validEmail(char* email){
     int length = strlen(email);
 
     char* username = (char*)malloc(length + 1);

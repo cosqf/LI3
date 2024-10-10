@@ -13,13 +13,17 @@ void printUser(const User* user);
 
 // GETTERs
 int getUserName(User* user);
+char* getUserNameString (User* user);
 char* getUserEmail(User* user);
 char* getUserFirstName(User* user);
 char* getUserLastName(User* user);
 Date getUserBirthDate(User* user);
+char* getUserBirthDateString (User* user);
 char* getUserCountry(User* user);
 bool getUserSubscriptionType(User* user);
+char* getUserSubscriptionTypeString (User *user);
 int* getUserLikedMusicsID(User* user);
+char* getUserLikedMusicsIDString (User *user);
 int getUserLikedCounter (User* user);
 
 // SETTERs

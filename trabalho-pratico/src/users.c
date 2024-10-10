@@ -70,9 +70,13 @@ void printUser(const User* user) {
 
 // GETTER
 
-/* Getter for username (as a string) */
+/* Getter for username */
 int getUserName(User* user) {
     return atoi (user->username + 1);
+}
+/* Getter for username in string format */
+char* getUserNameString (User* user) {
+    return strdup(user->username);
 }
 
 /* Getter for email */
@@ -94,6 +98,10 @@ char* getUserLastName(User* user) {
 Date getUserBirthDate(User* user) {
     return parseDate (user->birth_date);
 }
+/* Getter for birth_date in string format */
+char* getUserBirthDateString (User* user) {
+    return strdup (user->birth_date);
+}
 
 /* Getter for country */
 char* getUserCountry(User* user) {
@@ -107,10 +115,19 @@ bool getUserSubscriptionType(User* user) {
     else if (strcmp (subscription, "premium") == 0) return 1;
     return -1;
 }
+/* Getter for subscription_type in string format */
+char * getUserSubscriptionTypeString (User *user) {
+    return strdup (user->subscription_type);
+}
 
 /* Getter for liked_musics_id */
 int* getUserLikedMusicsID(User* user) {
     return parseIDs (user->liked_musics_id, user, Users);
+}
+
+/* Getter for liked_musics_id in string format */
+char* getUserLikedMusicsIDString (User *user) {
+    return strdup (user->liked_musics_id);
 }
 
 /* Getter for liked_musics_count */

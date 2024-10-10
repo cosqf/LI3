@@ -10,6 +10,6 @@ int isDigit(char);
 
 int isstr(char*, int);
 
-int validEmail(char*);
+bool validEmail(char*);
 
 #endif  
