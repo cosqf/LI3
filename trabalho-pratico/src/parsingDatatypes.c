@@ -7,81 +7,54 @@
 #include <artists.h>
 #include <users.h>
 #include <validateUser.h>
+#include <parsingDatatypes.h>
 
-User * fetchDataU (char *str, User *user, FILE * ferror) {
+User * fetchDataU (char *str, User *user) {
     if (!str || !user) return NULL;
+
     char *token = NULL;
-    bool isValid= 1;
+
     // Fetching the ID
     token = trimString(strsep(&str, ";"));
     if (token) setUserName (user, trimString(token));
-    else {
-        perror ("Id fetching error");
-        isValid = 0;
-    }
+    else perror ("Id fetching error");
 
     // Fetching the email
     token = trimString(strsep(&str, ";"));
     if (token) setUserEmail (user, trimString(token));
-    if (! validEmail (token)) {
-        //perror ("Email fetching error");
-        isValid = 0;
-    }
+    if (! validEmail (token)) //perror ("Email fetching error");
 
     // Fetching first name
     token = trimString(strsep(&str, ";"));
     if (token) setUserFirstName (user, trimString(token));
-    else {
-        perror ("First name fetching error");
-        isValid = 0;
-    }
+    else perror ("First name fetching error");
 
     // Fetching last name
     token = trimString(strsep(&str, ";"));
     if (token) setUserLastName (user, trimString(token));
-    else {
-        perror ("Last name fetching error");
-        isValid = 0;
-    }
+    else perror ("Last name fetching error");
 
     // Fetching birth date
     token = trimString(strsep(&str, ";"));
     if (token) setUserBirthDate(user, trimString(token));
-    else {
-        perror ("Birth date fetching error");
-        isValid = 0;
-    }
+    else perror ("Birth date fetching error");
 
     // Fetching country
     token = trimString(strsep(&str, ";"));
     if (token) setUserCountry (user, trimString(token));
-    else {
-        perror ("Country fetching error");
-        isValid = 0;
-    }
+    else        perror ("Country fetching error");
 
     // Fetching subscription type
-
     token = trimString(strsep(&str, ";"));
     if (token) setUserSubscriptionType (user, trimString(token));
-    else {
-        perror ("Subscription type fetching error");
-        isValid = 0;
-    }
+    else perror ("Subscription type fetching error");
 
     // Fetching liked musics ID
-
     token = trimString(strsep(&str, ";"));
     if (token) setUserLikedMusicsID (user, trimString(token));
-    else {
-        perror ("liked musics ID fetching error");
-        isValid = 0;
-    }
-    if (isValid) return user;
-    else {
-        insertErrorFileUser (user, ferror);
-        return NULL;
-    }
+    else ("liked musics ID fetching error");
+    
+    return user;
 }
 
 Artist* fetchDataA (char *str, Artist *artist) {

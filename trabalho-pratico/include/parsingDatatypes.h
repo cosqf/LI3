@@ -6,7 +6,7 @@
 #define _PARSINGDATATYPES_H_
 
 
-User * fetchDataU (char *str, User *user, FILE * fp);
+User * fetchDataU (char *str, User *user);
 
 Artist* fetchDataA (char *str, Artist *artist);
 

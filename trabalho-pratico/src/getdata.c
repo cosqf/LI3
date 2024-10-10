@@ -49,7 +49,7 @@ void getDataUser (char *path) {
         User *user = createUser();
         if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
 
-        user = fetchDataU (str, user, ferror);
+        user = fetchDataU (str, user);
         //if (validU (user)) ...
         //else g_hash_table_insert(hashUser, getUserName (user), user);
 
