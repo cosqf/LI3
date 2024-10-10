@@ -21,11 +21,15 @@ void printMusic(const Music* music);
 
 /* Getters */
 int getMusicID(Music* music);
+char* getMusicIDString(Music* music);
 char* getMusicTitle(Music* music);
 int* getMusicArtistID(Music* music);
+char* getMusicArtistIDString(Music* music);
 Duration getMusicDuration(Music* music);
+char* getMusicDurationString(Music* music);
 char* getMusicGenre(Music* music);
 int getMusicYear(Music* music);
+char* getMusicYearString(Music* music);
 char* getMusicLyrics(Music* music);
 int getMusicArtistIDCount (Music* music);
 

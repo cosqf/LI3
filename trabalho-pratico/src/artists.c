@@ -70,6 +70,10 @@ void printArtist(const Artist* artist) {
 int getArtistID(Artist* artist) {
     return atoi (artist->id + 1);
 }
+/* Getter for id in string format */
+char* getArtistIDString(Artist* artist) {
+    return strdup (artist->id);
+}
 
 /* Getter for name */
 char* getArtistName(Artist* artist) {
@@ -86,9 +90,19 @@ float getArtistRecipePerStream(Artist* artist) {
     return atof(artist->recipe_per_stream);
 }
 
+/* Getter for recipe_per_stream in string format */
+char* getArtistRecipePerStreamString(Artist* artist) {
+    return strdup(artist->recipe_per_stream);
+}
+
 /* Getter for id_constituent */
 int* getArtistIDConstituent(Artist* artist) {
     return parseIDs (artist->id_constituent, artist, Artists);
+}
+
+/* Getter for id_constituent in string format */
+char* getArtistIDConstituentString(Artist* artist) {
+    return strdup (artist->id_constituent);
 }
 
 /* Getter for id_constituent_counter */
@@ -104,6 +118,11 @@ char* getArtistCountry(Artist* artist) {
 /* Getter for type */
 int getArtistType(Artist* artist) {
     return atoi(artist->type);
+}
+
+/* Getter for type in string format*/
+char* getArtistTypeString(Artist* artist) {
+    return strdup(artist->type);
 }
 
 
