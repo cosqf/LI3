@@ -13,9 +13,9 @@
 #include <parsingMusic.h>
 
 void getData (char *path) {
-    //getDataUser (path);
-    //getDataArtist (path);
-    getDataMusic (path);
+    getDataUser (path);
+    getDataArtist (path);
+    //getDataMusic (path);
 }
 
 char * changePath(char *path, DataType type) {
@@ -63,8 +63,8 @@ void getDataUser (char *path) {
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
 
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
-        // User *myLookup = (User *) g_hash_table_lookup(hashUser, &user->username);
-        // printf("Username: %d, Email: %s, Primeiro Nome: %s\n", myLookup->username, myLookup->email, myLookup->first_name);
+        //User *myLookup = (User *) g_hash_table_lookup(hashUser, &user->username);
+        //printf("Username: %d, Email: %s, Primeiro Nome: %s\n", myLookup->username, myLookup->email, myLookup->first_name);
        
         
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %s\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->buffer, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
@@ -104,7 +104,7 @@ void getDataArtist (char *path) {
         if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
         artist = parseDataA (artist, artistRaw);
         if (!artist) insertErrorFileArtists (artistRaw);
-        // poeNaHash (music);
+        else g_hash_table_insert(hashArtist, &artist->id, artist);
 
         freeArtist (artist);
         freeArtistRaw (artistRaw);
