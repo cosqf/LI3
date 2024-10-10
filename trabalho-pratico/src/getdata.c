@@ -7,14 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <utils.h>
-#include <freeFunctions.h>
-#include <parsingUser.h>
-#include <parsingArtist.h>
-#include <parsingMusic.h>
+#include <parsingDatatypes.h>
+#include <users.h>
+#include <artists.h>
+#include <musics.h>
 
 void getData (char *path) {
-    //getDataUser (path);
-    //getDataArtist (path);
+    getDataUser (path);
+    getDataArtist (path);
     getDataMusic (path);
 }
 
@@ -45,19 +45,12 @@ void getDataUser (char *path) {
             i = 1;
             continue; // skip first line
         }
-        UserRaw *userRaw = malloc (sizeof (UserRaw));
-        if (mallocErrorCheck (userRaw)) exit (EXIT_FAILURE);
-
-        userRaw = fetchDataU (str, userRaw);
-        if (!userRaw) {
-            perror ("Fetching User error");
-            exit (EXIT_FAILURE);
-        }
-        User *user = malloc (sizeof (User));
+        User *user = createUser();
         if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
-        user = parseDataU (user, userRaw);
-        if (!user) insertErrorFileUser (userRaw);
-        else g_hash_table_insert(hashUser, &user->username, user);
+
+        user = fetchDataU (str, user);
+        if (!user) insertErrorFileUser (user);
+        //else g_hash_table_insert(hashUser, getUserName (user), user);
 
 
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
@@ -67,11 +60,8 @@ void getDataUser (char *path) {
         // printf("Username: %d, Email: %s, Primeiro Nome: %s\n", myLookup->username, myLookup->email, myLookup->first_name);
        
         
-        //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %s\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->buffer, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
-        //for (int i = 0; i<user->liked_musics_count; i++) printf ("%d\t", user->liked_musics_id[i]); //DEBUG
-        //printf ("\n\n"); //DEBUG
-        freeUser (user);
-        freeUserRaw (userRaw);
+        //printUser (user); 
+        deleteUser (user);
     }
     fclose(fp);
     free (userPath);
@@ -90,24 +80,14 @@ void getDataArtist (char *path) {
             i = 1;
             continue; // skip first line
         }
-        ArtistRaw *artistRaw = malloc (sizeof (ArtistRaw));
-        if (mallocErrorCheck (artistRaw)) exit (EXIT_FAILURE);
-
-        artistRaw = fetchDataA (str, artistRaw);
-        if (!artistRaw) {
-            perror ("Fetching artist error");
-            exit (EXIT_FAILURE);
-        }
-
-
-        Artist *artist = malloc (sizeof (Artist));
+        Artist *artist = createArtist();
         if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
-        artist = parseDataA (artist, artistRaw);
-        if (!artist) insertErrorFileArtists (artistRaw);
+        artist = fetchDataA (str, artist);
+        if (!artist) insertErrorFileArtists (artist);
         // poeNaHash (music);
-
-        freeArtist (artist);
-        freeArtistRaw (artistRaw);
+        
+        //printArtist (artist);
+        deleteArtist (artist);
     }
     fclose(fp);
     free (artistPath);
@@ -123,27 +103,16 @@ void getDataMusic (char *path) {
             i = 1;
             continue; // skip first line
         }
-        MusicRaw *musicRaw = malloc (sizeof (MusicRaw));
-        if (mallocErrorCheck (musicRaw)) exit (EXIT_FAILURE);
-
-        musicRaw = fetchDataM (str, musicRaw);
-        if (!musicRaw) {
-            perror ("Fetching artist error");
-            exit (EXIT_FAILURE);
-        }
-
-        Music *music = malloc (sizeof (Music));
+        Music *music = createMusic ();
         if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
-        music = parseDataM (music, musicRaw);
-        if (!music) insertErrorFileMusics (musicRaw);
 
-        //printf ("%d, %s, %d, %s, %s, %d, %s\n", music->id, music->title, music->artist_id_counter, music->buffer, music->genre, music->year, music->lyrics); // DEBUG
-        //for (int i=0; i < music->artist_id_counter; i++) printf ("%d ", music->artist_id[i]);
-        //printf ("\n\n");
+        music = fetchDataM (str, music);
+        if (!music) insertErrorFileMusics (music);
+
+        //printMusic (music);
         
         // poeNaHash (music);
-        freeMusic (music);
-        freeMusicRaw (musicRaw);
+        deleteMusic (music);
     }
     fclose(fp);
     free (musicPath);

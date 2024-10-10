@@ -6,6 +6,7 @@
 #include <artists.h>
 #include <parsingUtils.h>
 #include <string.h>
+#include <users.h>
 
 FILE* openFile (char * argv) { 
     FILE* fp = fopen (argv, "r");
@@ -16,8 +17,8 @@ FILE* openFile (char * argv) {
     return fp;
 }
 
-bool mallocErrorCheck (void* add) {
-    if (add == NULL) {
+bool mallocErrorCheck (void* address) {
+    if (address == NULL) {
         perror ("Malloc error");
         return 1;
     }
@@ -42,14 +43,14 @@ char *trimString(char *str) { // Trims a string, removing symbols from each end
 void updateCount(void* IDnum, DataType type, int count) {
     if (type == Users) {
         User *user = (User*)IDnum;
-        user->liked_musics_count = count;
+        setUserLikedMusicsCount (user, count);
 
     } else if (type == Artists) {
         Artist *artist = (Artist*)IDnum;
-        artist->id_constituent_counter = count;
+        setArtistIDConstituentCounter (artist, count);
 
     } else if (type == Musics) {
         Music *music = (Music*)IDnum;
-        music->artist_id_counter = count;
+        setMusicArtistIDCount (music, count);
     }
 }

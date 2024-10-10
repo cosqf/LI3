@@ -4,7 +4,6 @@
 #include <query1.h>
 #include <stdlib.h>
 #include <utils.h>
-#include <freeFunctions.h>
 #include <parsingCmd.h>
 
 
@@ -15,13 +14,12 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
     }
     FILE *fp = openFile (argv[2]);
 
-    initialize_hash_table();
+    //initialize_hash_table();
     getData (argv[1]);
 
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-        CMD *cmd = malloc (sizeof(CMD));
-        if (mallocErrorCheck (cmd)) exit (EXIT_FAILURE);
+        CMD *cmd = createCMD ();
 
         cmd = getCommand (str, cmd);
         //if (cmd->query == 1) query1 (argv[1]);

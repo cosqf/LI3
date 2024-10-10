@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <musics.h>
+#include <users.h>
 #include <utils.h>
 #include <artists.h>
 
@@ -21,16 +22,16 @@ void createErrorFile (DataType type) {
     }
 }
 
-void insertErrorFileUser (UserRaw *user){
-    printf ("debugging user: %s;%s;%s;%s;%s\n\n", user->email, user->first_name, user->last_name, user->birth_date, user->country);
-}; // email;first_name;last_name;age;country
-
-void insertErrorFileMusics (MusicRaw *music){
-    printf ("debugging music: %s;%s;%s;%s;%s;%s;%s\n\n",music->id, music->title, music->artist_id, music->duration, music->genre, music->year, music->lyrics);
+void insertErrorFileUser (User *user){
+    //printf ("debugging user: %s;%s;%s;%s;%s\n\n", user->email, user->first_name, user->last_name, user->birth_date, user->country);
 };
 
-void insertErrorFileArtists (ArtistRaw *artist){
-    printf ("debugging artist: %s;%s;%s;%s;%s;%s;%s\n\n", artist->id, artist->name, artist->description, artist->recipe_per_stream, artist->id_constituent, artist->country, artist->type);
+void insertErrorFileMusics (Music *music){
+    //printf ("debugging music: %s;%s;%s;%s;%s;%s;%s\n\n",music->id, music->title, music->artist_id, music->duration, music->genre, music->year, music->lyrics);
+};
+
+void insertErrorFileArtists (Artist *artist){
+    //printf ("debugging artist: %s;%s;%s;%s;%s;%s;%s\n\n", artist->id, artist->name, artist->description, artist->recipe_per_stream, artist->id_constituent, artist->country, artist->type);
 };
 
 
