@@ -1,38 +1,75 @@
 #include <stdio.h>
 #include <musics.h>
+#include <users.h>
 #include <utils.h>
 #include <artists.h>
+#include <stdlib.h>
+#include <validation.h>
 
-void createErrorFile (DataType type) {
-    switch (type){
-    case Users:
-        
-        break;
-    case Musics:
 
-        break;
-
-    case Artists:
-
-        break;
-
-    default:
-        break;
+FILE * openErrorFileUser () {
+    FILE* fp = fopen ("resultados/users_errors.csv", "w");
+    if (!fp) {
+        perror ("Error opening Error file");
+        exit (1);
     }
+    fprintf (fp, "username;email;first_name;last_name;birth_date;country;subscription_type;liked_songs_id");
+    return fp;
 }
 
-void insertErrorFileUser (UserRaw *user){
-    printf ("debugging user: %s;%s;%s;%s;%s\n\n", user->email, user->first_name, user->last_name, user->birth_date, user->country);
-}; // email;first_name;last_name;age;country
+void insertErrorFileUser (User *user, FILE *fp) {
+    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s;%s", 
+            getUserNameString(user), 
+            getUserEmail(user), 
+            getUserFirstName(user), 
+            getUserLastName(user), 
+            getUserBirthDateString(user), 
+            getUserCountry(user), 
+            getUserSubscriptionTypeString(user), 
+            getUserLikedMusicsIDString(user));
+}
 
-void insertErrorFileMusics (MusicRaw *music){
-    printf ("debugging music: %s;%s;%s;%s;%s;%s;%s\n\n",music->id, music->title, music->artist_id, music->duration, music->genre, music->year, music->lyrics);
-};
 
-void insertErrorFileArtists (ArtistRaw *artist){
-    printf ("debugging artist: %s;%s;%s;%s;%s;%s;%s\n\n", artist->id, artist->name, artist->description, artist->recipe_per_stream, artist->id_constituent, artist->country, artist->type);
-};
+FILE * openErrorFileArtists (){
+    FILE* fp = fopen ("resultados/artist_errors.csv", "w");
+    if (!fp) {
+        perror ("Error opening Error file");
+        exit (1);
+        }
+    fprintf (fp, "id;name;description;recipe_per_stream;id_constituent;country;type");
+    return fp;
+}
 
+void insertErrorFileArtists (Artist *artist, FILE *fp) {
+    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s", getArtistIDString (artist),
+                                         getArtistName (artist), 
+                                         getArtistDescription (artist),
+                                         getArtistRecipePerStreamString(artist),
+                                         getArtistIDConstituentString (artist),
+                                         getArtistCountry (artist),
+                                         getArtistTypeString (artist));
+}
+
+
+FILE * openErrorFileMusics (){
+    FILE* fp = fopen ("resultados/music_errors.csv", "w");
+    if (!fp) {
+        perror ("Error opening Error file");
+        exit (1);
+        }
+    fprintf (fp, "id;title;artist_id;duration;genre;year;lyrics");
+    return fp;
+}
+
+void insertErrorFileMusics (Music *music, FILE *fp) {
+    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s", getMusicIDString (music),
+                                            getMusicTitle (music),
+                                            getMusicArtistIDString (music),
+                                            getMusicDurationString(music),
+                                            getMusicGenre(music),
+                                            getMusicYearString(music),
+                                            getMusicLyrics(music));
+}
 
 
 //SYNTAX VALIDATION

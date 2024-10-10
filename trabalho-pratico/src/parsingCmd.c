@@ -5,6 +5,27 @@
 #include <utils.h>
 #include <parsingCmd.h>
 
+typedef struct cmd {
+    int query;     // 1, 2, or 3
+    int id;         // user ID
+    int topN;       // top N places
+    char *paises;   // (requires memory allocation)
+    int ageMin;     // minimum age
+    int ageMax;     // maximum age
+} CMD;
+
+CMD* createCMD () {
+    CMD* cmd = malloc(sizeof(CMD));
+    if (mallocErrorCheck (cmd)) exit (EXIT_FAILURE);
+    cmd->query = 0;
+    cmd->id = 0;
+    cmd->topN = 0;
+    cmd->paises = NULL;
+    cmd->ageMin = 0;
+    cmd->ageMax = 0;
+    return cmd;
+}
+
 CMD* getCommand (char* line, CMD* cmd) {
     char *token = strsep(&line, " ");
     cmd->query = atoi(token);
@@ -60,4 +81,9 @@ void getCommandQuery3 (char* line, CMD* cmd, char* token) {
         cmd->id = -1;
         cmd->topN = -1;
         cmd->paises = NULL;
+}
+
+void freeCmd (CMD *cmd) {
+    if (cmd->paises) free (cmd->paises);
+    free (cmd);
 }

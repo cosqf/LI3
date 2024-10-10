@@ -1,36 +1,40 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <parsingUtils.h>
+
 #ifndef _USERS_H_
 #define _USERS_H_
 
-typedef struct {
-    int year;    //aaaa (<=2024)
-    int month;   //mm   (01-12)
-    int day;     //dd   (01-31)
-    short int error; 
-} Date;
+typedef struct user User;
 
-typedef struct {
-    int username;           //– identificador único do utilizador;
-    char* email;              //– email de registo do utilizador;
-    char* first_name;         //– primeiro nome do utilizador;
-    char* last_name;          //– apelido do utilizador;
-    Date birth_date;          //– data de nascimento;
-    char* country;            //– país onde a conta do utilizador foi registada;
-    bool subscription_type;    //– tipo de subscrição, i.e., normal(0) ou premium(1);
-    int* liked_musics_id;     //– lista de identificadores únicos das músicas gostadas pelo utilizador.
-    int liked_musics_count;
-} User;
+User* createUser();
+void deleteUser(User* user);
+void printUser(const User* user);
 
-typedef struct {
-    char* username;           //– identificador único do utilizador;
-    char* email;              //– email de registo do utilizador;
-    char* first_name;         //– primeiro nome do utilizador;
-    char* last_name;          //– apelido do utilizador;
-    char* birth_date;          //– data de nascimento;
-    char* country;            //– país onde a conta do utilizador foi registada;
-    char* subscription_type;    //– tipo de subscrição, i.e., normal(0) ou premium(1);
-    char* liked_musics_id;     //– lista de identificadores únicos das músicas gostadas pelo utilizador.
-} UserRaw;
+// GETTERs
+int getUserName(User* user);
+char* getUserNameString (User* user);
+char* getUserEmail(User* user);
+char* getUserFirstName(User* user);
+char* getUserLastName(User* user);
+Date getUserBirthDate(User* user);
+char* getUserBirthDateString (User* user);
+char* getUserCountry(User* user);
+bool getUserSubscriptionType(User* user);
+char* getUserSubscriptionTypeString (User *user);
+int* getUserLikedMusicsID(User* user);
+char* getUserLikedMusicsIDString (User *user);
+int getUserLikedCounter (User* user);
+
+// SETTERs
+void setUserName(User* user, const char* username);
+void setUserEmail(User* user, const char* email);
+void setUserFirstName(User* user, const char* first_name);
+void setUserLastName(User* user, const char* last_name);
+void setUserBirthDate(User* user, const char* birth_date);
+void setUserCountry(User* user, const char* country);
+void setUserSubscriptionType(User* user, const char* subscription_type);
+void setUserLikedMusicsID(User* user, const char* liked_musics_id);
+void setUserLikedMusicsCount(User* user, int liked_musics_count);
 
 #endif  
