@@ -18,9 +18,9 @@
 */
 
 void getData (char *path) {
-    //getDataArtist (path);
+    getDataUser (path);
+    getDataArtist (path);
     getDataMusic (path);
-    //getDataUser (path);
 }
 
 char * changePath(char *path, DataType type) {
@@ -127,7 +127,8 @@ void getDataMusic (char *path) {
         if (!validMusic (music)) insertErrorFileMusics(music, ferror);
         //printMusic (music);
         
-        // poeNaHash (music);
+        g_hash_table_insert(hashMusic, GINT_TO_POINTER (getMusicID (music)), music);
+        
         deleteMusic (music);
     }
     fclose(fp);

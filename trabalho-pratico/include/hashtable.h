@@ -8,6 +8,7 @@
 
 extern GHashTable *hashUser;// Declara a hashUser globalmente, mas sem inicializá-la
 extern GHashTable *hashArtist; // Declara a hashArtist globalmente, mas sem inicializá-la
+extern GHashTable *hashMusic; // Declara a hashArtist globalmente, mas sem inicializá-la
 
 void initialize_hash_table();// Função para inicializar a hash table
 
