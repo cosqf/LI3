@@ -95,6 +95,11 @@ void getDataArtist (char *path) {
         // if (validA (artist)) ...
         g_hash_table_insert(hashArtist, GINT_TO_POINTER (getArtistID (artist)), artist);
         
+        //Exemplo de como dar print do que está na hashtable. Utilizado para testar
+        //Artist *myLookup = (Artist *) g_hash_table_lookup(hashArtist, getArtistID (artist));
+        //printf("ID: %d, Nome: %s, Descrição: %s\n", getArtistID (myLookup), getArtistName (myLookup), getArtistDescription (myLookup));
+      
+
         //printArtist (artist);
         deleteArtist (artist);
     }
