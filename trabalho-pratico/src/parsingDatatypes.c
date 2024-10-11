@@ -6,7 +6,7 @@
 #include <utils.h>
 #include <artists.h>
 #include <users.h>
-#include <validateUser.h>
+#include <validateDatatypes.h>
 #include <parsingDatatypes.h>
 
 User * fetchDataU (char *str, User *user) {
@@ -22,7 +22,7 @@ User * fetchDataU (char *str, User *user) {
     // Fetching the email
     token = trimString(strsep(&str, ";"));
     if (token) setUserEmail (user, trimString(token));
-    if (! validEmail (token)) //perror ("Email fetching error");
+    else perror ("Email fetching error");
 
     // Fetching first name
     token = trimString(strsep(&str, ";"));
@@ -42,7 +42,7 @@ User * fetchDataU (char *str, User *user) {
     // Fetching country
     token = trimString(strsep(&str, ";"));
     if (token) setUserCountry (user, trimString(token));
-    else        perror ("Country fetching error");
+    else perror ("Country fetching error");
 
     // Fetching subscription type
     token = trimString(strsep(&str, ";"));
@@ -52,7 +52,7 @@ User * fetchDataU (char *str, User *user) {
     // Fetching liked musics ID
     token = trimString(strsep(&str, ";"));
     if (token) setUserLikedMusicsID (user, trimString(token));
-    else ("liked musics ID fetching error");
+    else perror ("liked musics ID fetching error");
     
     return user;
 }

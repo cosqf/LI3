@@ -2,7 +2,7 @@
 #include <getdata.h>
 #include <validation.h> 
 #include <hashtable.h>
-#include <validateUser.h>
+#include <validateDatatypes.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,10 +12,15 @@
 #include <artists.h>
 #include <musics.h>
 
+/* 1. Artists, because it doesn't mess with any other hashtable
+   2. Musics, because it needs the artists' hastable for validation
+   3. Users, because it needs the musics' hashtable for validation
+*/
+
 void getData (char *path) {
-    getDataUser (path);
-    getDataArtist (path);
-    //getDataMusic (path);
+    //getDataArtist (path);
+    getDataMusic (path);
+    //getDataUser (path);
 }
 
 char * changePath(char *path, DataType type) {
@@ -50,7 +55,7 @@ void getDataUser (char *path) {
         if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
 
         user = fetchDataU (str, user);
-        //if (validU (user)) ...
+        if (!validUser (user)) insertErrorFileUser(user, ferror);
         //else g_hash_table_insert(hashUser, getUserName (user), user);
 
 
@@ -113,7 +118,7 @@ void getDataMusic (char *path) {
         if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
         music = fetchDataM (str, music);
-        // if (validM (music)) ...
+        if (!validMusic (music)) insertErrorFileMusics(music, ferror);
         //printMusic (music);
         
         // poeNaHash (music);
