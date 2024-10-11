@@ -93,7 +93,7 @@ void getDataArtist (char *path) {
         if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
         artist = fetchDataA (str, artist);
         // if (validA (artist)) ...
-        //g_hash_table_insert(hashArtist, getArtistID (artist), artist);
+        g_hash_table_insert(hashArtist, GINT_TO_POINTER (getArtistID (artist)), artist);
         
         //printArtist (artist);
         deleteArtist (artist);
