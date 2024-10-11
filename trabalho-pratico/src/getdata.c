@@ -129,6 +129,11 @@ void getDataMusic (char *path) {
         
         g_hash_table_insert(hashMusic, GINT_TO_POINTER (getMusicID (music)), music);
         
+        //Exemplo de como dar print do que está na hashtable. Utilizado para testar
+        //Music *myLookup = (Music *) g_hash_table_lookup(hashMusic, getMusicID (music));
+        //printf("ID: %d, Genero: %s, Titulo: %s\n", getMusicID (myLookup), getMusicGenre (myLookup), getMusicTitle (myLookup));
+    
+
         deleteMusic (music);
     }
     fclose(fp);
