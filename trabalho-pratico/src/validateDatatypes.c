@@ -8,6 +8,7 @@
 #include <artists.h>
 
 #include <validateDatatypes.h>
+#include <hashtable.h>
 #include <utils.h>
 
 //USERS
@@ -84,7 +85,7 @@ bool validLikes(int* liked_musics_id, int liked_musics_count){
 
 // Validates the music as a whole
 bool validMusic(Music* music){
-    return (validDuration(getMusicDuration(music))); //INCOMPLETE
+    return (validDuration(getMusicDuration(music)) /*&& validArtistId(getMusicArtistID(music))*/); //INCOMPLETE
 }
 
 // Validates the music's duration, ensuring it's in the correct format (hh:mm:ss)
@@ -99,19 +100,27 @@ bool validDuration(Duration duration){
 }
 
 // Validates the music's artist ID, ensuring it is an existent and valid artist
-bool validArtistId(){
+bool validArtistId(int* id){
+    bool valid = 0;
+    
+    if(g_hash_table_lookup(hashArtist, id) != NULL) valid = 1;
 
+    return valid;
 }
 
 
 //ARTISTS
 
 // Validates the artist as a whole
-bool validArtist(){
-
+bool validArtist(Artist* artist){
+    return (validIdConst(getArtistTypeString(artist), getArtistIDConstituentCounter(artist)));
 }
 
 // Validates the artist's ID constituent, ensuring an artist of type 'individual' doesn't have any element in this field
-bool valid_idconst(){
+bool validIdConst(char* type, int constituents){
+    bool valid = 1;
 
+    if(strcmp(trimString(type), "individual") == 0 && constituents != 0) valid = 0;
+
+    return valid;
 }

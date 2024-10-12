@@ -26,6 +26,8 @@ bool validDuration(Duration);
 bool validArtistId();
 
 //ARTISTS
-bool valid_idconst();
+bool validArtist(Artist*);
+
+bool validIdConst(char*, int);
 
 #endif  

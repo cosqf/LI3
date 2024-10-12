@@ -33,7 +33,7 @@ char *trimString(char *str) { // Trims a string, removing symbols from each end
     }
 
     int len = strlen(str);
-    while (len > 0 && (str[len - 1] == '"' || str[len - 1] == ' ' || str[len - 1] == '[' || str[len - 1] == ']' || str[len - 1] == '\'')) {
+    while (len > 0 && (str[len - 1] == '"' || str[len - 1] == ' ' || str[len - 1] == '[' || str[len - 1] == ']' || str[len - 1] == '\'' || str[len - 1] == '\n')) {
         str[--len] = '\0';
     }
 

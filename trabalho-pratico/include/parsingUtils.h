@@ -20,4 +20,6 @@ char * trimString (char *);
 
 void updateCount(void*, DataType, int);
 
+int artistConstituentCounter (char*);
+
 #endif  

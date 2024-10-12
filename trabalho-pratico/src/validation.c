@@ -13,12 +13,12 @@ FILE * openErrorFileUser () {
         perror ("Error opening Error file");
         exit (1);
     }
-    fprintf (fp, "username;email;first_name;last_name;birth_date;country;subscription_type;liked_songs_id");
+    fprintf (fp, "username;email;first_name;last_name;birth_date;country;subscription_type;liked_songs_id\n");
     return fp;
 }
 
 void insertErrorFileUser (User *user, FILE *fp) {
-    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s;%s", 
+    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s;%s\n", 
             getUserNameString(user), 
             getUserEmail(user), 
             getUserFirstName(user), 
@@ -36,12 +36,12 @@ FILE * openErrorFileArtists (){
         perror ("Error opening Error file");
         exit (1);
         }
-    fprintf (fp, "id;name;description;recipe_per_stream;id_constituent;country;type");
+    fprintf (fp, "id;name;description;recipe_per_stream;id_constituent;country;type\n");
     return fp;
 }
 
 void insertErrorFileArtists (Artist *artist, FILE *fp) {
-    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s", getArtistIDString (artist),
+    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s\n", getArtistIDString (artist),
                                          getArtistName (artist), 
                                          getArtistDescription (artist),
                                          getArtistRecipePerStreamString(artist),
@@ -57,12 +57,12 @@ FILE * openErrorFileMusics (){
         perror ("Error opening Error file");
         exit (1);
         }
-    fprintf (fp, "id;title;artist_id;duration;genre;year;lyrics");
+    fprintf (fp, "id;title;artist_id;duration;genre;year;lyrics\n");
     return fp;
 }
 
 void insertErrorFileMusics (Music *music, FILE *fp) {
-    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s", getMusicIDString (music),
+    fprintf (fp, "%s;%s;%s;%s;%s;%s;%s\n", getMusicIDString (music),
                                             getMusicTitle (music),
                                             getMusicArtistIDString (music),
                                             getMusicDurationString(music),

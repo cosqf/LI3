@@ -18,9 +18,9 @@
 */
 
 void getData (char *path) {
-    getDataUser (path);
     getDataArtist (path);
     getDataMusic (path);
+    getDataUser (path);
 }
 
 char * changePath(char *path, DataType type) {
@@ -55,10 +55,9 @@ void getDataUser (char *path) {
         if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
 
         user = fetchDataU (str, user);
-        //if (validU (user)) ...
-        g_hash_table_insert(hashUser, GINT_TO_POINTER (getUserName (user)), user);
 
-
+        if (!validUser (user)) insertErrorFileUser(user, ferror);
+        else g_hash_table_insert(hashUser, GINT_TO_POINTER (getUserName (user)), user);
 
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
 
@@ -91,9 +90,11 @@ void getDataArtist (char *path) {
         }
         Artist *artist = createArtist();
         if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
+
         artist = fetchDataA (str, artist);
-        // if (validA (artist)) ...
-        g_hash_table_insert(hashArtist, GINT_TO_POINTER (getArtistID (artist)), artist);
+
+        if (!validArtist(artist)) insertErrorFileArtists(artist, ferror);
+        else g_hash_table_insert(hashArtist, GINT_TO_POINTER (getArtistID (artist)), artist);
         
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
         //Artist *myLookup = (Artist *) g_hash_table_lookup(hashArtist, getArtistID (artist));
@@ -124,16 +125,15 @@ void getDataMusic (char *path) {
         if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
         music = fetchDataM (str, music);
+
         if (!validMusic (music)) insertErrorFileMusics(music, ferror);
-        //printMusic (music);
-        
-        g_hash_table_insert(hashMusic, GINT_TO_POINTER (getMusicID (music)), music);
+        else g_hash_table_insert(hashMusic, GINT_TO_POINTER (getMusicID (music)), music);
         
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
         //Music *myLookup = (Music *) g_hash_table_lookup(hashMusic, getMusicID (music));
         //printf("ID: %d, Genero: %s, Titulo: %s\n", getMusicID (myLookup), getMusicGenre (myLookup), getMusicTitle (myLookup));
     
-
+        //printMusic (music);
         deleteMusic (music);
     }
     fclose(fp);

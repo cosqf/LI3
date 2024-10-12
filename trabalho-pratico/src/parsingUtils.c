@@ -53,3 +53,22 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
     updateCount (IDnum, type, count);
     return ids;
 }
+
+
+int artistConstituentCounter (char* id_constituent){
+    if (!id_constituent) return 0; 
+
+    int count = 0;
+    char *token = NULL;
+
+    // Fetching the ID
+    token = trimString(strsep(&id_constituent, ","));
+    while(token){
+        if (strlen(token) > 0) {
+            count++;
+        }
+        token = trimString(strsep(&id_constituent, ","));
+    }
+    
+    return count;
+}
