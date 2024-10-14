@@ -30,7 +30,7 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
     int count=0;
 
     int len = strlen (line);
-    line [len - 1] = '\0';
+    if (line [len - 1] == '\n') line [len - 1] = '\0';
     line = trimString (line);
 
     if (strlen (line) == 0) {
@@ -55,19 +55,19 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
 }
 
 
-int artistConstituentCounter (char* id_constituent){
-    if (!id_constituent) return 0; 
+int IdCounter (char* id_counter){
+    if (!id_counter) return 0; 
 
     int count = 0;
     char *token = NULL;
 
     // Fetching the ID
-    token = trimString(strsep(&id_constituent, ","));
+    token = trimString(strsep(&id_counter, ","));
     while(token){
         if (strlen(token) > 0) {
             count++;
         }
-        token = trimString(strsep(&id_constituent, ","));
+        token = trimString(strsep(&id_counter, ","));
     }
     
     return count;

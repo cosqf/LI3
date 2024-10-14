@@ -103,7 +103,7 @@ Artist* fetchDataA (char *str, Artist *artist) {
     }
 
     // Setting the ID constituents counter
-    setArtistIDConstituentCounter(artist, artistConstituentCounter(getArtistIDConstituentString(artist)));
+    setArtistIDConstituentCounter(artist, IdCounter(getArtistIDConstituentString(artist)));
 
     // Fetching the country
     token = strsep(&str, ";");
@@ -152,6 +152,9 @@ Music* fetchDataM (char *str, Music *music) {
         perror("ID constituents parsing error");
         return NULL;
     }
+
+    // Setting the music's artists' ID counter
+    setMusicArtistIDCount(music, IdCounter(getMusicArtistIDString(music)));
 
     // Parsing the duration
     token = strsep(&str, ";");

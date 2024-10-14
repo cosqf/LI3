@@ -21,7 +21,6 @@ bool validUser(User* user){
 // Validates the user's email, ensuring it's in the correct format (username@lstr.rstr)
 bool validEmail(char* email){
     int length = strlen(email);
-    bool valid = 0;
 
     char* username = (char*)malloc(length + 1);
     char* lstr = (char*)malloc(length + 1);
@@ -32,7 +31,10 @@ bool validEmail(char* email){
         if (isstr(username, 1) && isstr(lstr, 0) && isstr(rstr, 0)){
 
             if (strlen(rstr) == 2 || strlen(rstr) == 3){
-                valid = 1;
+                free(username);
+                free(lstr);
+                free(rstr);                
+                return true;
             }
         }
     }
@@ -41,43 +43,40 @@ bool validEmail(char* email){
     free(lstr);
     free(rstr);
 
-    return valid;
+    return false;
 }
 
 // Validates the user's birthdate, ensuring it's in the correct format (aaa/mm/dd)
 bool validBirthdate(char* bdate){
     int year, month, day;
 
-    bool valid = 1;
+    if (sscanf(bdate, "%d/%d/%d", &year, &month, &day) != 3) return false;
 
-    if (sscanf(bdate, "%d/%d/%d", &year, &month, &day) != 3) valid = 0;
-
-    else if (year > 2024) valid = 0;
+    else if (year > 2024) return false;
 
     else if (year == 2024){
-        if (month > 9) valid = 0;
-        else if (month == 9 && (day < 1 || day > 9)) valid = 0;
+        if (month > 9) return false;
+        else if (month == 9 && (day < 1 || day > 9)) return false;
     }
 
-    else if (month < 1 || month > 12 || day < 1 || day > 31) valid = 0;
+    else if (month < 1 || month > 12 || day < 1 || day > 31) return false;
 
-    return valid;
+    return true;
 }
 
 // Validates the user's subscription type, ensuring it's either "normal" or "premium"
 bool validSubscription(char* subs){
-    bool valid = 0;
 
-    if (strcmp(subs, "normal") == 0 || strcmp(subs, "premium") == 0) valid = 1;
+    if (strcmp(trimString(subs), "normal") == 0 || strcmp(trimString(subs), "premium") == 0) return true;
 
-    return valid;
+    return false;
 }
 
 // Validates the liked musics IDs of the user, ensuring they are all existent and valid musics.
 bool validLikes(int* liked_musics_id, int liked_musics_count){
-    for(int i = 0; i < liked_musics_count; i++){
-        
-    }
+    // for(int i = 0; i < liked_musics_count; i++){
+        // 
+    // }
 }
 
 
@@ -85,27 +84,28 @@ bool validLikes(int* liked_musics_id, int liked_musics_count){
 
 // Validates the music as a whole
 bool validMusic(Music* music){
-    return (validDuration(getMusicDuration(music)) /*&& validArtistId(getMusicArtistID(music))*/); //INCOMPLETE
+    return (validDuration(getMusicDuration(music)) && validArtistId(getMusicArtistID(music), getMusicArtistIDCount(music)));
 }
 
 // Validates the music's duration, ensuring it's in the correct format (hh:mm:ss)
 bool validDuration(Duration duration){
-    bool valid = 0;
 
     if (duration.error == 0){
-        if (duration.hours >= 0 && duration.hours <= 99 && duration.minutes >= 0 && duration.minutes <= 59 && duration.seconds >= 0 && duration.seconds <= 59) valid = 1;
+        if (duration.hours >= 0 && duration.hours <= 99 && duration.minutes >= 0 && duration.minutes <= 59 && duration.seconds >= 0 && duration.seconds <= 59) return true;
     }
 
-    return valid;
+    return false;
 }
 
-// Validates the music's artist ID, ensuring it is an existent and valid artist
-bool validArtistId(int* id){
-    bool valid = 0;
-    
-    if(g_hash_table_lookup(hashArtist, id) != NULL) valid = 1;
+// Validates the music's artist ID, ensuring they are all existent and valid artists
+bool validArtistId(int* id, int n){    
+    int i;
 
-    return valid;
+    for(i = 0; i < n && g_hash_table_lookup(hashArtist, (gpointer) id[i]) != NULL; i++);
+
+    if (i == n) return true;
+
+    return false;
 }
 
 
@@ -118,9 +118,8 @@ bool validArtist(Artist* artist){
 
 // Validates the artist's ID constituent, ensuring an artist of type 'individual' doesn't have any element in this field
 bool validIdConst(char* type, int constituents){
-    bool valid = 1;
 
-    if(strcmp(trimString(type), "individual") == 0 && constituents != 0) valid = 0;
+    if(strcmp(trimString(type), "individual") == 0 && constituents != 0) return false;
 
-    return valid;
+    return true;
 }

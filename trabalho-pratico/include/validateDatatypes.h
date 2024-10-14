@@ -23,7 +23,7 @@ bool validMusic(Music*);
 
 bool validDuration(Duration);
 
-bool validArtistId();
+bool validArtistId(int*, int);    
 
 //ARTISTS
 bool validArtist(Artist*);
