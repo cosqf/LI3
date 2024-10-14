@@ -26,9 +26,9 @@ void getData (char *path) {
 char * changePath(char *path, DataType type) {
     const char* file;
 
-    if (type == Users) file = "users.csv";
-    else if (type == Musics) file = "musics.csv";
-    else file = "artists.csv";
+    if (type == Users) file = "/users.csv";
+    else if (type == Musics) file = "/musics.csv";
+    else file = "/artists.csv";
 
     char *pathUpdated = malloc(strlen(path) + strlen(file) + 1); 
     if (pathUpdated) {

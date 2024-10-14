@@ -31,7 +31,7 @@ void insertErrorFileUser (User *user, FILE *fp) {
 
 
 FILE * openErrorFileArtists (){
-    FILE* fp = fopen ("resultados/artist_errors.csv", "w");
+    FILE* fp = fopen ("resultados/artists_errors.csv", "w");
     if (!fp) {
         perror ("Error opening Error file");
         exit (1);
@@ -52,7 +52,7 @@ void insertErrorFileArtists (Artist *artist, FILE *fp) {
 
 
 FILE * openErrorFileMusics (){
-    FILE* fp = fopen ("resultados/music_errors.csv", "w");
+    FILE* fp = fopen ("resultados/musics_errors.csv", "w");
     if (!fp) {
         perror ("Error opening Error file");
         exit (1);
