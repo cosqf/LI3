@@ -15,7 +15,17 @@
 
 // Validates the user as a whole
 bool validUser(User* user){
-    return (validEmail(getUserEmail(user)) && validBirthdate(getUserBirthDateString(user)) && validSubscription(getUserSubscriptionTypeString(user)));
+    char* email = getUserEmail(user);
+    char* birthdate = getUserBirthDateString(user);
+    char* subscription = getUserSubscriptionTypeString(user);
+    int* likedMusics = getUserLikedMusicsID(user);
+    int likedMusicsCount = getUserLikedCounter(user);
+    bool valid = validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validLikes(likedMusics, likedMusicsCount);
+    free (email);
+    free (birthdate);
+    free (subscription);
+    free (likedMusics);
+    return valid;
 }
 
 // Validates the user's email, ensuring it's in the correct format (username@lstr.rstr)
@@ -74,9 +84,13 @@ bool validSubscription(char* subs){
 
 // Validates the liked musics IDs of the user, ensuring they are all existent and valid musics.
 bool validLikes(int* liked_musics_id, int liked_musics_count){
-    // for(int i = 0; i < liked_musics_count; i++){
-        // 
-    // }
+    int i;
+
+    for(i = 0; i < liked_musics_count && g_hash_table_lookup(hashMusic, GINT_TO_POINTER (liked_musics_id[i])) != NULL; i++);
+    
+    if (i == liked_musics_count) return true;
+
+    return false;
 }
 
 
@@ -101,7 +115,7 @@ bool validDuration(Duration duration){
 bool validArtistId(int* id, int n){    
     int i;
 
-    for(i = 0; i < n && g_hash_table_lookup(hashArtist, (gpointer) id[i]) != NULL; i++);
+    for(i = 0; i < n && g_hash_table_lookup(hashArtist, GINT_TO_POINTER (id[i])) != NULL; i++);
 
     if (i == n) return true;
 
@@ -113,7 +127,11 @@ bool validArtistId(int* id, int n){
 
 // Validates the artist as a whole
 bool validArtist(Artist* artist){
-    return (validIdConst(getArtistTypeString(artist), getArtistIDConstituentCounter(artist)));
+    char* type = getArtistTypeString(artist);
+    int constituentCounter = getArtistIDConstituentCounter(artist);
+    bool valid = (validIdConst(type, constituentCounter));
+    free (type);
+    return valid;
 }
 
 // Validates the artist's ID constituent, ensuring an artist of type 'individual' doesn't have any element in this field
