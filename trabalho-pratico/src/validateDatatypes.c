@@ -15,7 +15,14 @@
 
 // Validates the user as a whole
 bool validUser(User* user){
-    return (validEmail(getUserEmail(user)) && validBirthdate(getUserBirthDateString(user)) && validSubscription(getUserSubscriptionTypeString(user)));
+    char* email = getUserEmail(user);
+    char* birthdate = getUserBirthDateString(user);
+    char* subscription = getUserSubscriptionTypeString(user);
+    bool valid = validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription);
+    free (email);
+    free (birthdate);
+    free (subscription);
+    return valid;
 }
 
 // Validates the user's email, ensuring it's in the correct format (username@lstr.rstr)
@@ -113,7 +120,11 @@ bool validArtistId(int* id, int n){
 
 // Validates the artist as a whole
 bool validArtist(Artist* artist){
-    return (validIdConst(getArtistTypeString(artist), getArtistIDConstituentCounter(artist)));
+    char* type = getArtistTypeString(artist);
+    int constituentCounter = getArtistIDConstituentCounter(artist);
+    bool valid = (validIdConst(type, constituentCounter));
+    free (type);
+    return valid;
 }
 
 // Validates the artist's ID constituent, ensuring an artist of type 'individual' doesn't have any element in this field
