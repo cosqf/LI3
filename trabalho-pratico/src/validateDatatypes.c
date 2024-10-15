@@ -18,10 +18,13 @@ bool validUser(User* user){
     char* email = getUserEmail(user);
     char* birthdate = getUserBirthDateString(user);
     char* subscription = getUserSubscriptionTypeString(user);
-    bool valid = validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription);
+    int* likedMusics = getUserLikedMusicsID(user);
+    int likedMusicsCount = getUserLikedCounter(user);
+    bool valid = validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validLikes(likedMusics, likedMusicsCount);
     free (email);
     free (birthdate);
     free (subscription);
+    free (likedMusics);
     return valid;
 }
 
@@ -81,9 +84,13 @@ bool validSubscription(char* subs){
 
 // Validates the liked musics IDs of the user, ensuring they are all existent and valid musics.
 bool validLikes(int* liked_musics_id, int liked_musics_count){
-    // for(int i = 0; i < liked_musics_count; i++){
-        // 
-    // }
+    int i;
+
+    for(i = 0; i < liked_musics_count && g_hash_table_lookup(hashMusic, GINT_TO_POINTER (liked_musics_id[i])) != NULL; i++);
+    
+    if (i == liked_musics_count) return true;
+
+    return false;
 }
 
 
@@ -108,7 +115,7 @@ bool validDuration(Duration duration){
 bool validArtistId(int* id, int n){    
     int i;
 
-    for(i = 0; i < n && g_hash_table_lookup(hashArtist, (gpointer) id[i]) != NULL; i++);
+    for(i = 0; i < n && g_hash_table_lookup(hashArtist, GINT_TO_POINTER (id[i])) != NULL; i++);
 
     if (i == n) return true;
 
