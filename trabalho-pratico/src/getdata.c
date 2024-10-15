@@ -112,7 +112,7 @@ void getDataMusic (char *path) {
     char *musicPath = changePath (path, Musics);
 
     FILE* fp = openFile (musicPath);
-    FILE * ferror = openErrorFileMusics ();
+    FILE* ferror = openErrorFileMusics ();
 
     bool i = 0;
     char str[DEFAULT];
@@ -134,7 +134,7 @@ void getDataMusic (char *path) {
         //printf("ID: %d, Genero: %s, Titulo: %s\n", getMusicID (myLookup), getMusicGenre (myLookup), getMusicTitle (myLookup));
     
         //printMusic (music);
-        deleteMusic (music);
+        //deleteMusic (music);
     }
     fclose(fp);
     free (musicPath);

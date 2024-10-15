@@ -87,3 +87,28 @@ void freeCmd (CMD *cmd) {
     if (cmd->paises) free (cmd->paises);
     free (cmd);
 }
+
+int getCMDquery (CMD* cmd) {
+    return cmd->query;
+}
+
+int getCMDId (CMD* cmd) {
+    return cmd->id;
+}
+
+int getCMDtopN (CMD* cmd) {
+    return cmd->topN;
+}
+
+char *getCMDCountry (CMD* cmd) {
+    if (cmd->paises == NULL) return NULL;
+    else return strdup (cmd->paises);
+}
+
+int getCMDAgeMin (CMD* cmd) {
+    return cmd->ageMin;
+}
+
+int getCMDAgeMax (CMD* cmd) {
+    return cmd->ageMax;
+}

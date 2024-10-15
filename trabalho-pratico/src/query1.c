@@ -1,6 +1,6 @@
-#include <parsingUtils.h>
 #include <stdlib.h>
+#include <query1.h>
+#include <parsingCmd.h>
 
-
-void query1(char* path) {
+void query1(CMD* cmd) {
 }
