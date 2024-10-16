@@ -1,0 +1,31 @@
+#include <glib.h>
+#include <musicManager.h>
+#include <musics.h>
+
+typedef struct musicManager {
+    GHashTable *music;
+} MusicManager;
+
+void insertMusicHash (MusicManager *m_mngr, int key, Music *Music) {
+    g_hash_table_insert(m_mngr->music, GINT_TO_POINTER (key), Music);
+}
+
+MusicManager* initializeHashMusic () {
+    MusicManager* m_mngr = malloc (sizeof (MusicManager));
+    if (m_mngr == NULL) {
+        perror("Failed to allocate memory for MusicManager");
+        exit(EXIT_FAILURE); 
+    }
+    m_mngr->music = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteMusic);
+    return m_mngr;
+}
+
+void freeHashMusic (MusicManager* m_mngr) {
+    g_hash_table_destroy (m_mngr->music);
+    free (m_mngr);
+}
+
+Music* lookupMusicHash (MusicManager *m_mngr, int id) {
+    Music* Music = g_hash_table_lookup (m_mngr->music, GINT_TO_POINTER(id));
+    return Music;
+}

@@ -18,7 +18,7 @@ FILE * openErrorFileUser () {
 }
 
 void insertErrorFileUser(User *user, FILE *fp) {
-    char* username = getUserNameString(user);
+    char* username = getUserIDString(user);
     char* email = getUserEmail(user);
     char* firstName = getUserFirstName(user);
     char* lastName = getUserLastName(user);
@@ -38,7 +38,6 @@ void insertErrorFileUser(User *user, FILE *fp) {
     free(subscriptionType);
     free(likedMusicsID);
 }
-
 
 FILE * openErrorFileArtists (){
     FILE* fp = fopen ("resultados/artists_errors.csv", "w");

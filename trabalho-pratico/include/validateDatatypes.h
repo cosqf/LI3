@@ -4,11 +4,14 @@
 #include <musics.h>
 #include <artists.h>
 
+#include <musicManager.h>
+#include <artistManager.h>
+
 #ifndef _VALIDATEDATATYPES_H_
 #define _VALIDATEDATATYPES_H_
 
 //USERS
-bool validUser(User*);
+bool validUser(User*, MusicManager *mngr);
 
 bool validEmail(char*);
 
@@ -16,14 +19,14 @@ bool validBirthdate(char*);
 
 bool validSubscription(char*);
 
-bool validLikes(int*, int);
+bool validLikes(int*, int, MusicManager*);
 
 //MUSICS
-bool validMusic(Music*);
+bool validMusic(Music*, ArtistManager *a_mngr);
 
 bool validDuration(Duration);
 
-bool validArtistId(int*, int);    
+bool validArtistId(int*, int, ArtistManager*);    
 
 //ARTISTS
 bool validArtist(Artist*);

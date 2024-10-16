@@ -15,4 +15,16 @@ void getCommandQuery3 (char* line, CMD* cmd, char* token);
 
 void freeCmd (CMD *cmd);
 
+int getCMDquery (CMD* cmd);
+
+int getCMDId (CMD* cmd);
+
+int getCMDtopN (CMD* cmd);
+
+char *getCMDCountry (CMD* cmd);
+
+int getCMDAgeMin (CMD* cmd);
+
+int getCMDAgeMax (CMD* cmd);
+
 #endif
