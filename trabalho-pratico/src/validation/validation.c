@@ -104,12 +104,15 @@ void insertErrorFileMusics(Music *music, FILE *fp) {
 //SYNTAX VALIDATION
 
 
-Duration parseDuration(char* dur){
-    Duration duration;
+Duration parseDuration(char* dur) {
+    Duration duration = {0, 0, 0, 0};
+
+    if (strlen(dur) > 8) {
+        duration.error = 1;
+        return duration;
+    }
 
     if (sscanf(dur, "%d:%d:%d", &duration.hours, &duration.minutes, &duration.seconds) != 3) duration.error = 1;
-    
-    else duration.error = 0;
 
     return duration;
 }
