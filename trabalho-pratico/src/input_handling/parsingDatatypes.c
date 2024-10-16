@@ -16,7 +16,7 @@ User * fetchDataU (char *str, User *user) {
 
     // Fetching the ID
     token = trimString(strsep(&str, ";"));
-    if (token) setUserName (user, trimString(token));
+    if (token) setUserID (user, trimString(token));
     else perror ("Id fetching error");
 
     // Fetching the email

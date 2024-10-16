@@ -17,12 +17,12 @@ typedef struct cmd {
 CMD* createCMD () {
     CMD* cmd = malloc(sizeof(CMD));
     if (mallocErrorCheck (cmd)) exit (EXIT_FAILURE);
-    cmd->query = 0;
-    cmd->id = 0;
-    cmd->topN = 0;
+    cmd->query = -1;
+    cmd->id = -1;
+    cmd->topN = -1;
     cmd->paises = NULL;
-    cmd->ageMin = 0;
-    cmd->ageMax = 0;
+    cmd->ageMin = -1;
+    cmd->ageMax = -1;
     return cmd;
 }
 
@@ -50,11 +50,6 @@ CMD* getCommand (char* line, CMD* cmd) {
 
 void getCommandQuery1 (char* line, CMD* cmd) {
     cmd->id = atoi (line+1);
-
-    cmd->topN = -1;
-    cmd->paises = NULL;
-    cmd->ageMin = -1;
-    cmd->ageMax = -1;
 }
 
 void getCommandQuery2 (char* line, CMD* cmd, char* token) {
@@ -68,19 +63,12 @@ void getCommandQuery2 (char* line, CMD* cmd, char* token) {
         strcpy(cmd->paises, token); 
     }
     else cmd->paises = NULL;
-    cmd->id = -1;
-    cmd->ageMin = -1;
-    cmd->ageMax = -1;
 }
 
 void getCommandQuery3 (char* line, CMD* cmd, char* token) {
     token = strsep (&line, " ");
         cmd->ageMin = atoi(token);
         cmd->ageMax = atoi(line);
-        
-        cmd->id = -1;
-        cmd->topN = -1;
-        cmd->paises = NULL;
 }
 
 void freeCmd (CMD *cmd) {

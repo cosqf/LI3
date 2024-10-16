@@ -7,7 +7,7 @@
 
 /* The User struct */
 typedef struct user {
-    char* username;                    //– identificador único do utilizador;
+    char* id;                    //– identificador único do utilizador;
     char* email;                       //– email de registo do utilizador;
     char* first_name;                  //– primeiro nome do utilizador;
     char* last_name;                   //– apelido do utilizador;
@@ -22,7 +22,7 @@ typedef struct user {
 User* createUser() {
     User* user = malloc(sizeof(User));
     if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
-    user->username = NULL;
+    user->id = NULL;
     user->email = NULL;
     user->first_name = NULL;
     user->last_name = NULL;
@@ -37,7 +37,7 @@ User* createUser() {
 /* Destroy a User and free all allocated memory */
 void deleteUser(User* user) {
     if (user) {
-        free(user->username);
+        free(user->id);
         free(user->email);
         free(user->first_name);
         free(user->last_name);
@@ -55,9 +55,9 @@ void printUser(const User* user) {
         return;
     }
 
-    printf("Username: %s, Email: %s, First Name: %s, Last Name: %s, Birth Date: %s, "
+    printf("id: %s, Email: %s, First Name: %s, Last Name: %s, Birth Date: %s, "
            "Country: %s, Subscription Type: %s, Liked Musics ID: %s, Liked Musics Count: %u\n",
-           user->username ? user->username : "N/A",
+           user->id ? user->id : "N/A",
            user->email ? user->email : "N/A",
            user->first_name ? user->first_name : "N/A",
            user->last_name ? user->last_name : "N/A",
@@ -70,13 +70,13 @@ void printUser(const User* user) {
 
 // GETTER
 
-/* Getter for username */
-int getUserName(User* user) {
-    return atoi (user->username + 1);
+/* Getter for id */
+int getUserID(User* user) {
+    return atoi (user->id + 1);
 }
-/* Getter for username in string format */
-char* getUserNameString (User* user) {
-    return strdup(user->username);
+/* Getter for id in string format */
+char* getUserIDString (User* user) {
+    return strdup(user->id);
 }
 
 /* Getter for email */
@@ -145,10 +145,10 @@ int getUserLikedCounter (User* user) {
 // SETTERS
 
 
-/* Setter for username */
-void setUserName(User* user, const char* username) {
-    if (user->username) free(user->username);  
-    user->username = strdup(username);
+/* Setter for id */
+void setUserID(User* user, const char* id) {
+    if (user->id) free(user->id);  
+    user->id = strdup(id);
 }
 
 /* Setter for email */

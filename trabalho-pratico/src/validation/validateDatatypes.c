@@ -8,19 +8,20 @@
 #include <artists.h>
 
 #include <validateDatatypes.h>
-#include <hashtable.h>
 #include <utils.h>
 
+#include <artistManager.h>
+#include <musicManager.h>
 //USERS
 
 // Validates the user as a whole
-bool validUser(User* user){
+bool validUser(User* user, MusicManager *m_mngr){
     char* email = getUserEmail(user);
     char* birthdate = getUserBirthDateString(user);
     char* subscription = getUserSubscriptionTypeString(user);
     int* likedMusics = getUserLikedMusicsID(user);
     int likedMusicsCount = getUserLikedCounter(user);
-    bool valid = validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validLikes(likedMusics, likedMusicsCount);
+    bool valid = validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validLikes(likedMusics, likedMusicsCount, m_mngr);
     free (email);
     free (birthdate);
     free (subscription);
@@ -83,10 +84,10 @@ bool validSubscription(char* subs){
 }
 
 // Validates the liked musics IDs of the user, ensuring they are all existent and valid musics.
-bool validLikes(int* liked_musics_id, int liked_musics_count){
+bool validLikes(int* liked_musics_id, int liked_musics_count, MusicManager *m_mngr){
     int i;
 
-    for(i = 0; i < liked_musics_count && g_hash_table_lookup(hashMusic, GINT_TO_POINTER (liked_musics_id[i])) != NULL; i++);
+    for(i = 0; i < liked_musics_count && lookupMusicHash (m_mngr, liked_musics_id[i]) != NULL; i++);
     
     if (i == liked_musics_count) return true;
 
@@ -97,8 +98,8 @@ bool validLikes(int* liked_musics_id, int liked_musics_count){
 //MUSICS
 
 // Validates the music as a whole
-bool validMusic(Music* music){
-    return (validDuration(getMusicDuration(music)) && validArtistId(getMusicArtistID(music), getMusicArtistIDCount(music)));
+bool validMusic(Music* music, ArtistManager *a_mngr){
+    return (validDuration(getMusicDuration(music)) && validArtistId(getMusicArtistID(music), getMusicArtistIDCount(music), a_mngr));
 }
 
 // Validates the music's duration, ensuring it's in the correct format (hh:mm:ss)
@@ -112,10 +113,11 @@ bool validDuration(Duration duration){
 }
 
 // Validates the music's artist ID, ensuring they are all existent and valid artists
-bool validArtistId(int* id, int n){    
+bool validArtistId(int* id, int n, ArtistManager *a_mngr){    
     int i;
 
-    for(i = 0; i < n && g_hash_table_lookup(hashArtist, GINT_TO_POINTER (id[i])) != NULL; i++);
+    for(i = 0; i < n && lookupArtistHash (a_mngr, id[i]) != NULL; i++);
+    
 
     if (i == n) return true;
 

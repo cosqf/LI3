@@ -1,7 +1,6 @@
 #include <parsingUtils.h>
 #include <getdata.h>
 #include <validation.h> 
-#include <hashtable.h>
 #include <validateDatatypes.h>
 #include <string.h>
 #include <stdio.h>
@@ -11,16 +10,17 @@
 #include <users.h>
 #include <artists.h>
 #include <musics.h>
+#include <entityManager.h>
 
 /* 1. Artists, because it doesn't mess with any other hashtable
    2. Musics, because it needs the artists' hastable for validation
    3. Users, because it needs the musics' hashtable for validation
 */
 
-void getData (char *path) {
-    getDataArtist (path);
-    getDataMusic (path);
-    getDataUser (path);
+void getData (char *path, EntityManager *mngr) {
+    getDataArtist (path, getArtistManager (mngr));
+    getDataMusic (path, getMusicManager (mngr), getArtistManager(mngr));
+    getDataUser (path, getUserManager(mngr), getMusicManager(mngr));
 }
 
 char * changePath(char *path, DataType type) {
@@ -38,10 +38,10 @@ char * changePath(char *path, DataType type) {
     return pathUpdated;
 }
 
-void getDataUser (char *path) {
+void getDataUser (char *path, UserManager *u_mngr, MusicManager *m_mngr) {
     char* userPath = changePath (path, Users);
     FILE* fp = openFile (userPath);
-    FILE * ferror = openErrorFileUser ();
+    FILE* ferror = openErrorFileUser ();
 
     bool i = 0;
     char str[DEFAULT];
@@ -56,8 +56,8 @@ void getDataUser (char *path) {
 
         user = fetchDataU (str, user);
 
-        if (!validUser (user)) insertErrorFileUser(user, ferror);
-        else g_hash_table_insert(hashUser, GINT_TO_POINTER (getUserName (user)), user);
+        if (!validUser (user, m_mngr)) insertErrorFileUser(user, ferror);
+        else insertUserHash (u_mngr, getUserID (user), user);
 
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
 
@@ -74,7 +74,7 @@ void getDataUser (char *path) {
     free (userPath);
 }
 
-void getDataArtist (char *path) {
+void getDataArtist (char *path, ArtistManager *mngr) {
     char *artistPath = changePath (path, Artists);
 
     FILE* fp = openFile (artistPath);
@@ -94,7 +94,7 @@ void getDataArtist (char *path) {
         artist = fetchDataA (str, artist);
 
         if (!validArtist(artist)) insertErrorFileArtists(artist, ferror);
-        else g_hash_table_insert(hashArtist, GINT_TO_POINTER (getArtistID (artist)), artist);
+        insertArtistHash (mngr, getArtistID (artist), artist);
         
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
         //Artist *myLookup = (Artist *) g_hash_table_lookup(hashArtist, getArtistID (artist));
@@ -108,7 +108,7 @@ void getDataArtist (char *path) {
     free (artistPath);
 }
 
-void getDataMusic (char *path) {
+void getDataMusic (char *path, MusicManager *m_mngr, ArtistManager *a_mngr) {
     char *musicPath = changePath (path, Musics);
 
     FILE* fp = openFile (musicPath);
@@ -126,9 +126,9 @@ void getDataMusic (char *path) {
 
         music = fetchDataM (str, music);
 
-        if (!validMusic (music)) insertErrorFileMusics(music, ferror);
-        else g_hash_table_insert(hashMusic, GINT_TO_POINTER (getMusicID (music)), music);
-        
+        if (!validMusic (music, a_mngr)) insertErrorFileMusics(music, ferror);
+        else insertMusicHash (m_mngr, getMusicID (music), music);
+
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
         //Music *myLookup = (Music *) g_hash_table_lookup(hashMusic, getMusicID (music));
         //printf("ID: %d, Genero: %s, Titulo: %s\n", getMusicID (myLookup), getMusicGenre (myLookup), getMusicTitle (myLookup));

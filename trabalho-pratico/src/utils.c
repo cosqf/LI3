@@ -83,3 +83,17 @@ int isstr(char* str, int flag) {
     
     return 0;
 }
+
+// Returns a duration in seconds
+int durationInSeconds (Duration time) {
+    return time.hours*3600 + time.minutes*60 + time.seconds;
+}
+// Returns the duration when given seconds
+Duration secondsInDuration (int seconds) {
+    Duration dur;
+     dur.hours = seconds / 3600;
+    dur.minutes = (seconds % 3600) / 60;
+    dur.seconds = seconds % 60;
+
+    return dur;
+}

@@ -12,8 +12,8 @@ void deleteUser(User* user);
 void printUser(const User* user);
 
 // GETTERs
-int getUserName(User* user);
-char* getUserNameString (User* user);
+int getUserID(User* user);
+char* getUserIDString (User* user);
 char* getUserEmail(User* user);
 char* getUserFirstName(User* user);
 char* getUserLastName(User* user);
@@ -27,7 +27,7 @@ char* getUserLikedMusicsIDString (User *user);
 int getUserLikedCounter (User* user);
 
 // SETTERs
-void setUserName(User* user, const char* username);
+void setUserID(User* user, const char* username);
 void setUserEmail(User* user, const char* email);
 void setUserFirstName(User* user, const char* first_name);
 void setUserLastName(User* user, const char* last_name);

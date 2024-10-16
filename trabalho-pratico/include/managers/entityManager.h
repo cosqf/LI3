@@ -1,17 +1,24 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
-#ifndef HASH_TABLE_H 
-#define HASH_TABLE_H
+#include <userManager.h>
+#include <artistManager.h>
+#include <musicManager.h>
+
+#ifndef ENTITY_MANAGER_H 
+#define ENTITY_MANAGER_H
 
 //GHashTable *hashUser = g_hash_table_new(g_int_hash, g_int_equal);
 
-extern GHashTable *hashUser;// Declara a hashUser globalmente, mas sem inicializá-la
-extern GHashTable *hashArtist; // Declara a hashArtist globalmente, mas sem inicializá-la
-extern GHashTable *hashMusic; // Declara a hashArtist globalmente, mas sem inicializá-la
+typedef struct entityManager EntityManager;
 
-void initialize_hash_table();// Função para inicializar a hash table
+EntityManager* initializeHash ();
 
+void freeHash (EntityManager *mngr);
+
+UserManager* getUserManager (EntityManager *mngr);
+MusicManager* getMusicManager (EntityManager *mngr);
+ArtistManager* getArtistManager (EntityManager *mngr);
 #endif
 
 
