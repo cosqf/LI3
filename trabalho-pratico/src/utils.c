@@ -7,6 +7,7 @@
 #include <parsingUtils.h>
 #include <string.h>
 #include <users.h>
+#include <glib.h>
 
 FILE* openFile (char * argv) { 
     FILE* fp = fopen (argv, "r");
@@ -96,4 +97,16 @@ Duration secondsInDuration (int seconds) {
     dur.seconds = seconds % 60;
 
     return dur;
+}
+
+GHashTable* createHash () {
+    return g_hash_table_new(g_direct_hash, g_direct_equal);
+}
+
+void deleteHash (GHashTable* hash) {
+    g_hash_table_destroy (hash);
+}
+
+void insertHash (GHashTable* hash, int key, int value) {
+    g_hash_table_insert(hash, GINT_TO_POINTER (key), GINT_TO_POINTER (value));
 }

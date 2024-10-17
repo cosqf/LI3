@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <parsingUtils.h>
 #include <stdbool.h>
+#include <glib.h>
 
 #ifndef _UTILS_H_
 #define _UTILS_H_
@@ -18,5 +19,11 @@ int isletter(char);
 int isDigit(char);
 
 int isstr(char*, int);
+
+GHashTable* createHash ();
+
+void deleteHash (GHashTable* hash);
+
+void insertHash (GHashTable* hash, int key, int value);
 
 #endif
