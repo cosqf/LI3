@@ -8,6 +8,7 @@
 #include <string.h>
 #include <users.h>
 #include <glib.h>
+#include <validation.h>
 
 FILE* openFile (char * argv) { 
     FILE* fp = fopen (argv, "r");
@@ -109,4 +110,53 @@ void deleteHash (GHashTable* hash) {
 
 void insertHash (GHashTable* hash, int key, int value) {
     g_hash_table_insert(hash, GINT_TO_POINTER (key), GINT_TO_POINTER (value));
+}
+
+
+
+// for debugging:
+
+void writeUsersToErrorFile(GHashTable* userTable) {
+    FILE *fp = openResultFileUsers();
+    
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, userTable);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        User* user = (User*)value;
+        insertErrorFileUser(user, fp);
+    }
+    
+    fclose(fp);
+}
+
+void writeArtistsToErrorFile(GHashTable* artistTable) {
+    FILE *fp = openResultFileArtists();
+    
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, artistTable);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        Artist* artist = (Artist*)value;
+        insertErrorFileArtists(artist, fp);
+    }
+
+    fclose(fp);
+}
+
+void writeMusicsToErrorFile(GHashTable* musicTable) {
+    FILE *fp = openResultsFileMusics();
+    
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, musicTable);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        Music* music = (Music*)value;
+        insertErrorFileMusics(music, fp);
+    }
+
+    fclose(fp);
 }

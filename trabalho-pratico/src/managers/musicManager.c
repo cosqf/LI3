@@ -30,6 +30,11 @@ Music* lookupMusicHash (MusicManager *m_mngr, int id) {
     return Music;
 }
 
+GHashTable* getMusicTable (MusicManager *m_mngr) {
+    return m_mngr->music;
+}
+
+
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data) {
     GHashTableIter iter;
     gpointer key, value;

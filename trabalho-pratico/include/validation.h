@@ -12,8 +12,18 @@ FILE * openErrorFileArtists ();
 
 FILE * openErrorFileMusics ();
 
+
+
+FILE * openResultsFileMusics ();
+
+FILE * openResultFileArtists ();
+
+FILE * openResultFileUsers ();
+
 Duration parseDuration(char*);
 
+
+// for debug
 void insertErrorFileUser (User *user, FILE *fp);
 
 void insertErrorFileMusics (Music *music, FILE *fp);

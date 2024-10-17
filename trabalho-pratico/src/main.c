@@ -17,6 +17,10 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
 
     getData (argv[1], mngr);
 
+    //writeUsersToErrorFile(getUserTable (getUserManager(mngr)));
+    //writeArtistsToErrorFile(getArtistTable (getArtistManager(mngr)));
+    //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
+
     FILE *fp = openFile (argv[2]);
 
     char str[DEFAULT];

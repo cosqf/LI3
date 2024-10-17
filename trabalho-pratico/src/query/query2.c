@@ -76,7 +76,7 @@ void getArtistsDiscography (int* id, int count, GHashTable* newtable, int durati
         Artist* artist = lookupArtistHash (a_mngr, id[i]);    // ERROR. READING MUSIC FILE INSTEAD FOR SOME REASON
         if (artist == NULL) continue;
 
-        printArtist (artist); // DEBUG
+        //printArtist (artist); // DEBUG
         if (country!= NULL) {  // country filter is active
             char* countryArtist = getArtistCountry (artist);
             if (strcmp (country, countryArtist) != 0) {
