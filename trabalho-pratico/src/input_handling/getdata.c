@@ -49,14 +49,20 @@ void getDataUser (char *path, UserManager *u_mngr, MusicManager *m_mngr) {
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
             i = 1;
-            continue; // skip first line
+            continue; // skip first line (header)
         }
         User *user = createUser();
-        if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
+        if (mallocErrorCheck (user)) {
+            free (user);
+            exit (EXIT_FAILURE);
+        }
 
-        user = fetchDataU (str, user);
+        fetchDataU (str, user);
 
-        if (!validUser (user, m_mngr)) insertErrorFileUser(user, ferror);
+        if (!validUser (user, m_mngr)) {
+            insertErrorFileUser(user, ferror);
+            deleteUser (user);
+        }
         else insertUserHash (u_mngr, getUserID (user), user);
 
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
@@ -67,12 +73,12 @@ void getDataUser (char *path, UserManager *u_mngr, MusicManager *m_mngr) {
        
         
         //printUser (user); 
-        deleteUser (user);
     }
     fclose(fp);
     fclose(ferror);
     free (userPath);
 }
+
 
 void getDataArtist (char *path, ArtistManager *mngr) {
     char *artistPath = changePath (path, Artists);
@@ -86,15 +92,20 @@ void getDataArtist (char *path, ArtistManager *mngr) {
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
             i = 1;
-            continue; // skip first line
+            continue; // skip first line (header)
         }
         Artist *artist = createArtist();
-        if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
+        if (mallocErrorCheck (artist)) {
+            free (artist);
+            exit (EXIT_FAILURE);
+        }
+        fetchDataA (str, artist);
 
-        artist = fetchDataA (str, artist);
-
-        if (!validArtist(artist)) insertErrorFileArtists(artist, ferror);
-        insertArtistHash (mngr, getArtistID (artist), artist);
+        if (!validArtist(artist)) {
+            insertErrorFileArtists(artist, ferror);
+            deleteArtist (artist);
+        }
+        else insertArtistHash (mngr, getArtistID (artist), artist);
         
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
         //Artist *myLookup = (Artist *) g_hash_table_lookup(hashArtist, getArtistID (artist));
@@ -102,9 +113,9 @@ void getDataArtist (char *path, ArtistManager *mngr) {
       
 
         //printArtist (artist);
-        deleteArtist (artist);
     }
     fclose(fp);
+    fclose (ferror);
     free (artistPath);
 }
 
@@ -119,14 +130,20 @@ void getDataMusic (char *path, MusicManager *m_mngr, ArtistManager *a_mngr) {
     while (fgets (str, sizeof (str), fp) != NULL){
         if (i==0) {
             i = 1;
-            continue; // skip first line
+            continue; // skip first line (header)
         }
         Music *music = createMusic ();
-        if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
+        if (mallocErrorCheck (music)) {
+            free (music);
+            exit (EXIT_FAILURE);
+        }
 
-        music = fetchDataM (str, music);
+        fetchDataM (str, music);
 
-        if (!validMusic (music, a_mngr)) insertErrorFileMusics(music, ferror);
+        if (!validMusic (music, a_mngr)) {
+            insertErrorFileMusics(music, ferror);
+            deleteMusic (music);
+        }
         else insertMusicHash (m_mngr, getMusicID (music), music);
 
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
@@ -137,5 +154,6 @@ void getDataMusic (char *path, MusicManager *m_mngr, ArtistManager *a_mngr) {
         //deleteMusic (music);
     }
     fclose(fp);
+    fclose (ferror);
     free (musicPath);
 }

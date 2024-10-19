@@ -17,6 +17,10 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
 
     getData (argv[1], mngr);
 
+    //writeUsersToErrorFile(getUserTable (getUserManager(mngr)));
+    //writeArtistsToErrorFile(getArtistTable (getArtistManager(mngr)));
+    //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
+
     FILE *fp = openFile (argv[2]);
 
     char str[DEFAULT];
@@ -29,7 +33,7 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
             query1 (cmd);
             break;
         case 2:
-            //query2 (cmd);
+            query2 (cmd, mngr);
             break;
         case 3:
             //query3 (cmd);
@@ -41,6 +45,6 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
 
         freeCmd (cmd);
     }
-    
     fclose (fp);
+    freeHash (mngr);
 }
