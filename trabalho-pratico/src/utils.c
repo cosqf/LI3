@@ -160,3 +160,14 @@ void writeMusicsToErrorFile(GHashTable* musicTable) {
 
     fclose(fp);
 }
+
+void printHash (GHashTable* table) {
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, table);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        printf ("id:%d, duration:%d\t", GPOINTER_TO_INT(key), GPOINTER_TO_INT(value));
+    }
+    printf ("\n");
+}

@@ -30,4 +30,6 @@ void insertHash (GHashTable* hash, int key, int value);
 void writeMusicsToErrorFile(GHashTable* );
 void writeUsersToErrorFile(GHashTable* );
 void writeArtistsToErrorFile(GHashTable* );
+
+void printHash (GHashTable* table);
 #endif
