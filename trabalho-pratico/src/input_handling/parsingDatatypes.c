@@ -103,8 +103,9 @@ Artist* fetchDataA (char *str, Artist *artist) {
     }
 
     // Setting the ID constituents counter
-    setArtistIDConstituentCounter(artist, IdCounter(getArtistIDConstituentString(artist)));
-
+    char* ids = getArtistIDConstituentString (artist);
+    setArtistIDConstituentCounter(artist, IdCounter(ids));
+    free (ids);
     // Fetching the country
     token = strsep(&str, ";");
     if (token) setArtistCountry (artist, trimString(token));

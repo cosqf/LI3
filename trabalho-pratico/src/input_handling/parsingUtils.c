@@ -24,21 +24,26 @@ Date parseDate(char* dateStr) {
 
 int* parseIDs(char *line, void* IDnum, DataType type) {
     if (line == NULL) return NULL;
+    char *lineCopy = strdup(line); 
+    if (lineCopy == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
 
     char * token = NULL;
     int *ids = NULL;
     int count=0;
 
     int len = strlen (line);
-    if (line [len - 1] == '\n') line [len - 1] = '\0';
-    line = trimString (line);
+    if (lineCopy [len - 1] == '\n') lineCopy [len - 1] = '\0';
+    lineCopy = trimString (lineCopy);
 
-    if (strlen (line) == 0) {
+    if (strlen (lineCopy) == 0) {
         updateCount (IDnum, type, count);
         return NULL;
     }
 
-    for (count = 0; (token = strsep (&line, ",")) != NULL; count ++) {
+    for (count = 0; (token = strsep (&lineCopy, ",")) != NULL; count ++) {
         token = trimString (token);
         if (token == NULL) break;
         if (token[0] == 'S' || token[0] == 'A') {
@@ -51,6 +56,7 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
         }
     }
     updateCount (IDnum, type, count);
+    free (lineCopy);
     return ids;
 }
 

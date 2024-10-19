@@ -93,7 +93,7 @@ int durationInSeconds (Duration time) {
 // Returns the duration when given seconds
 Duration secondsInDuration (int seconds) {
     Duration dur;
-     dur.hours = seconds / 3600;
+    dur.hours = seconds / 3600;
     dur.minutes = (seconds % 3600) / 60;
     dur.seconds = seconds % 60;
 
@@ -113,7 +113,14 @@ void insertHash (GHashTable* hash, int key, int value) {
 }
 
 
+char* durationInString(Duration time) {
+    char* str = malloc(9 * sizeof(char));
+    if (mallocErrorCheck (str)) exit (EXIT_FAILURE);
 
+    sprintf(str, "%02d:%02d:%02d", time.hours, time.minutes, time.seconds);
+
+    return str; 
+}
 // for debugging:
 
 void writeUsersToErrorFile(GHashTable* userTable) {
