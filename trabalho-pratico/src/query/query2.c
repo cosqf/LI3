@@ -80,6 +80,7 @@ void feeder(gpointer value, gpointer music_data) {
     int idsCounter = getMusicArtistIDCount (music);
 
     getArtistsDiscography(ids, idsCounter, hashDuration, duration, country_filter, a_mngr);
+    free (ids);
 }
 
 //Insert the duration of an artist's discography in the new hashtable, using the id as key

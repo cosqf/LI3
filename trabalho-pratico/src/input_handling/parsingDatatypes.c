@@ -155,7 +155,9 @@ Music* fetchDataM (char *str, Music *music) {
     }
 
     // Setting the music's artists' ID counter
-    setMusicArtistIDCount(music, IdCounter(getMusicArtistIDString(music)));
+    char* ids = getMusicArtistIDString(music);
+    setMusicArtistIDCount(music, IdCounter(ids));
+    free (ids);
 
     // Parsing the duration
     token = strsep(&str, ";");

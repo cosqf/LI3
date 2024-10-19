@@ -105,7 +105,7 @@ void getDataArtist (char *path, ArtistManager *mngr) {
             insertErrorFileArtists(artist, ferror);
             deleteArtist (artist);
         }
-        insertArtistHash (mngr, getArtistID (artist), artist);
+        else insertArtistHash (mngr, getArtistID (artist), artist);
         
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
         //Artist *myLookup = (Artist *) g_hash_table_lookup(hashArtist, getArtistID (artist));

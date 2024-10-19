@@ -30,22 +30,24 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
         exit(EXIT_FAILURE);
     }
 
-    char * token = NULL;
-    int *ids = NULL;
+    int* ids = NULL;
     int count=0;
 
-    int len = strlen (line);
+    int len = strlen (lineCopy);
     if (lineCopy [len - 1] == '\n') lineCopy [len - 1] = '\0';
     lineCopy = trimString (lineCopy);
 
     if (strlen (lineCopy) == 0) {
         updateCount (IDnum, type, count);
+        free (lineCopy);
         return NULL;
     }
 
-    for (count = 0; (token = strsep (&lineCopy, ",")) != NULL; count ++) {
+    char *token = NULL;
+    char *lineCopyPtr = lineCopy; // keeping the original pointer
+
+    for (count = 0; (token = strsep (&lineCopyPtr, ",")) != NULL; count ++) {
         token = trimString (token);
-        if (token == NULL) break;
         if (token[0] == 'S' || token[0] == 'A') {
             ids = realloc (ids, sizeof(int) * (count + 1));
             if (ids == NULL) {
@@ -59,7 +61,6 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
     free (lineCopy);
     return ids;
 }
-
 
 int IdCounter (char* id_counter){
     if (!id_counter) return 0; 

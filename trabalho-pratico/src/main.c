@@ -45,6 +45,6 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
 
         freeCmd (cmd);
     }
-    
     fclose (fp);
+    freeHash (mngr);
 }
