@@ -14,17 +14,21 @@
 
 int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1 if principal is running from the test program, 0 if running alone
 
-    int i = 0; // cmd counter
+    int i = 0;
     EntityManager* mngr = initializeHash ();
 
     getData (argv[1], mngr);
 
-    FILE *fp = openFile (argv[2]);
+    //writeUsersToErrorFile(getUserTable (getUserManager(mngr)));
+    //writeArtistsToErrorFile(getArtistTable (getArtistManager(mngr)));
+    //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
+    FILE *fp = openFile (argv[2]);
+    int i = 1;
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-        i++;
-        CMD *cmd = createCMD ();
+
+        CMD *cmd = createCMD (i++);
 
         cmd = getCommand (str, cmd);
         switch (getCMDquery (cmd)) {
@@ -32,7 +36,7 @@ int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1
             query1 (cmd, getUserManager(mngr), i);
             break;
         case 2:
-            //query2 (cmd);
+            query2 (cmd, mngr);
             break;
         case 3:
             //query3 (cmd);
@@ -41,14 +45,11 @@ int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);
         }
-
         freeCmd (cmd);
     }
-    
     fclose (fp);
-    return 0;
+    freeHash (mngr);
 }
-
 
 
 // Returns the total number of commands run
@@ -66,8 +67,9 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
 
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-        i++;
-        CMD *cmd = createCMD ();
+
+        CMD *cmd = createCMD (i++);
+
         char output[100];
         char expected[100];
 
@@ -92,7 +94,7 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
             q2c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
             
-            //query2 ();
+            query2 (cmd, mngr);
             
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q2total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
@@ -100,7 +102,7 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
             snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
             snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
     
-            //if(compareFiles(output, expected, i) == true) correctQ2++;
+            if(compareFiles(output, expected, i) == true) correctQ2++;
 
             break;
         case 3:
@@ -138,6 +140,7 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
     printf("Tempos médios de execução:\n\tQ1: %.2f ms\n\tQ2: %.2f ms\n\tQ3: %.2f ms\n\n", q1avg, q2avg, q3avg);
     
     fclose (fp);
+    freeHash (mngr);
 }
 
 

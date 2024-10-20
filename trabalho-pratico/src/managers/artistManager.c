@@ -1,5 +1,6 @@
 #include <glib.h>
 #include <artists.h>
+#include <artistManager.h>
 
 typedef struct artistManager {
     GHashTable *artist;
@@ -28,4 +29,8 @@ void freeHashArtist (ArtistManager* a_mngr) {
 Artist* lookupArtistHash (ArtistManager *a_mngr, int id) {
     Artist* artist = g_hash_table_lookup (a_mngr->artist, GINT_TO_POINTER(id));
     return artist;
+}
+
+GHashTable* getArtistTable (ArtistManager *a_mngr) {
+    return a_mngr->artist;
 }

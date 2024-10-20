@@ -99,7 +99,10 @@ bool validLikes(int* liked_musics_id, int liked_musics_count, MusicManager *m_mn
 
 // Validates the music as a whole
 bool validMusic(Music* music, ArtistManager *a_mngr){
-    return (validDuration(getMusicDuration(music)) && validArtistId(getMusicArtistID(music), getMusicArtistIDCount(music), a_mngr));
+    int* ids = getMusicArtistID(music);
+    bool check = (validDuration(getMusicDuration(music)) && validArtistId(ids, getMusicArtistIDCount(music), a_mngr));
+    free (ids);
+    return check;
 }
 
 // Validates the music's duration, ensuring it's in the correct format (hh:mm:ss)

@@ -24,23 +24,30 @@ Date parseDate(char* dateStr) {
 
 int* parseIDs(char *line, void* IDnum, DataType type) {
     if (line == NULL) return NULL;
+    char *lineCopy = strdup(line); 
+    if (lineCopy == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
 
-    char * token = NULL;
-    int *ids = NULL;
+    int* ids = NULL;
     int count=0;
 
-    int len = strlen (line);
-    if (line [len - 1] == '\n') line [len - 1] = '\0';
-    line = trimString (line);
+    int len = strlen (lineCopy);
+    if (lineCopy [len - 1] == '\n') lineCopy [len - 1] = '\0';
+    lineCopy = trimString (lineCopy);
 
-    if (strlen (line) == 0) {
+    if (strlen (lineCopy) == 0) {
         updateCount (IDnum, type, count);
+        free (lineCopy);
         return NULL;
     }
 
-    for (count = 0; (token = strsep (&line, ",")) != NULL; count ++) {
+    char *token = NULL;
+    char *lineCopyPtr = lineCopy; // keeping the original pointer
+
+    for (count = 0; (token = strsep (&lineCopyPtr, ",")) != NULL; count ++) {
         token = trimString (token);
-        if (token == NULL) break;
         if (token[0] == 'S' || token[0] == 'A') {
             ids = realloc (ids, sizeof(int) * (count + 1));
             if (ids == NULL) {
@@ -51,9 +58,9 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
         }
     }
     updateCount (IDnum, type, count);
+    free (lineCopy);
     return ids;
 }
-
 
 int IdCounter (char* id_counter){
     if (!id_counter) return 0; 

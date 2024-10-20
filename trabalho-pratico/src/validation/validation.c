@@ -116,3 +116,35 @@ Duration parseDuration(char* dur) {
 
     return duration;
 }
+
+FILE * openResultFileArtists (){
+    FILE* fp = fopen ("resultados/artists.csv", "w");
+    if (!fp) {
+        perror ("Error opening Error file");
+        exit (1);
+        }
+    fprintf (fp, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
+    return fp;
+}
+
+
+FILE * openResultsFileMusics (){
+    FILE* fp = fopen ("resultados/musics.csv", "w");
+    if (!fp) {
+        perror ("Error opening Error file");
+        exit (1);
+        }
+    fprintf (fp, "\"id\";\"title\";\"artist_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
+    return fp;
+}
+
+FILE * openResultFileUsers (){
+    FILE* fp = fopen ("resultados/users.csv", "w");
+    if (!fp) {
+        perror ("Error opening Error file");
+        exit (1);
+    }
+    fprintf (fp, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");
+    return fp;
+}
+

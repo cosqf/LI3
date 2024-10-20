@@ -5,12 +5,6 @@
 #include <musicManager.h>
 #include <stdbool.h>
 
-
-GHashTable *hashUser = NULL;
-GHashTable *hashArtist = NULL;
-GHashTable *hashMusic = NULL;
-
-
 typedef struct entityManager {
     UserManager* user;
     ArtistManager* artist;
