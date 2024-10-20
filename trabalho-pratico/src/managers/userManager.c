@@ -7,8 +7,8 @@ typedef struct userManager {
 } UserManager;
 
 
-void insertUserHash (UserManager *u_mngr, int key, User *User) {
-    g_hash_table_insert(u_mngr->user, GINT_TO_POINTER (key), User);
+void insertUserHash (UserManager *u_mngr, int key, User *user) {
+    g_hash_table_insert(u_mngr->user, GINT_TO_POINTER (key), user);
 }
 
 UserManager* initializeHashUser () {
@@ -29,4 +29,8 @@ void freeHashUser (UserManager* u_mngr) {
 User* lookupUserHash (UserManager *u_mngr, int id) {
     User* User = g_hash_table_lookup (u_mngr->user, GINT_TO_POINTER(id));
     return User;
+}
+
+GHashTable* getUserTable (UserManager *u_mngr) {
+    return u_mngr->user;
 }

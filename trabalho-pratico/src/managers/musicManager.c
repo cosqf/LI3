@@ -29,3 +29,19 @@ Music* lookupMusicHash (MusicManager *m_mngr, int id) {
     Music* Music = g_hash_table_lookup (m_mngr->music, GINT_TO_POINTER(id));
     return Music;
 }
+
+GHashTable* getMusicTable (MusicManager *m_mngr) {
+    return m_mngr->music;
+}
+
+
+void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data) {
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, m_mngr->music);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        MusicProcessor(value, music_data);
+    }
+}

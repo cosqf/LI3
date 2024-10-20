@@ -3,7 +3,7 @@
 
 typedef struct cmd CMD;
 
-CMD* createCMD();
+CMD* createCMD(int i);
 
 CMD* getCommand(char* , CMD* );
 
@@ -26,5 +26,7 @@ char *getCMDCountry (CMD* cmd);
 int getCMDAgeMin (CMD* cmd);
 
 int getCMDAgeMax (CMD* cmd);
+
+int getCMDCounter (CMD* cmd);
 
 #endif

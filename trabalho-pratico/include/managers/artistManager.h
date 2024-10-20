@@ -1,4 +1,5 @@
 #include <artists.h>
+#include <glib.h>
 
 #ifndef _ARTISTMANAGER_H_
 #define _ARTISTMANAGER_H_
@@ -12,4 +13,6 @@ ArtistManager* initializeHashArtist ();
 void freeHashArtist (ArtistManager* a_mngr);
 
 Artist* lookupArtistHash (ArtistManager *a_mngr, int id);
+
+GHashTable* getArtistTable (ArtistManager *a_mngr);
 #endif

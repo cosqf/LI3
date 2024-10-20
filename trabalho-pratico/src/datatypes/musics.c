@@ -152,7 +152,8 @@ void setMusicYear(Music* music, const char* year) {
 
 void setMusicLyrics(Music* music, const char* lyrics) {
     if (music->lyrics) free(music->lyrics);
-    music->lyrics = strdup(lyrics);
+    if (lyrics) music->lyrics = strdup(lyrics); 
+    else music->lyrics = NULL;  
 }
 
 void setMusicArtistIDCount (Music* music, int x) {

@@ -7,6 +7,8 @@
 #include <parsingUtils.h>
 #include <string.h>
 #include <users.h>
+#include <glib.h>
+#include <validation.h>
 
 FILE* openFile (char * argv) { 
     FILE* fp = fopen (argv, "r");
@@ -91,9 +93,88 @@ int durationInSeconds (Duration time) {
 // Returns the duration when given seconds
 Duration secondsInDuration (int seconds) {
     Duration dur;
-     dur.hours = seconds / 3600;
+    dur.hours = seconds / 3600;
     dur.minutes = (seconds % 3600) / 60;
     dur.seconds = seconds % 60;
 
     return dur;
+}
+
+GHashTable* createHash () {
+    return g_hash_table_new(g_direct_hash, g_direct_equal);
+}
+
+void deleteHash (GHashTable* hash) {
+    g_hash_table_destroy (hash);
+}
+
+void insertHash (GHashTable* hash, int key, int value) {
+    g_hash_table_insert(hash, GINT_TO_POINTER (key), GINT_TO_POINTER (value));
+}
+
+
+char* durationInString(Duration time) {
+    char* str = malloc(9 * sizeof(char));
+    if (mallocErrorCheck (str)) exit (EXIT_FAILURE);
+
+    sprintf(str, "%02d:%02d:%02d", time.hours, time.minutes, time.seconds);
+
+    return str; 
+}
+// for debugging:
+
+void writeUsersToErrorFile(GHashTable* userTable) {
+    FILE *fp = openResultFileUsers();
+    
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, userTable);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        User* user = (User*)value;
+        insertErrorFileUser(user, fp);
+    }
+    
+    fclose(fp);
+}
+
+void writeArtistsToErrorFile(GHashTable* artistTable) {
+    FILE *fp = openResultFileArtists();
+    
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, artistTable);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        Artist* artist = (Artist*)value;
+        insertErrorFileArtists(artist, fp);
+    }
+
+    fclose(fp);
+}
+
+void writeMusicsToErrorFile(GHashTable* musicTable) {
+    FILE *fp = openResultsFileMusics();
+    
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, musicTable);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        Music* music = (Music*)value;
+        insertErrorFileMusics(music, fp);
+    }
+
+    fclose(fp);
+}
+
+void printHash (GHashTable* table) {
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, table);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        printf ("id:%d, duration:%d\t", GPOINTER_TO_INT(key), GPOINTER_TO_INT(value));
+    }
+    printf ("\n");
 }

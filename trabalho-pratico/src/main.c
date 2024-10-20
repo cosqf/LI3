@@ -17,12 +17,16 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
 
     getData (argv[1], mngr);
 
-    FILE *fp = openFile (argv[2]);
+    //writeUsersToErrorFile(getUserTable (getUserManager(mngr)));
+    //writeArtistsToErrorFile(getArtistTable (getArtistManager(mngr)));
+    //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
+    FILE *fp = openFile (argv[2]);
+    int i = 1;
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-        i++;
-        CMD *cmd = createCMD ();
+
+        CMD *cmd = createCMD (i++);
 
         cmd = getCommand (str, cmd);
         switch (getCMDquery (cmd)) {
@@ -30,7 +34,7 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
             query1 (cmd, getUserManager(mngr), i);
             break;
         case 2:
-            //query2 (cmd);
+            query2 (cmd, mngr);
             break;
         case 3:
             //query3 (cmd);
@@ -39,9 +43,8 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);
         }
-
         freeCmd (cmd);
     }
-    
     fclose (fp);
+    freeHash (mngr);
 }

@@ -1,4 +1,5 @@
 #include <users.h>
+#include <glib.h>
 
 #ifndef _USERMANAGER_H_
 #define _USERMANAGER_H_
@@ -12,4 +13,7 @@ UserManager* initializeHashUser ();
 void freeHashUser (UserManager* u_mngr);
 
 User* lookupUserHash (UserManager *u_mngr, int id);
+
+GHashTable* getUserTable (UserManager *u_mngr);
+
 #endif
