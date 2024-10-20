@@ -12,7 +12,7 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
         perror ("Wrong number of arguments");
         return 1;
     }
-
+    int i = 0;
     EntityManager* mngr = initializeHash ();
 
     getData (argv[1], mngr);
@@ -25,12 +25,13 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
     int i = 1;
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
+
         CMD *cmd = createCMD (i++);
 
         cmd = getCommand (str, cmd);
         switch (getCMDquery (cmd)) {
         case 1:
-            query1 (cmd);
+            query1 (cmd, getUserManager(mngr), i);
             break;
         case 2:
             query2 (cmd, mngr);

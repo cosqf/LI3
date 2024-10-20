@@ -6,13 +6,14 @@
 
 typedef struct userManager UserManager;
 
-void insertUserHash (UserManager *a_mngr, int key, User *User);
+void insertUserHash (UserManager *u_mngr, int key, User *User);
 
 UserManager* initializeHashUser ();
 
-void freeHashUser (UserManager* a_mngr);
+void freeHashUser (UserManager* u_mngr);
 
-User* lookupUserHash (UserManager *a_mngr, int id);
+User* lookupUserHash (UserManager *u_mngr, int id);
 
 GHashTable* getUserTable (UserManager *u_mngr);
+
 #endif
