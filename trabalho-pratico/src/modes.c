@@ -1,3 +1,4 @@
+#define _GNU_SOURCE and #define _POSIX_C_SOURCE 1999309L
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

@@ -33,8 +33,6 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
     }
 
     fprintf(results, "\n");
-    
-    free(user);
     fclose(results);
 }
 

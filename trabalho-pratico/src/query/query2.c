@@ -41,7 +41,9 @@ void query2(CMD *cmd, EntityManager *mngr) {
     int limit;
     if (lengthHash < topN) limit = lengthHash;
     else limit = topN;
+    
     FILE *fp = openFileQuery2 (cmdI);
+    if (limit == 0) fprintf (fp, "\n");
     for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
