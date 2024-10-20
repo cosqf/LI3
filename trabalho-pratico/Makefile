@@ -1,6 +1,7 @@
 CC =gcc
 
 EXEC := programa-principal
+EXEC_TEST :=  programa-testes
 
 INCLUDE_DIRS := $(shell find include/ -type d)
 
@@ -13,9 +14,12 @@ SRC := $(shell find src/ -name "*.c")
 OBJ := $(patsubst src/%.c,build/%.o,$(SRC))
 
 .PHONY: all
-all: $(EXEC)
+all: $(EXEC) $(EXEC_TEST)
 
 $(EXEC): $(OBJ)
+	@$(CC) $(OBJ) $(LDFLAGS) -o $@
+
+$(EXEC_TEST): $(OBJ)
 	@$(CC) $(OBJ) $(LDFLAGS) -o $@
 
 build/%.o: src/%.c
@@ -26,5 +30,5 @@ build/%.o: src/%.c
 
 clean:
 	rm -rf build/*
-	rm -f programa-principal
+	rm -f programa-principal programa-testes
 	rm -f resultados/*
