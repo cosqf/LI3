@@ -23,7 +23,7 @@ int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1
     //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
     FILE *fp = openFile (argv[2]);
-    int i = 0;
+    int i = 1;
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
 
@@ -32,7 +32,7 @@ int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1
         cmd = getCommand (str, cmd);
         switch (getCMDquery (cmd)) {
         case 1:
-            query1 (cmd, getUserManager(mngr), i);
+            query1 (cmd, getUserManager(mngr), getCMDCounter(cmd));
             break;
         case 2:
             query2 (cmd, mngr);
@@ -57,7 +57,7 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
     struct timespec cmdstart, cmdend;
     double q1total = 0, q2total = 0, q3total = 0;
 
-    int i = 0, q1c = 0, q2c = 0, q3c = 0; // i counts the total commands run, the others count the commands run for each query
+    int i = 1, q1c = 0, q2c = 0, q3c = 0; // i counts the total commands run, the others count the commands run for each query
     int correctQ1 = 0, correctQ2 = 0, correctQ3 = 0; // counts the commands that execute correctly
     EntityManager* mngr = initializeHash ();
 
@@ -67,8 +67,8 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
 
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-        i++;
-        CMD *cmd = createCMD (i);
+
+        CMD *cmd = createCMD (i++);
 
         char output[100];
         char expected[100];
@@ -79,13 +79,13 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
             q1c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
             
-            query1 (cmd, getUserManager(mngr), i);
+            query1 (cmd, getUserManager(mngr), getCMDCounter(cmd));
             
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q1total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
 
-            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
-            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", getCMDCounter(cmd));
+            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", getCMDCounter(cmd));
     
             if(compareFiles(output, expected, i) == true) correctQ1++;
 
@@ -99,8 +99,8 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q2total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
 
-            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
-            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", getCMDCounter(cmd));
+            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", getCMDCounter(cmd));
     
             if(compareFiles(output, expected, i) == true) correctQ2++;
 
@@ -114,8 +114,8 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q3total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
 
-            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
-            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", getCMDCounter(cmd));
+            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", getCMDCounter(cmd));
     
             //if(compareFiles(output, expected, i) == true) correctQ3++;
 

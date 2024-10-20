@@ -12,7 +12,7 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
     // Format the filename with the counter value
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", counter);
 
-    FILE* results = fopen (filename, "a");
+    FILE* results = fopen (filename, "w");
 
     int userID = getCMDId(cmd);
     User* user = lookupUserHash(u_mngr, userID);
