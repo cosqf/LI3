@@ -22,10 +22,10 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
     //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
     FILE *fp = openFile (argv[2]);
-
+    int i = 1;
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-        CMD *cmd = createCMD ();
+        CMD *cmd = createCMD (i++);
 
         cmd = getCommand (str, cmd);
         switch (getCMDquery (cmd)) {
@@ -42,7 +42,6 @@ int main (int argc, char** argv) { // argv[1]: path to data, argv[2]: cmd
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);
         }
-
         freeCmd (cmd);
     }
     fclose (fp);

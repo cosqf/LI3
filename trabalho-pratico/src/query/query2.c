@@ -19,7 +19,7 @@ typedef struct {
 void query2(CMD *cmd, EntityManager *mngr) {
     GHashTable *hashDuration = createHash(); // temporary hash table 
     char* country = getCMDCountry(cmd);
-
+    int cmdI = getCMDCounter (cmd);
     FeederData data = { 
         data.country = country, 
         data.hashDuration = hashDuration, 
@@ -41,25 +41,17 @@ void query2(CMD *cmd, EntityManager *mngr) {
     int limit;
     if (lengthHash < topN) limit = lengthHash;
     else limit = topN;
+    FILE *fp = openFileQuery2 (cmdI);
     for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
         Duration dur = secondsInDuration (hashArray[i].duration);
-        char* name = getArtistName (artist);
-        char* type = getArtistTypeString(artist);
-        char* duration = durationInString (dur);
-        char* artist_country = getArtistCountry(artist); 
-
-        printf ("%s;%s;%s;%s\n", name, type, duration, artist_country);
-        free (name);
-        free(type);
-        free(duration);
-        free(artist_country);
+        printResult (artist, dur, fp);
     }
-    
+    fclose (fp);
     free (hashArray);
-    deleteHash(hashDuration);
     free (country);
+    deleteHash(hashDuration);
 }
 
 
@@ -89,19 +81,6 @@ void getArtistsDiscography (int* id, int count, GHashTable* newtable, int durati
         Artist* artist = lookupArtistHash (a_mngr, id[i]);
         if (artist == NULL) continue;
 
-        /*
-        // Check if the artist is a group
-        if (getArtistType(artist) == 1) {
-            int* artistsgroup = getArtistIDConstituent(artist);
-            int groupLength = getArtistIDConstituentCounter(artist);
-
-            id = realloc(id, sizeof(int) * (count + groupLength));
-            if (mallocErrorCheck (id)) exit (EXIT_FAILURE);
-            
-            for (int j = 0; j < groupLength; j++) id[count + j] = artistsgroup[j];
-            count += groupLength;
-        }
-        */
         if (country!= NULL) {  // country filter is active
             char* countryArtist = getArtistCountry (artist);
             if (strcmp (country, countryArtist) != 0) {
@@ -113,7 +92,7 @@ void getArtistsDiscography (int* id, int count, GHashTable* newtable, int durati
         updateDurationHash (id[i], newtable, duration);
     }
 }
-
+// Transforms the hash table into a Tuple array and sorts it
 Tuple* sortHash (GHashTable* hash) {
     GHashTableIter iter;
     gpointer key, value;
@@ -155,10 +134,40 @@ void updateDurationHash(int id, GHashTable* newtable, int duration) {
     // the artist is already in the new table
     if (g_hash_table_lookup_extended (newtable, GINT_TO_POINTER(id), &key, &value)) {
         int newValue = GPOINTER_TO_INT(value) + duration;
-
+        // update duration
         g_hash_table_replace(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(newValue));
     }
     // it isnt, so we need to add it
     else g_hash_table_insert(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(duration));
 }
 
+void printResult (Artist* artist, Duration dur, FILE* fp) {
+    char* name = getArtistName (artist);
+    char* type = getArtistTypeString(artist);
+    char* artist_country = getArtistCountry(artist); 
+    char* duration = durationInString (dur);
+
+    fprintf (fp, "%s;%s;%s;%s\n", name, type, duration, artist_country);
+    free (name);
+    free(type);
+    free(artist_country);
+    free(duration);
+}
+
+FILE* openFileQuery2 (int i) {
+    const char* filepath = "resultados/";
+    int required_size = 11 + 21 + 1;
+
+    char* fullpath = malloc(required_size);
+    if (mallocErrorCheck (fullpath)) exit(EXIT_FAILURE);
+
+    snprintf(fullpath, required_size, "%scommand%d_output.txt", filepath, i);
+
+    FILE* fp = fopen (fullpath, "w");
+    if (!fp) {
+        perror ("Error opening Error file");
+        exit (1);
+    }
+    free (fullpath);
+    return fp;
+}

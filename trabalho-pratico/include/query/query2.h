@@ -29,4 +29,8 @@ int compareTuple(const void* a, const void* b);
 
 Tuple* sortHash (GHashTable* hash);
 
+void printResult (Artist* artist, Duration dur, FILE* fp);
+
+FILE* openFileQuery2 (int i);
+
 #endif  
