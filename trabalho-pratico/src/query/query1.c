@@ -24,13 +24,15 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
         int age = calculateAge(user);
         char* country = getUserCountry(user);
 
-        fprintf(results, "%s;%s;%s;%d;%s\n", email, firstname, lastname, age, country); //email;first_name;last_name;age;country
+        fprintf(results, "%s;%s;%s;%d;%s", email, firstname, lastname, age, country); //email;first_name;last_name;age;country
 
         free(email);
         free(firstname);
         free(lastname);
         free(country);
     }
+
+    fprintf(results, "\n");
     
     free(user);
     fclose(results);
