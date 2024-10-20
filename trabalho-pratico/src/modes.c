@@ -14,7 +14,6 @@
 
 int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1 if principal is running from the test program, 0 if running alone
 
-    int i = 0;
     EntityManager* mngr = initializeHash ();
 
     getData (argv[1], mngr);
@@ -24,7 +23,7 @@ int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1
     //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
     FILE *fp = openFile (argv[2]);
-    int i = 1;
+    int i = 0;
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
 
@@ -49,6 +48,7 @@ int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1
     }
     fclose (fp);
     freeHash (mngr);
+    return 0;
 }
 
 
@@ -67,8 +67,8 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
 
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
-
-        CMD *cmd = createCMD (i++);
+        i++;
+        CMD *cmd = createCMD (i);
 
         char output[100];
         char expected[100];
