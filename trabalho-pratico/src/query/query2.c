@@ -44,7 +44,7 @@ void query2(CMD *cmd, EntityManager *mngr) {
     
     FILE *fp = openFileQuery2 (cmdI);
     if (limit == 0) fprintf (fp, "\n");
-    else for (int i = 0; i < limit; i++) {
+    for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
         Duration dur = secondsInDuration (hashArray[i].duration);
@@ -157,12 +157,13 @@ void printResult (Artist* artist, Duration dur, FILE* fp) {
 }
 
 FILE* openFileQuery2 (int i) {
+    const char* filepath = "resultados/";
     int required_size = 11 + 21 + 1;
 
     char* fullpath = malloc(required_size);
     if (mallocErrorCheck (fullpath)) exit(EXIT_FAILURE);
 
-    snprintf(fullpath, required_size, "resultados/command%d_output.txt", i);
+    snprintf(fullpath, required_size, "%scommand%d_output.txt", filepath, i);
 
     FILE* fp = fopen (fullpath, "w");
     if (!fp) {
