@@ -83,7 +83,7 @@ char* getMusicTitle(Music* music) {
 }
 /* Getter for artist's ID */
 int* getMusicArtistID(Music* music) {
-    return parseIDs (music->artist_id, music, Musics);
+    return parseIDs (trimString (music->artist_id), music, Musics);
 }
 /* Getter for artist's ID  in string format */
 char* getMusicArtistIDString(Music* music) {

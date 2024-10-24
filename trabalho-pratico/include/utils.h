@@ -13,6 +13,8 @@ bool mallocErrorCheck (void* add);
 
 char *trimString(char *str);
 
+char* trimStringWithoutBrackets (char* str);
+
 void updateCount(void* IDnum, DataType type, int count);
 
 int isletter(char);

@@ -97,7 +97,7 @@ char* getArtistRecipePerStreamString(Artist* artist) {
 
 /* Getter for id_constituent */
 int* getArtistIDConstituent(Artist* artist) {
-    return parseIDs (artist->id_constituent, artist, Artists);
+    return parseIDs (trimString (artist->id_constituent), artist, Artists);
 }
 
 /* Getter for id_constituent in string format */

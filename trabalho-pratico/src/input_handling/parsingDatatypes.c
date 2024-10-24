@@ -51,7 +51,7 @@ User * fetchDataU (char *str, User *user) {
 
     // Fetching liked musics ID
     token = trimString(strsep(&str, ";"));
-    if (token) setUserLikedMusicsID (user, trimString(token));
+    if (token) setUserLikedMusicsID (user, trimStringWithoutBrackets(token));
     else perror ("liked musics ID fetching error");
     
     return user;
@@ -96,7 +96,7 @@ Artist* fetchDataA (char *str, Artist *artist) {
 
     // Fetching the ID constituents
     token = strsep(&str, ";");
-    if (token) setArtistIDConstituent (artist, trimString(token));
+    if (token) setArtistIDConstituent (artist, trimStringWithoutBrackets(token));
     else {
         perror("ID constituents parsing error");
         return NULL;
@@ -148,7 +148,7 @@ Music* fetchDataM (char *str, Music *music) {
 
     // Parsing the ID constituents
     token = strsep(&str, ";");
-    if (token) setMusicArtistID (music, trimString(token));
+    if (token) setMusicArtistID (music, trimStringWithoutBrackets(token));
     else {
         perror("ID constituents parsing error");
         return NULL;

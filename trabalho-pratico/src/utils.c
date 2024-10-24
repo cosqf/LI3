@@ -44,6 +44,22 @@ char *trimString(char *str) {
     return start; 
 }
 
+char* trimStringWithoutBrackets (char* str) {
+    if (!str) return NULL;
+
+    char *start = str;
+    char *end = str + strlen(str) - 1;
+
+    while (*start == '"' || *start == ' ' || *start == '\'') {
+        start++;
+    }
+
+    while (end > start && (*end == '"' || *end == ' ' || *end == '\'' || *end == '\n')) {
+        *end-- = '\0';
+    }
+
+    return start; 
+}
 
 void updateCount(void* IDnum, DataType type, int count) {
     if (type == Users) {

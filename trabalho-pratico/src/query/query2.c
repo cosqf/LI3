@@ -157,14 +157,13 @@ void printResult (Artist* artist, Duration dur, FILE* fp) {
 }
 
 FILE* openFileQuery2 (int i) {
-    const char* filepath = "resultados/";
     int required_size = 11 + 21 + 1;
 
     char* fullpath = malloc(required_size);
     if (mallocErrorCheck (fullpath)) exit(EXIT_FAILURE);
 
-    snprintf(fullpath, required_size, "%scommand%d_output.txt", filepath, i);
-
+    snprintf(fullpath, required_size, "resultados/command%d_output.txt", i);
+    
     FILE* fp = fopen (fullpath, "w");
     if (!fp) {
         perror ("Error opening Error file");
