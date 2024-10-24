@@ -27,20 +27,23 @@ bool mallocErrorCheck (void* address) {
     else return 0;
 }
 
-char *trimString(char *str) { // Trims a string, removing symbols from each end
+char *trimString(char *str) {
     if (!str) return NULL;
 
-    while (*str == '"' || *str == ' ' || *str == '[' || *str == ']' || *str == '\'') {
-        str++;
+    char *start = str;
+    char *end = str + strlen(str) - 1;
+
+    while (*start == '"' || *start == ' ' || *start == '\'' || *start == '[' || *start == ']' || *start == '\'') {
+        start++;
     }
 
-    int len = strlen(str);
-    while (len > 0 && (str[len - 1] == '"' || str[len - 1] == ' ' || str[len - 1] == '[' || str[len - 1] == ']' || str[len - 1] == '\'' || str[len - 1] == '\n')) {
-        str[--len] = '\0';
+    while (end > start && (*end == '"' || *end == ' ' || *end == '\'' || *end == '\n' || *end == '[' || *end == ']' || *end == '\'')) {
+        *end-- = '\0';
     }
 
-    return str;
+    return start; 
 }
+
 
 void updateCount(void* IDnum, DataType type, int count) {
     if (type == Users) {
