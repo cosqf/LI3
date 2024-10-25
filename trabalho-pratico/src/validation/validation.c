@@ -58,7 +58,7 @@ void insertErrorFileArtists (Artist *artist, FILE *fp) {
     char* country = getArtistCountry(artist);
     char* type = getArtistTypeString(artist);
 
-    fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"['%s']\";\"%s\";\"%s\"\n", id, name, description, recipePerStream, idConstituent, country, type);
+    fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", id, name, description, recipePerStream, idConstituent, country, type);
 
     free(id);
     free(name);
