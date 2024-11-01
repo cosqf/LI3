@@ -13,17 +13,16 @@
 #include <query2.h>
 #include <entityManager.h>
 
-int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1 if principal is running from the test program, 0 if running alone
-
+int principal (char* pathData, char* pathCmd) {
     EntityManager* mngr = initializeHash ();
 
-    getData (argv[1], mngr);
+    getData (pathData, mngr);
 
     //writeUsersToErrorFile(getUserTable (getUserManager(mngr)));
     //writeArtistsToErrorFile(getArtistTable (getArtistManager(mngr)));
     //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
-    FILE *fp = openFile (argv[2]);
+    FILE *fp = openFile (pathCmd);
     int i = 1;
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
@@ -54,7 +53,7 @@ int principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1
 
 
 // Returns the total number of commands run
-void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //flag is 1 if principal is running from the test program, 0 if running alone
+void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, argv[2]: cmd //flag is 1 if principal is running from the test program, 0 if running alone
     struct timespec cmdstart, cmdend;
     double q1total = 0, q2total = 0, q3total = 0;
 
@@ -62,9 +61,9 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
     int correctQ1 = 0, correctQ2 = 0, correctQ3 = 0; // counts the commands that execute correctly
     EntityManager* mngr = initializeHash ();
 
-    getData (argv[1], mngr);
+    getData (pathData, mngr);
 
-    FILE *fp = openFile (argv[2]);
+    FILE *fp = openFile (pathCmd);
 
     char str[DEFAULT];
     while (fgets (str, sizeof str, fp) != NULL){
@@ -146,12 +145,12 @@ void test_principal (char** argv) { // argv[1]: path to data, argv[2]: cmd //fla
 
 
 
-int tests (char** argv) { // argv[1]: path to data, argv[2]: cmd, argv[3]: expected outputs
+int tests (char* pathData, char* pathCmd) { // argv[1]: path to data, argv[2]: cmd, argv[3]: expected outputs
     struct timespec totalstart, totalend;
     double totalelapsed;
     clock_gettime(CLOCK_REALTIME, &totalstart); // Get the start time
 
-    test_principal(argv);
+    test_principal(pathData, pathCmd);
 
     // Memory Usage
     struct rusage r_usage;
