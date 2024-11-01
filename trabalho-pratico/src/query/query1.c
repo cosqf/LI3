@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <query1.h>
-#include <parsingCmd.h>
+#include <parsing.h>
 #include <userManager.h>
 #include <users.h>
 #include <stdio.h>

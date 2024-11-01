@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include <parsingCmd.h>
+#include <cmd.h>
 #include <musics.h>
 #include <entityManager.h>
 

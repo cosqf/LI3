@@ -1,5 +1,5 @@
 #include <parsingUtils.h>
-#include <parsingCmd.h>
+#include <cmd.h>
 #include <userManager.h>
 #include <users.h>
 

@@ -7,7 +7,7 @@
 
 typedef struct user User;
 
-User* createUser();
+User* createUser (char** tokens);
 void deleteUser(User* user);
 void printUser(const User* user);
 

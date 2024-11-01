@@ -1,5 +1,5 @@
-#ifndef _PARSINGCMD_H_
-#define _PARSINGCMD_H_
+#ifndef _CMD_H_
+#define _CMD_H_
 
 typedef struct cmd CMD;
 

@@ -1,6 +1,11 @@
 #include <glib.h>
 #include <artists.h>
 #include <artistManager.h>
+#include <parsingUtils.h>
+#include <parsing.h>
+#include <utils.h>
+#include <validation.h>
+#include <validateDatatypes.h>
 
 typedef struct artistManager {
     GHashTable *artist;
@@ -33,4 +38,37 @@ Artist* lookupArtistHash (ArtistManager *a_mngr, int id) {
 
 GHashTable* getArtistTable (ArtistManager *a_mngr) {
     return a_mngr->artist;
+}
+
+void getDataArtist (char* path, ArtistManager* artistManager) {
+    char *artistPath = changePath (path, Artists);
+
+    FILE* fileData = openFile (artistPath);
+    FILE* fileError = openErrorFileArtists ();
+    char str[DEFAULT];
+    if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
+        perror ("skipping artist header error");
+        exit(EXIT_FAILURE);
+    }
+
+    while (fgets (str, sizeof (str), fileData) != NULL) {
+        char* tokens[7];
+        parseLine(str, tokens, ";");
+
+        Artist* artist = createArtist(tokens);
+        if (!validArtist(artist)) {
+            insertErrorFileArtists(artist, fileError);
+            deleteArtist(artist);
+        } else insertArtistHash(artistManager, getArtistID(artist), artist);
+        
+        //Exemplo de como dar print do que está na hashtable. Utilizado para testar
+        //Artist *myLookup = (Artist *) g_hash_table_lookup(hashArtist, getArtistID (artist));
+        //printf("ID: %d, Nome: %s, Descrição: %s\n", getArtistID (myLookup), getArtistName (myLookup), getArtistDescription (myLookup));
+      
+
+        //printArtist (artist);
+    }
+    fclose(fileData);
+    fclose (fileError);
+    free (artistPath);
 }

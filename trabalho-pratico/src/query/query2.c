@@ -1,5 +1,5 @@
 #include <query2.h>
-#include <parsingCmd.h>
+#include <parsing.h>
 #include <string.h>
 #include <utils.h>
 #include <artists.h>

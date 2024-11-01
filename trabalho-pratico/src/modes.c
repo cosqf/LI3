@@ -6,9 +6,9 @@
 
 #include <modes.h>
 #include <parsingUtils.h>
-#include <getdata.h>
+#include <parsing.h>
 #include <utils.h>
-#include <parsingCmd.h>
+#include <cmd.h>
 #include <query1.h>
 #include <query2.h>
 #include <entityManager.h>

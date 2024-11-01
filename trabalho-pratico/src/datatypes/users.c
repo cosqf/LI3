@@ -2,7 +2,7 @@
 #include <string.h>
 #include <parsingUtils.h>
 #include <utils.h>
-#include "users.h"
+#include <users.h>
 #include <string.h>
 
 /* The User struct */
@@ -19,18 +19,19 @@ typedef struct user {
 } User;
 
 /* Create a new User */
-User* createUser() {
+User* createUser (char** tokens) {
     User* user = malloc(sizeof(User));
     if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
-    user->id = NULL;
-    user->email = NULL;
-    user->first_name = NULL;
-    user->last_name = NULL;
-    user->birth_date = NULL;
-    user->country = NULL;
-    user->subscription_type = NULL;
-    user->liked_musics_id = NULL;
-    user->liked_musics_count = 0;
+
+    user->id = strdup (trimString((tokens[0])));
+    user->email = strdup (trimString((tokens[1])));
+    user->first_name = strdup (trimString((tokens[2])));
+    user->last_name = strdup (trimString((tokens[3])));
+    user->birth_date = strdup (trimString((tokens[4])));
+    user->country = strdup (trimString((tokens[5])));
+    user->subscription_type = strdup (trimString((tokens[6])));
+    user->liked_musics_id = strdup (trimStringWithoutBrackets((tokens[7])));
+    user->liked_musics_count = IdCounter ((tokens[7]));
     return user;
 }
 
@@ -122,7 +123,7 @@ char * getUserSubscriptionTypeString (User *user) {
 
 /* Getter for liked_musics_id */
 int* getUserLikedMusicsID(User* user) {
-    char* liked_musics_copy = strdup(trimString(user->liked_musics_id));
+    char* liked_musics_copy = strdup((trimString(user->liked_musics_id)));
     int* result = parseIDs(liked_musics_copy, user, Users); 
     free(liked_musics_copy);
     return result;

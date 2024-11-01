@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <utils.h>
-#include <parsingCmd.h>
+#include <cmd.h>
 
 typedef struct cmd {
     int query;     // 1, 2, or 3
