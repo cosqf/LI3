@@ -15,7 +15,7 @@ char *trimString(char *str);
 
 char* trimStringWithoutBrackets (char* str);
 
-void updateCount(void* IDnum, DataType type, int count);
+void updateCount(void*, DataType, int);
 
 int isletter(char);
 

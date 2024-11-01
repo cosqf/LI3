@@ -50,10 +50,10 @@ User * fetchDataU (char *str, User *user) {
     else perror ("Subscription type fetching error");
 
     // Fetching liked musics ID
-    token = trimString(strsep(&str, ";"));
+    token = trimStringWithoutBrackets(strsep(&str, ";"));
     if (token) setUserLikedMusicsID (user, trimStringWithoutBrackets(token));
     else perror ("liked musics ID fetching error");
-    
+
     return user;
 }
 

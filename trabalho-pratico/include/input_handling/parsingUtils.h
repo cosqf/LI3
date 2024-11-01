@@ -18,8 +18,6 @@ int* parseIDs(char *, void*, DataType);
 
 char * trimString (char *);
 
-void updateCount(void*, DataType, int);
-
 int IdCounter (char*);
 
 #endif  
