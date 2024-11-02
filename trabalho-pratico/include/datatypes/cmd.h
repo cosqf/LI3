@@ -3,7 +3,7 @@
 
 typedef struct cmd CMD;
 
-CMD* createCMD(int i);
+CMD* createCMD(char** tokens, int count);
 
 CMD* getCommand(char* , CMD* );
 

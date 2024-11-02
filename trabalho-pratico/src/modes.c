@@ -12,6 +12,7 @@
 #include <query1.h>
 #include <query2.h>
 #include <entityManager.h>
+#include <cmdManager.h>
 
 int principal (char* pathData, char* pathCmd) {
     EntityManager* mngr = initializeHash ();
@@ -22,14 +23,12 @@ int principal (char* pathData, char* pathCmd) {
     //writeArtistsToErrorFile(getArtistTable (getArtistManager(mngr)));
     //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
-    FILE *fp = openFile (pathCmd);
-    int i = 1;
-    char str[DEFAULT];
-    while (fgets (str, sizeof str, fp) != NULL){
+    cmdManager* cmdMngr = createCmdManager ();
+    int cmdNumber = readCommands (pathCmd, cmdMngr);
 
-        CMD *cmd = createCMD (i++);
+    for (int i = 0; i< cmdNumber; i++) {
+        CMD* cmd = getCommandFromMngr (cmdMngr, i);
 
-        cmd = getCommand (str, cmd);
         switch (getCMDquery (cmd)) {
         case 1:
             query1 (cmd, getUserManager(mngr), getCMDCounter(cmd));
@@ -44,13 +43,14 @@ int principal (char* pathData, char* pathCmd) {
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);
         }
-        freeCmd (cmd);
     }
-    fclose (fp);
+    freeCmdManager (cmdMngr);
     freeHash (mngr);
     return 0;
 }
 
+void test_principal (char* pathData, char* pathCmd){};
+/*
 
 // Returns the total number of commands run
 void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, argv[2]: cmd //flag is 1 if principal is running from the test program, 0 if running alone
@@ -142,7 +142,7 @@ void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, 
     fclose (fp);
     freeHash (mngr);
 }
-
+*/
 
 
 int tests (char* pathData, char* pathCmd) { // argv[1]: path to data, argv[2]: cmd, argv[3]: expected outputs

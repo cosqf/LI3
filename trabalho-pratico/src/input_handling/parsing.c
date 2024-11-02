@@ -30,13 +30,15 @@ char* changePath(char *path, DataType type) {
     return pathUpdated;
 }
 
-void parseLine(char* line, char* tokens[], const char* separator) {
-  int token_count = 0;
+int parseLine(char* line, char* tokens[], const char* separator) {
+  int tokenCount = 0;
   char* token;
+  line[strcspn(line, "\n")] = 0;
 
   while ((token = strsep(&line, separator)) != NULL) {
     if (*token == '\0') continue;
-    tokens[token_count] = token;
-    token_count++;
+    tokens[tokenCount] = token;
+    tokenCount++;
   }
+  return tokenCount;
 }

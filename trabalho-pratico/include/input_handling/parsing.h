@@ -10,7 +10,7 @@
 
 void getData (char *path, EntityManager *mngr);
 
-void parseLine(char* line, char* tokens[], const char* separator);
+int parseLine(char* line, char* tokens[], const char* separator);
 
 char * changePath(char *path, DataType type);
 #endif
