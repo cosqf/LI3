@@ -58,24 +58,24 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
 
 
 
-int IdCounter (char* id_counter){
+int IdCounter(char* id_counter) {
     if (!id_counter) return 0; 
 
     char* copy = strdup(id_counter);
+    char* copyPtr = copy;
 
     int count = 0;
-    char *token = NULL;
+    char* token = NULL;
 
-    // Fetching the ID
     token = trimString(strsep(&copy, ","));
-    while(token){
+    while (token) {
         if (strlen(token) > 0) {
             count++;
         }
         token = trimString(strsep(&copy, ","));
     }
-    
-    free(copy);
+
+    free(copyPtr);
 
     return count;
 }
