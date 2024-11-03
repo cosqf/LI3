@@ -72,46 +72,60 @@ void printMusic(const Music* music) {
 int getMusicID(Music* music) {
     return atoi (music->id + 1);
 }
+
 /* Getter for id in string format */
 char* getMusicIDString(Music* music) {
     return strdup (music->id);
 }
+
 /* Getter for title */
 char* getMusicTitle(Music* music) {
     return strdup(music->title);
 }
+
 /* Getter for artist's ID */
 int* getMusicArtistID(Music* music) {
-    return parseIDs (trimString (music->artist_id), music, Musics);
+    char* artist_ids_copy = strdup(trimString(music->artist_id));
+    int* result = parseIDs (trimString (music->artist_id), music, Musics);
+    free(artist_ids_copy);
+    return result;
 }
+
 /* Getter for artist's ID  in string format */
 char* getMusicArtistIDString(Music* music) {
     return strdup (music->artist_id);
 }
+
 /* Getter for artist's ID count */
 int getMusicArtistIDCount (Music* music) {
     return music->artist_id_count;
 }
+
 /* Getter for song's duration */
 Duration getMusicDuration(Music* music) {
     return parseDuration (music->duration);
 }
+
 /* Getter for song's duration in string format */
 char* getMusicDurationString(Music* music) {
     return strdup (music->duration);
 }
+
 /* Getter for genre */
 char* getMusicGenre(Music* music) {
     return strdup(music->genre);
 }
+
 /* Getter for year */
 int getMusicYear(Music* music) {
     return atoi(music->year);
 }
+
 /* Getter for year in string format */
 char* getMusicYearString(Music* music) {
     return strdup(music->year);
 }
+
 /* Getter for lyrics */
 char* getMusicLyrics(Music* music) {
     return strdup(music->lyrics);

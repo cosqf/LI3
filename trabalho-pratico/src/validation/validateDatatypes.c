@@ -12,6 +12,7 @@
 
 #include <artistManager.h>
 #include <musicManager.h>
+
 //USERS
 
 // Validates the user as a whole
@@ -19,13 +20,18 @@ bool validUser(User* user, MusicManager *m_mngr){
     char* email = getUserEmail(user);
     char* birthdate = getUserBirthDateString(user);
     char* subscription = getUserSubscriptionTypeString(user);
+    char* likedMusicsString = getUserLikedMusicsIDString(user);
     int* likedMusics = getUserLikedMusicsID(user);
     int likedMusicsCount = getUserLikedCounter(user);
-    bool valid = validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validLikes(likedMusics, likedMusicsCount, m_mngr);
+
+    bool valid = (validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validList(likedMusicsString) && validLikes(likedMusics, likedMusicsCount, m_mngr));
+    
     free (email);
     free (birthdate);
     free (subscription);
+    free (likedMusicsString);
     free (likedMusics);
+    
     return valid;
 }
 
@@ -99,10 +105,17 @@ bool validLikes(int* liked_musics_id, int liked_musics_count, MusicManager *m_mn
 
 // Validates the music as a whole
 bool validMusic(Music* music, ArtistManager *a_mngr){
+    Duration dur = getMusicDuration(music);
+    char* idsString = getMusicArtistIDString(music);
     int* ids =  getMusicArtistID (music);
-    bool check = (validDuration(getMusicDuration(music)) && validArtistId(ids, getMusicArtistIDCount(music), a_mngr));
+    int artistIDCount = getMusicArtistIDCount(music);
+
+    bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr));
+    
+    free (idsString);
     free (ids);
-    return check;
+    
+    return valid;
 }
 
 // Validates the music's duration, ensuring it's in the correct format (hh:mm:ss)
@@ -134,8 +147,13 @@ bool validArtistId(int* id, int n, ArtistManager *a_mngr){
 bool validArtist(Artist* artist){
     char* type = getArtistTypeString(artist);
     int constituentCounter = getArtistIDConstituentCounter(artist);
-    bool valid = (validIdConst(type, constituentCounter));
+    char* constituents = getArtistIDConstituentString(artist);
+
+    bool valid = (validList(constituents) && validIdConst(type, constituentCounter));
+
     free (type);
+    free (constituents);
+
     return valid;
 }
 
@@ -143,6 +161,18 @@ bool validArtist(Artist* artist){
 bool validIdConst(char* type, int constituents){
 
     if(strcmp(trimString(type), "individual") == 0 && constituents != 0) return false;
+
+    return true;
+}
+
+
+//LISTS
+
+// Validates lists of IDs, ensuring they start and end with the proper brackets
+bool validList (char* idList) {
+    int length = strlen(idList);
+        
+    if(length < 2 || idList[0] != '[' || idList[length-1] != ']') return false;
 
     return true;
 }
