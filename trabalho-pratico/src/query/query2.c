@@ -1,5 +1,5 @@
 #include <query2.h>
-#include <parsingCmd.h>
+#include <parsing.h>
 #include <string.h>
 #include <utils.h>
 #include <artists.h>
@@ -16,10 +16,9 @@ typedef struct {
 } FeederData;
 
 
-void query2(CMD *cmd, EntityManager *mngr) {
+void query2(CMD *cmd, EntityManager *mngr, int cmdCounter) {
     GHashTable *hashDuration = createHash(); // temporary hash table 
     char* country = getCMDCountry(cmd);
-    int cmdI = getCMDCounter (cmd);
     FeederData data = { 
         data.country = country, 
         data.hashDuration = hashDuration, 
@@ -42,7 +41,7 @@ void query2(CMD *cmd, EntityManager *mngr) {
     if (lengthHash < topN) limit = lengthHash;
     else limit = topN;
     
-    FILE *fp = openFileQuery2 (cmdI);
+    FILE *fp = openFileQuery2 (cmdCounter);
     if (limit == 0) fprintf (fp, "\n");
     for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);

@@ -1,9 +1,9 @@
-#ifndef _PARSINGCMD_H_
-#define _PARSINGCMD_H_
+#ifndef _CMD_H_
+#define _CMD_H_
 
 typedef struct cmd CMD;
 
-CMD* createCMD(int i);
+CMD* createCMD(char** tokens, int count);
 
 CMD* getCommand(char* , CMD* );
 
@@ -27,6 +27,7 @@ int getCMDAgeMin (CMD* cmd);
 
 int getCMDAgeMax (CMD* cmd);
 
-int getCMDCounter (CMD* cmd);
+
+void printCMD(const CMD* cmd);
 
 #endif

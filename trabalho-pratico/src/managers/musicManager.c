@@ -1,6 +1,13 @@
 #include <glib.h>
 #include <musicManager.h>
 #include <musics.h>
+#include <artistManager.h>
+#include <parsingUtils.h>
+#include <parsing.h>
+#include <stdlib.h>
+#include <utils.h>
+#include <validation.h>
+#include <validateDatatypes.h>
 
 typedef struct musicManager {
     GHashTable *music;
@@ -44,4 +51,39 @@ void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, g
     while (g_hash_table_iter_next(&iter, &key, &value)) {
         MusicProcessor(value, music_data);
     }
+}
+
+void getDataMusic (char *path, MusicManager *musicManager, ArtistManager *artistManager) {
+    char *musicPath = changePath (path, Musics);
+
+    FILE* fileData = openFile (musicPath);
+    FILE* fileError = openErrorFileMusics ();
+
+    char str[DEFAULT];
+    if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
+        perror ("skipping music header error");
+        exit(EXIT_FAILURE);
+    }
+    while (fgets (str, sizeof (str), fileData) != NULL){
+        char* tokens[7];
+        parseLine(str, tokens, ";");
+
+        Music* music = createMusic(tokens);
+        if (!validMusic(music, artistManager)) {
+            insertErrorFileMusics(music, fileError);
+            deleteMusic(music);
+        } else {
+            insertMusicHash(musicManager, getMusicID(music), music);
+        }
+
+        //Exemplo de como dar print do que está na hashtable. Utilizado para testar
+        //Music *myLookup = (Music *) g_hash_table_lookup(hashMusic, getMusicID (music));
+        //printf("ID: %d, Genero: %s, Titulo: %s\n", getMusicID (myLookup), getMusicGenre (myLookup), getMusicTitle (myLookup));
+    
+        //printMusic (music);
+        //deleteMusic (music);
+    }
+    fclose(fileData);
+    fclose (fileError);
+    free (musicPath);
 }

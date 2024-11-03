@@ -1,4 +1,5 @@
 #include <musics.h>
+#include <utils.h>
 #include <parsingUtils.h>
 #include <validation.h>
 #include <stdlib.h>
@@ -16,21 +17,19 @@ typedef struct music {
 } Music;
 
 
-/* Creator function for Music: Initializes all fields to NULL or default values */
-Music* createMusic() {
+/* Creator function for Music */
+Music* createMusic(char** tokens) {
     Music* music = (Music*)malloc(sizeof(Music));
-    
-    if (music == NULL) {
-        return NULL;
-    }
-    music->id = NULL;
-    music->title = NULL;
-    music->artist_id = NULL;
-    music->artist_id_count = 0;
-    music->duration = NULL;
-    music->genre = NULL;
-    music->year = NULL;
-    music->lyrics = NULL;
+    if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
+
+    music->id = strdup (trimString(tokens[0]));
+    music->title = strdup (trimString(tokens[1]));
+    music->artist_id = strdup (trimStringWithoutBrackets(tokens[2]));
+    music->artist_id_count = IdCounter (tokens[2]);
+    music->duration = strdup (trimString(tokens[3]));
+    music->genre = strdup (trimString(tokens[4]));
+    music->year = strdup (trimString(tokens[5]));
+    music->lyrics = strdup (trimString(tokens[6]));
     
     return music;
 }

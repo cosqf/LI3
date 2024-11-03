@@ -15,4 +15,7 @@ void freeHashArtist (ArtistManager* a_mngr);
 Artist* lookupArtistHash (ArtistManager *a_mngr, int id);
 
 GHashTable* getArtistTable (ArtistManager *a_mngr);
+
+void getDataArtist (char* path, ArtistManager* artistManager);
+
 #endif

@@ -6,9 +6,14 @@
 #include <artists.h>
 #include <parsingUtils.h>
 #include <string.h>
-#include <users.h>
 #include <glib.h>
 #include <validation.h>
+#include <parsing.h>
+#include <validateDatatypes.h>
+#include <entityManager.h>
+#include <artistManager.h>
+#include <userManager.h>
+#include <musicManager.h>
 
 FILE* openFile (char * argv) { 
     FILE* fp = fopen (argv, "r");

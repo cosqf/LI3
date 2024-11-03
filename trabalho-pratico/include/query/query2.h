@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include <parsingCmd.h>
+#include <cmd.h>
 #include <musics.h>
 #include <entityManager.h>
 
@@ -11,7 +11,7 @@ typedef struct {
     int duration;
 } Tuple;
 
-void query2(CMD *cmd, EntityManager* mngr);
+void query2(CMD *cmd, EntityManager* mngr, int cmdCounter);
 
 void getArtistsDiscography (int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr);
 

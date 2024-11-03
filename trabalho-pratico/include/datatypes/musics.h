@@ -13,7 +13,7 @@ typedef struct {
 
 typedef struct music Music;
 
-Music* createMusic();
+Music* createMusic(char** tokens);
 
 void deleteMusic(Music* music);
 

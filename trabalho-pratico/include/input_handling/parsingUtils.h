@@ -16,7 +16,7 @@ Date parseDate(char*);
 
 int* parseIDs(char *, void*, DataType);
 
-char * trimString (char *);
+char* trimString (char *);
 
 int IdCounter (char*);
 

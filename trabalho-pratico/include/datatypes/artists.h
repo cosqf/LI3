@@ -8,7 +8,7 @@
 typedef struct artist Artist;
 
 /* Creator: Initializes the Artist struct with NULL/default values */
-Artist* createArtist();
+Artist* createArtist(char **tokens);
 
 /* Destructor: Frees the memory of an Artist struct */
 void deleteArtist(Artist* artist);

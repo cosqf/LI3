@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <utils.h>
-#include <parsingCmd.h>
+#include <cmd.h>
 
 typedef struct cmd {
     int query;     // 1, 2, or 3
@@ -12,10 +12,9 @@ typedef struct cmd {
     char *paises;   // (requires memory allocation)
     int ageMin;     // minimum age
     int ageMax;     // maximum age
-    int counter;    // tracks the number of the command
 } CMD;
 
-CMD* createCMD (int i) {
+CMD* createCMD (char** tokens, int counter) {
     CMD* cmd = malloc(sizeof(CMD));
     if (mallocErrorCheck (cmd)) exit (EXIT_FAILURE);
     cmd->query = -1;
@@ -24,7 +23,26 @@ CMD* createCMD (int i) {
     cmd->paises = NULL;
     cmd->ageMin = -1;
     cmd->ageMax = -1;
-    cmd->counter = i;
+
+    if (tokens[0]) cmd->query = atoi (tokens[0]);
+    else {
+        perror ("Error getting cmd query number");
+        exit (EXIT_FAILURE);
+    }
+    switch (cmd->query) {
+    case 1:
+        if (tokens[1]) cmd->id = atoi (tokens[1]+1);
+        break;
+    case 2:
+        if (tokens[1]) cmd->topN = atoi (tokens[1]);
+        if (counter == 3 && tokens[2]) cmd->paises = strdup (trimString (tokens[2]));
+        break;
+    case 3:
+        if (tokens[1]) cmd->ageMin = atoi (tokens[1]);
+        if (tokens[2]) cmd->ageMax = atoi (tokens[2]);
+        break;
+    }
+
     return cmd;
 }
 
@@ -101,8 +119,4 @@ int getCMDAgeMin (CMD* cmd) {
 
 int getCMDAgeMax (CMD* cmd) {
     return cmd->ageMax;
-}
-
-int getCMDCounter (CMD* cmd) {
-    return cmd->counter;
 }

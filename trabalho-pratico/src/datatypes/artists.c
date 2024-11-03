@@ -16,17 +16,18 @@ typedef struct artist {
 
 
 /* Create a new Artist */
-Artist* createArtist() {
+Artist* createArtist(char **tokens) {
     Artist* artist = malloc(sizeof(Artist));
     if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
-    artist->id = NULL;
-    artist->name = NULL;
-    artist->description = NULL;
-    artist->recipe_per_stream = NULL;
-    artist->id_constituent = NULL;
-    artist->country = NULL;
-    artist->type = NULL;
-    artist->id_constituent_counter = 0;
+
+    artist->id = strdup (trimString(tokens[0]));
+    artist->name = strdup (trimString(tokens[1]));
+    artist->description = strdup (trimString(tokens[2]));
+    artist->recipe_per_stream = strdup (trimString(tokens[3]));
+    artist->id_constituent = strdup (trimStringWithoutBrackets(tokens[4]));
+    artist->id_constituent_counter = IdCounter (tokens[4]);
+    artist->country = strdup (trimString(tokens[5]));
+    artist->type = strdup (trimString(tokens[6]));
     return artist;
 }
 
@@ -172,5 +173,5 @@ void setArtistCountry(Artist* artist, const char* country) {
 /* Setter for type */
 void setArtistType(Artist* artist, const char* type) {
     if (artist->type) free(artist->type);
-    artist->type = strdup(type);
+    artist->type = strdup (type);
 }
