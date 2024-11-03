@@ -123,9 +123,7 @@ char * getUserSubscriptionTypeString (User *user) {
 
 /* Getter for liked_musics_id */
 int* getUserLikedMusicsID(User* user) {
-    char* liked_musics_copy = strdup((trimString(user->liked_musics_id)));
-    int* result = parseIDs(liked_musics_copy, user, Users); 
-    free(liked_musics_copy);
+    int* result = parseIDs(user->liked_musics_id, user, Users); 
     return result;
 }
 /* Getter for liked_musics_id in string format */

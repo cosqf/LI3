@@ -24,58 +24,58 @@ Date parseDate(char* dateStr) {
 
 int* parseIDs(char *line, void* IDnum, DataType type) {
     if (line == NULL) return NULL;
-    char *lineCopy = strdup(line); 
-    if (lineCopy == NULL) {
-        perror("strdup error");
-        exit(EXIT_FAILURE);
-    }
+
+    char *copy = strdup(line);
 
     int* ids = NULL;
-    int count=0;
+    int count = 0;
 
-    int len = strlen (lineCopy);
-    if (lineCopy [len - 1] == '\n') lineCopy [len - 1] = '\0';
-    lineCopy = trimString (lineCopy);
+    char *token;
+    char *copyPtr = copy;
+    while ((token = strsep(&copyPtr, ",")) != NULL) {
 
-    if (strlen (lineCopy) == 0) {
-        updateCount (IDnum, type, count);
-        free (lineCopy);
-        return NULL;
-    }
+        while (*token == ' ' || *token == '\'' || *token == 'U' || *token == 'S' || *token == 'A' || *token == '[' || *token == ']') token++;
 
-    char *token = NULL;
-    char *lineCopyPtr = lineCopy; // keeping the original pointer
+        int id = atoi(token);
 
-    for (count = 0; (token = strsep (&lineCopyPtr, ",")) != NULL; count ++) {
-        token = trimString (token);
-        if (token[0] == 'S' || token[0] == 'A') {
-            ids = realloc (ids, sizeof(int) * (count + 1));
-            if (ids == NULL) {
-                perror ("Realloc error");
-                exit (EXIT_FAILURE);
-            }
-            ids[count] = atoi (token + 1);
+        int* temp = realloc(ids, sizeof(int) * (count + 1));
+        if (temp == NULL) {
+            perror("Realloc error");
+            free(ids);
+            free(copy);
+            exit(EXIT_FAILURE);
         }
+        ids = temp;
+        ids[count] = id;
+        count++;
     }
+    
     updateCount (IDnum, type, count);
-    free (lineCopy);
+
+    free(copy);
     return ids;
 }
 
+
+
 int IdCounter (char* id_counter){
     if (!id_counter) return 0; 
+
+    char* copy = strdup(id_counter);
 
     int count = 0;
     char *token = NULL;
 
     // Fetching the ID
-    token = trimString(strsep(&id_counter, ","));
+    token = trimString(strsep(&copy, ","));
     while(token){
         if (strlen(token) > 0) {
             count++;
         }
-        token = trimString(strsep(&id_counter, ","));
+        token = trimString(strsep(&copy, ","));
     }
     
+    free(copy);
+
     return count;
 }

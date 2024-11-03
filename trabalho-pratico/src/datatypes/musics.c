@@ -85,9 +85,7 @@ char* getMusicTitle(Music* music) {
 
 /* Getter for artist's ID */
 int* getMusicArtistID(Music* music) {
-    char* artist_ids_copy = strdup(trimString(music->artist_id));
-    int* result = parseIDs (trimString (music->artist_id), music, Musics);
-    free(artist_ids_copy);
+    int* result = parseIDs (music->artist_id, music, Musics);
     return result;
 }
 
