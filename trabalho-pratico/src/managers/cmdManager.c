@@ -62,6 +62,7 @@ void freeCmdManager (cmdManager *mngr) {
     for (int i = 0; i< counter; i++) {
         freeCmd (mngr->cmdArray[i]);
     }
+    free (mngr->cmdArray);
     free (mngr);
 }
 
