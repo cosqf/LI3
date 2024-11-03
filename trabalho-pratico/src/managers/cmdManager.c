@@ -45,10 +45,11 @@ int readCommands (char* path, cmdManager *mngr) {
     while (fgets (str, sizeof (str), fp) != NULL) {
         
         char* tokens[3];
-        int count = parseLine(str, tokens, " ");
+        int count = parseCmdLine(str, tokens);
 
         CMD* cmd = createCMD (tokens, count);
         if (cmd != NULL) addCommandToManager(mngr, cmd);
+        i++;
     }
     fclose (fp);
     mngr->counter = i;
@@ -63,3 +64,4 @@ void freeCmdManager (cmdManager *mngr) {
     }
     free (mngr);
 }
+

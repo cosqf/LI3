@@ -12,12 +12,12 @@ typedef struct cmd {
     char *paises;   // (requires memory allocation)
     int ageMin;     // minimum age
     int ageMax;     // maximum age
-    int counter;    // tracks the number of the command
 } CMD;
 
 CMD* createCMD (char** tokens, int counter) {
     CMD* cmd = malloc(sizeof(CMD));
     if (mallocErrorCheck (cmd)) exit (EXIT_FAILURE);
+    cmd->query = -1;
     cmd->id = -1;
     cmd->topN = -1;
     cmd->paises = NULL;
@@ -35,7 +35,7 @@ CMD* createCMD (char** tokens, int counter) {
         break;
     case 2:
         if (tokens[1]) cmd->topN = atoi (tokens[1]);
-        if (counter > 2 && tokens[2]) cmd->paises = trimString (tokens[2]);
+        if (counter == 3 && tokens[2]) cmd->paises = strdup (trimString (tokens[2]));
         break;
     case 3:
         if (tokens[1]) cmd->ageMin = atoi (tokens[1]);
@@ -119,8 +119,4 @@ int getCMDAgeMin (CMD* cmd) {
 
 int getCMDAgeMax (CMD* cmd) {
     return cmd->ageMax;
-}
-
-int getCMDCounter (CMD* cmd) {
-    return cmd->counter;
 }

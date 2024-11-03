@@ -27,6 +27,7 @@ int getCMDAgeMin (CMD* cmd);
 
 int getCMDAgeMax (CMD* cmd);
 
-int getCMDCounter (CMD* cmd);
+
+void printCMD(const CMD* cmd);
 
 #endif

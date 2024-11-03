@@ -42,3 +42,38 @@ int parseLine(char* line, char* tokens[], const char* separator) {
   }
   return tokenCount;
 }
+
+int parseCmdLine(char* line, char* tokens[]) {
+    int tokenCount = 0;
+    line[strcspn(line, "\n")] = 0;
+
+    while (*line != '\0') {
+        while (*line == ' ') line++;
+
+        if (*line == '"') {
+            line++; 
+            tokens[tokenCount++] = line;
+
+            while (*line != '"' && *line != '\0') line++;
+
+            if (*line == '"') {
+                *line = '\0';
+                line++;
+            }
+        } else {
+            tokens[tokenCount++] = line;
+
+            while (*line != ' ' && *line != '\0') line++;
+
+            if (*line == ' ') {
+                *line = '\0';
+                line++;
+            }
+        }
+
+        if (*line == '\0') break;
+    }
+
+    return tokenCount;
+}
+

@@ -28,17 +28,20 @@ int principal (char* pathData, char* pathCmd) {
 
     for (int i = 0; i< cmdNumber; i++) {
         CMD* cmd = getCommandFromMngr (cmdMngr, i);
-
+        
         switch (getCMDquery (cmd)) {
         case 1:
-            query1 (cmd, getUserManager(mngr), getCMDCounter(cmd));
+            query1 (cmd, getUserManager(mngr), i+1);
             break;
+
         case 2:
-            query2 (cmd, mngr);
+            query2 (cmd, mngr, i+1);
             break;
+
         case 3:
             //query3 (cmd);
             break;
+
         default:
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);
@@ -49,10 +52,6 @@ int principal (char* pathData, char* pathCmd) {
     return 0;
 }
 
-void test_principal (char* pathData, char* pathCmd){};
-/*
-
-// Returns the total number of commands run
 void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, argv[2]: cmd //flag is 1 if principal is running from the test program, 0 if running alone
     struct timespec cmdstart, cmdend;
     double q1total = 0, q2total = 0, q3total = 0;
@@ -63,71 +62,67 @@ void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, 
 
     getData (pathData, mngr);
 
-    FILE *fp = openFile (pathCmd);
+    cmdManager* cmdMngr = createCmdManager ();
+    int cmdNumber = readCommands (pathCmd, cmdMngr);
 
-    char str[DEFAULT];
-    while (fgets (str, sizeof str, fp) != NULL){
-
-        CMD *cmd = createCMD (i++);
+    for (; i< cmdNumber+1; i++) {
+        CMD* cmd = getCommandFromMngr (cmdMngr, i-1);
 
         char output[100];
         char expected[100];
 
-        cmd = getCommand (str, cmd);
         switch (getCMDquery (cmd)) {
         case 1:
             q1c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
-            
-            query1 (cmd, getUserManager(mngr), getCMDCounter(cmd));
-            
+
+            query1 (cmd, getUserManager(mngr), i);
+
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q1total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
 
-            snprintf(output, sizeof(output), "resultados/command%d_output.txt", getCMDCounter(cmd));
-            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", getCMDCounter(cmd));
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
+            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
     
             if(compareFiles(output, expected, i) == true) correctQ1++;
 
             break;
+
         case 2:
             q2c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
-            
-            query2 (cmd, mngr);
-            
+
+            query2 (cmd, mngr, i);
+
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q2total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
 
-            snprintf(output, sizeof(output), "resultados/command%d_output.txt", getCMDCounter(cmd));
-            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", getCMDCounter(cmd));
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
+            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
     
             if(compareFiles(output, expected, i) == true) correctQ2++;
-
             break;
+
         case 3:
             q3c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
-            
-            //query3 ();
-            
+
+            //query3 (cmd);
+
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q3total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
 
-            snprintf(output, sizeof(output), "resultados/command%d_output.txt", getCMDCounter(cmd));
-            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", getCMDCounter(cmd));
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
+            snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
     
             //if(compareFiles(output, expected, i) == true) correctQ3++;
-
             break;
+
         default:
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);
         }
-
-        freeCmd (cmd);
     }
-
 
     printf("Q1: %d de %d testes OK.\n", correctQ1, q1c);
     printf("Q2: %d de %d testes OK.\n", correctQ2, q2c);
@@ -139,10 +134,9 @@ void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, 
 
     printf("Tempos médios de execução:\n\tQ1: %.2f ms\n\tQ2: %.2f ms\n\tQ3: %.2f ms\n\n", q1avg, q2avg, q3avg);
     
-    fclose (fp);
+    freeCmdManager (cmdMngr);
     freeHash (mngr);
 }
-*/
 
 
 int tests (char* pathData, char* pathCmd) { // argv[1]: path to data, argv[2]: cmd, argv[3]: expected outputs
