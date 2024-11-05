@@ -7,10 +7,12 @@
 typedef struct {
     char* gender;
     int likes;
-} Tuple;
+} TupleMusics;
 
 void query3 (CMD *cmd, UserManager *u_mngr);
 
 void iter_hash (GHashTable* userHashTable);
+
+void defineGender (TupleMusics *array);
 
 #endif  
