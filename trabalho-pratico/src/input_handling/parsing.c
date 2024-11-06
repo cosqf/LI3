@@ -1,4 +1,6 @@
 #include <parsing.h>
+#include <utils.h>
+#include <validation.h>
 
 /* 1. Artists, because it doesn't mess with any other hashtable
    2. Musics, because it needs the artists' hastable for validation
@@ -6,28 +8,41 @@
 */
 
 void getData (char *path, EntityManager *mngr) {
-    getDataArtist (path, getArtistManager (mngr));
-    getDataMusic (path, getMusicManager (mngr), getArtistManager(mngr));
-    getDataUser (path, getUserManager(mngr), getMusicManager(mngr));
+    char *artistPath = changePath(path, Artists);
+    char *musicPath = changePath(path, Musics);
+    char *userPath = changePath(path, Users);
+
+    FILE *errorFileArtist = openErrorFileArtists();
+    FILE *errorFileMusic = openErrorFileMusics();
+    FILE *errorFileUser = openErrorFileUser();
+
+    parseFile(artistPath, callbackArtist, getArtistManager(mngr), errorFileArtist);
+    parseFile(musicPath, callbackMusic, mngr, errorFileMusic);
+    parseFile(userPath, callbackUser, mngr, errorFileUser);
+
+    fclose(errorFileUser); 
+    fclose(errorFileMusic); 
+    fclose(errorFileArtist); 
+    
+    free(artistPath);
+    free(musicPath);
+    free(userPath);
 }
 
-char* changePath(char *path, DataType type) {
-    const char* file;
 
-    if (type == Users) file = "/users.csv";
-    else if (type == Musics) file = "/musics.csv";
-    else if (type == Artists) file = "/artists.csv";
-    else {
-        perror ("changePath datatype error");
-        exit (EXIT_FAILURE);
+void parseFile (char* pathToFile, void (processLine)(char**, void*, FILE*), void* manager, FILE* errorFile) {
+    FILE* fileData = openFile (pathToFile);
+    char str[DEFAULT];
+    if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
+            perror ("skipping artist header error");
+            exit(EXIT_FAILURE);
+        }
+    while (fgets (str, sizeof (str), fileData) != NULL) {
+        char* tokens[8];
+        parseLine(str, tokens, ";");
+        processLine (tokens, manager, errorFile);
     }
-
-    char *pathUpdated = malloc(strlen(path) + strlen(file) + 1); 
-    if (pathUpdated) {
-        strcpy(pathUpdated, path); 
-        strcat(pathUpdated, file); 
-    }
-    return pathUpdated;
+    fclose (fileData);
 }
 
 int parseLine(char* line, char* tokens[], const char* separator) {
@@ -75,5 +90,25 @@ int parseCmdLine(char* line, char* tokens[]) {
     }
 
     return tokenCount;
+}
+
+
+char* changePath(char *path, DataType type) {
+    const char* file;
+
+    if (type == Users) file = "/users.csv";
+    else if (type == Musics) file = "/musics.csv";
+    else if (type == Artists) file = "/artists.csv";
+    else {
+        perror ("changePath datatype error");
+        exit (EXIT_FAILURE);
+    }
+
+    char *pathUpdated = malloc(strlen(path) + strlen(file) + 1); 
+    if (pathUpdated) {
+        strcpy(pathUpdated, path); 
+        strcat(pathUpdated, file); 
+    }
+    return pathUpdated;
 }
 

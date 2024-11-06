@@ -17,6 +17,6 @@ User* lookupUserHash (UserManager *u_mngr, int id);
 
 GHashTable* getUserTable (UserManager *u_mngr);
 
-void getDataUser (char *path, UserManager *userManager, MusicManager *musicManager);
+void callbackUser(char **tokens, void *manager, FILE *errorFile);
 
 #endif

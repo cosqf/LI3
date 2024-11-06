@@ -18,6 +18,6 @@ GHashTable* getMusicTable (MusicManager *m_mngr);
 
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data);
 
-void getDataMusic (char *path, MusicManager *musicManager, ArtistManager *artistManager);
+void callbackMusic (char** tokens, void* manager, FILE* errorFile);
 
 #endif

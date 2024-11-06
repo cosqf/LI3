@@ -1,6 +1,7 @@
 #include <users.h>
 #include <glib.h>
 #include <userManager.h>
+#include <entityManager.h>
 #include <musicManager.h>
 #include <parsingUtils.h>
 #include <parsing.h>
@@ -40,36 +41,16 @@ GHashTable* getUserTable (UserManager *u_mngr) {
     return u_mngr->user;
 }
 
-void getDataUser (char *path, UserManager *userManager, MusicManager *musicManager) {
-    char* userPath = changePath (path, Users);
-    FILE* fileData = openFile (userPath);
-    FILE* fileError = openErrorFileUser ();
+void callbackUser(char **tokens, void *manager, FILE *errorFile) { // receives entity manager
+    EntityManager* mngr = (EntityManager*) manager;
+    UserManager* user_mngr = getUserManager(mngr);
+    MusicManager* music_mngr = getMusicManager(mngr);
 
-    char str[DEFAULT];
-    if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
-        perror ("skipping user header error");
-        exit(EXIT_FAILURE);
+    User *user = createUser(tokens);
+    if (!validUser(user, music_mngr)) {
+        insertErrorFileUser(user, errorFile);
+        deleteUser(user);
+    } else {
+        insertUserHash(user_mngr, getUserID(user), user);
     }
-    while (fgets (str, sizeof (str), fileData) != NULL){
-        char* tokens[8];
-        parseLine(str, tokens, ";");
-        
-        User* user = createUser(tokens);
-        if (!validUser(user, musicManager)) {
-            insertErrorFileUser(user, fileError);
-            deleteUser(user);
-        } else insertUserHash(userManager, getUserID(user), user);
-
-        //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
-
-        //Exemplo de como dar print do que está na hashtable. Utilizado para testar
-        //User *myLookup = (User *) g_hash_table_lookup(hashUser, getUserName (user));
-        //printf("Username: %d, Email: %s, Primeiro Nome: %s\n", getUserName (myLookup), getUserEmail (myLookup), getUserFirstName (myLookup));
-       
-        
-        //printUser (user); 
-    }
-    fclose(fileData);
-    fclose(fileError);
-    free (userPath);
 }

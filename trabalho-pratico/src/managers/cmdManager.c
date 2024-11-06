@@ -25,14 +25,6 @@ void addCommandToManager(cmdManager* mngr, CMD* cmd) {
     mngr->cmdArray[mngr->counter - 1] = cmd;
 }
 
-int getCommandsCounter (cmdManager *mngr) {
-    return mngr->counter;
-}
-
-CMD* getCommandFromMngr (cmdManager *mngr, int i) {
-    return mngr->cmdArray [i];
-}
-
 int readCommands (char* path, cmdManager *mngr) {
     FILE* fp = openFile(path);
     if (fp == NULL) {
@@ -54,6 +46,14 @@ int readCommands (char* path, cmdManager *mngr) {
     fclose (fp);
     mngr->counter = i;
     return i;
+}
+
+int getCommandsCounter (cmdManager *mngr) {
+    return mngr->counter;
+}
+
+CMD* getCommandFromMngr (cmdManager *mngr, int i) {
+    return mngr->cmdArray [i];
 }
 
 void freeCmdManager (cmdManager *mngr) {
