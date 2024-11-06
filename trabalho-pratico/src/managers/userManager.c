@@ -63,9 +63,8 @@ void getDataUser (char *path, UserManager *userManager, MusicManager *musicManag
         //printf ("GETDATA:\nuser: %d\nemail:%s\nfirst name:%s\nlast name:%s\nbirthdate: %d/%d/%d\ncountry:%s\nsubscription:%d\nno. of liked songs: %d\nliked songs:", user->username, user->email, user->first_name, user->last_name, user->birth_date.year, user->birth_date.month, user->birth_date.day, user->country, user->subscription_type, user->liked_musics_count); //DEBUG
 
         //Exemplo de como dar print do que está na hashtable. Utilizado para testar
-        //User *myLookup = (User *) g_hash_table_lookup(hashUser, getUserName (user));
-        //printf("Username: %d, Email: %s, Primeiro Nome: %s\n", getUserName (myLookup), getUserEmail (myLookup), getUserFirstName (myLookup));
-       
+        //int idd = getUserID (user);
+        //printf("%d\n", idd);
         
         //printUser (user); 
     }
