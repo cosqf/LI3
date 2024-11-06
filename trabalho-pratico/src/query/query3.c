@@ -35,16 +35,14 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
             for (int i=0; i<nLikes; i++){ //para cada musica
                 int idAtual = LikedMusics[i];
                 Music* music = lookupMusicHash (m_mngr, idAtual);
-                //if(music != NULL) {
-                    char* genre = getMusicGenre (music);
-
-                    addToResults (arrayResults, genre);
-                //}
-
+                char* genre = getMusicGenre (music);
+                
+                addToResults (arrayResults, genre);
+                free (genre);
             }
         }
-
-    };
+        free (LikedMusics);
+    }
 
     qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
 
@@ -59,40 +57,40 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
     fclose(results);
 }
 
-void addToResults(TupleMusics *array, char* genre){
-    if (strcmp (genre, "Metal") == 0)
-        array[0].likes++;
-    else if (strcmp (genre, "Reggae") == 0)
-        array[1].likes++;
-    else if (strcmp (genre, "Jazz") == 0)
-        array[2].likes++;
-    else if (strcmp (genre, "Hip Hop") == 0)
-        array[3].likes++;
-    else if (strcmp (genre, "Classical") == 0)
-        array[4].likes++;
-    else if (strcmp (genre, "Rock") == 0)
-        array[5].likes++;
-    else if (strcmp (genre, "Blues") == 0)
-        array[6].likes++;
-    else if (strcmp (genre, "Country") == 0)
-        array[7].likes++;
-    else if (strcmp (genre, "Pop") == 0)
-        array[8].likes++;
-    else if (strcmp (genre, "Electronic") == 0)
-        array[9].likes++;
+GenreID getGenreID(const char *genre) {
+    if (strcmp(genre, "Metal") == 0) return GENRE_METAL;
+    if (strcmp(genre, "Reggae") == 0) return GENRE_REGGAE;
+    if (strcmp(genre, "Jazz") == 0) return GENRE_JAZZ;
+    if (strcmp(genre, "Hip Hop") == 0) return GENRE_HIPHOP;
+    if (strcmp(genre, "Classical") == 0) return GENRE_CLASSICAL;
+    if (strcmp(genre, "Rock") == 0) return GENRE_ROCK;
+    if (strcmp(genre, "Blues") == 0) return GENRE_BLUES;
+    if (strcmp(genre, "Country") == 0) return GENRE_COUNTRY;
+    if (strcmp(genre, "Pop") == 0) return GENRE_POP;
+    if (strcmp(genre, "Electronic") == 0) return GENRE_ELECTRONIC;
+    return -1; // Invalid genre
 }
 
+
+void addToResults(TupleMusics *array, const char* genre) {
+    GenreID genreID = getGenreID(genre);
+    if (genreID >= 0 && genreID < 10) {
+        array[genreID].likes++;
+    }
+}
+
+
 void defineGenre(TupleMusics *array) {
-    array[0].genre = "Metal"; array[0].likes = 0;
-    array[1].genre = "Reggae"; array[1].likes = 0;
-    array[2].genre = "Jazz"; array[2].likes = 0;
-    array[3].genre = "Hip Hop"; array[3].likes = 0;
-    array[4].genre = "Classical"; array[4].likes = 0;
-    array[5].genre = "Rock"; array[5].likes = 0;
-    array[6].genre = "Blues"; array[6].likes = 0;
-    array[7].genre = "Country"; array[7].likes = 0;
-    array[8].genre = "Pop"; array[8].likes = 0;
-    array[9].genre = "Electronic"; array[9].likes = 0;
+    array[GENRE_METAL]      = (TupleMusics) { .genre = "Metal", .likes = 0 };
+    array[GENRE_REGGAE]     = (TupleMusics) { .genre = "Reggae", .likes = 0 };
+    array[GENRE_JAZZ]       = (TupleMusics) { .genre = "Jazz", .likes = 0 };
+    array[GENRE_HIPHOP]     = (TupleMusics) { .genre = "Hip Hop", .likes = 0 };
+    array[GENRE_CLASSICAL]  = (TupleMusics) { .genre = "Classical", .likes = 0 };
+    array[GENRE_ROCK]       = (TupleMusics) { .genre = "Rock", .likes = 0 };
+    array[GENRE_BLUES]      = (TupleMusics) { .genre = "Blues", .likes = 0 };
+    array[GENRE_COUNTRY]    = (TupleMusics) { .genre = "Country", .likes = 0 };
+    array[GENRE_POP]        = (TupleMusics) { .genre = "Pop", .likes = 0 };
+    array[GENRE_ELECTRONIC] = (TupleMusics) { .genre = "Electronic", .likes = 0 };
 }
 
 int compareLikes(const void* a, const void* b) {
@@ -103,8 +101,8 @@ int compareLikes(const void* a, const void* b) {
     if (tupleA->likes < tupleB->likes) return 1;
  
     // if the likes are equal, orders alphabetically
-    if(tupleA->genre[0] > tupleB->genre[0]) return 1;
-    if(tupleA->genre[0] < tupleB->genre[0]) return -1;
+    if(strcmp (tupleA->genre, tupleB->genre) > 0) return 1;
+    if(strcmp (tupleA->genre, tupleB->genre) < 0) return -1;
 
     return 0;
 }

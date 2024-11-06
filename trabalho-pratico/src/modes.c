@@ -40,7 +40,7 @@ int principal (char* pathData, char* pathCmd) {
             break;
 
         case 3:
-            query3 (cmd, getUserManager(mngr), getMusicManager(mngr), i);
+            query3 (cmd, getUserManager(mngr), getMusicManager(mngr), i+1);
             break;
 
         default:
