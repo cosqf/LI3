@@ -36,7 +36,7 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr){
 
     };
     for (int j=0; j<10; j++)
-        printf("%s, %d\n", arrayResults[j].gender, arrayResults[j].likes);
+        printf("%s, %d\n", arrayResults[j].genre, arrayResults[j].likes);
     printf ("\n");
 }
 
@@ -64,14 +64,14 @@ void addToResults(TupleMusics *array, char* genre){
 }
 
 void defineGender (TupleMusics *array){
-    array[0].gender = "Metal";
-    array[1].gender = "Reggae";
-    array[2].gender = "Jazz";
-    array[3].gender = "Hip Hop";
-    array[4].gender = "Classical";
-    array[5].gender = "Rock";
-    array[6].gender = "Blues";
-    array[7].gender = "Country";
-    array[8].gender = "Pop";
-    array[9].gender = "Electronic";
+    array[0].genre = "Metal";
+    array[1].genre = "Reggae";
+    array[2].genre = "Jazz";
+    array[3].genre = "Hip Hop";
+    array[4].genre = "Classical";
+    array[5].genre = "Rock";
+    array[6].genre = "Blues";
+    array[7].genre = "Country";
+    array[8].genre = "Pop";
+    array[9].genre = "Electronic";
 }

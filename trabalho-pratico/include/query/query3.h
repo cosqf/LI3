@@ -5,7 +5,7 @@
 #define _QUERY3_H_
 
 typedef struct {
-    char* gender;
+    char* genre;
     int likes;
 } TupleMusics;
 
