@@ -47,7 +47,10 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
     qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
 
     for (int j=0; j<10; j++){
-        if(arrayResults[j].likes == 0) continue;
+        if(arrayResults[j].likes == 0) {
+            fprintf(results, "\n");
+            break;
+        }
         char str[20];
         snprintf(str, sizeof(str), "%d", arrayResults[j].likes);
         fprintf(results, "%s;%s\n", arrayResults[j].genre, str);
