@@ -139,14 +139,16 @@ int getUserLikedCounter (User* user) {
 /* Getter for the age of the user
 Current date 2024/09/09 */
 int getUserAge (User* user) {
-    int age, year, month, day;
-    char* birthDate = getUserBirthDateString (user);
-    sscanf(birthDate,"%4d/%2d/%2d", &year, &month, &day);
-    age = 2024 - year;
-    if (month > 9)
-        age--;
-    if (month == 9 && day > 9)
-        age--;
+    int age = -1;
+    int birthYear, birthMonth, birthDay;
+    char* bdate = getUserBirthDateString(user);
+
+    if (sscanf(bdate, "%d/%d/%d", &birthYear, &birthMonth, &birthDay) == 3) {
+        age = 2024 - birthYear;
+        if (birthMonth > 9 || (birthMonth == 9 && birthDay > 9)) age--;
+    }
+
+    free(bdate);
     return age;
 }
 

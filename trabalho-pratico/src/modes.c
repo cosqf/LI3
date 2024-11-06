@@ -40,7 +40,7 @@ int principal (char* pathData, char* pathCmd) {
             break;
 
         case 3:
-            query3 (cmd, getUserManager(mngr), getMusicManager(mngr));
+            query3 (cmd, getUserManager(mngr), getMusicManager(mngr), i);
             break;
 
         default:
@@ -108,7 +108,7 @@ void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, 
             q3c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
 
-            query3 (cmd, getUserManager(mngr), getMusicManager(mngr));
+            query3 (cmd, getUserManager(mngr), getMusicManager(mngr), i);
 
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q3total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
@@ -116,7 +116,7 @@ void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, 
             snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
             snprintf(expected, sizeof(expected), "outputs_esperados/command%d_output.txt", i);
     
-            //if(compareFiles(output, expected, i) == true) correctQ3++;
+            if(compareFiles(output, expected, i) == true) correctQ3++;
             break;
 
         default:

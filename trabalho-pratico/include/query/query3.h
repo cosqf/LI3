@@ -9,11 +9,13 @@ typedef struct {
     int likes;
 } TupleMusics;
 
-void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr);
+void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int);
 
 //void iter_hash (GHashTable* userHashTable, GHashTable* musicHashTable, int AgeMin, int AgeMax);
 void addToResults(TupleMusics *array, char* genre);
 
-void defineGender (TupleMusics *array);
+void defineGenre (TupleMusics *array);
+
+int compareLikes(const void* a, const void* b);
 
 #endif  

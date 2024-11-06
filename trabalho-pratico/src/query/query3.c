@@ -4,11 +4,19 @@
 #include <stdlib.h>
 
 
-void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr){
+void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter){
     GHashTable* userHashTable = getUserTable (u_mngr);
    // GHashTable* musicHashTable = getMusicTable (m_mngr);
     GHashTableIter iter;
     gpointer key, value;
+//
+    char filename[50];  // buffer for the formatted file name
+
+    // Format the filename with the counter value
+    snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
+
+    FILE* results = fopen (filename, "w");
+//
 
     g_hash_table_iter_init(&iter, userHashTable);
 
@@ -16,7 +24,7 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr){
     int AgeMax = getCMDAgeMax(cmd);
     TupleMusics arrayResults [10];
 
-    defineGender (arrayResults);
+    defineGenre (arrayResults);
 
     while (g_hash_table_iter_next(&iter, &key, &value)) { //para cada user
         User* user = (User*) value;
@@ -27,17 +35,28 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr){
             for (int i=0; i<nLikes; i++){ //para cada musica
                 int idAtual = LikedMusics[i];
                 Music* music = lookupMusicHash (m_mngr, idAtual);
-                char* genre = getMusicGenre (music);
+                //if(music != NULL) {
+                    char* genre = getMusicGenre (music);
 
-                addToResults (arrayResults, genre);
+                    addToResults (arrayResults, genre);
+                //}
 
             }
         }
 
     };
-    for (int j=0; j<10; j++)
-        printf("%s, %d\n", arrayResults[j].genre, arrayResults[j].likes);
-    printf ("\n");
+
+    qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
+
+    for (int j=0; j<10; j++){
+        if(arrayResults[j].likes == 0) continue;
+        char str[20];
+        snprintf(str, sizeof(str), "%d", arrayResults[j].likes);
+        fprintf(results, "%s;%s\n", arrayResults[j].genre, str);
+    }
+    //printf ("\n");
+    //fprintf(results, "\n");
+    fclose(results);
 }
 
 void addToResults(TupleMusics *array, char* genre){
@@ -63,15 +82,29 @@ void addToResults(TupleMusics *array, char* genre){
         array[9].likes++;
 }
 
-void defineGender (TupleMusics *array){
-    array[0].genre = "Metal";
-    array[1].genre = "Reggae";
-    array[2].genre = "Jazz";
-    array[3].genre = "Hip Hop";
-    array[4].genre = "Classical";
-    array[5].genre = "Rock";
-    array[6].genre = "Blues";
-    array[7].genre = "Country";
-    array[8].genre = "Pop";
-    array[9].genre = "Electronic";
+void defineGenre(TupleMusics *array) {
+    array[0].genre = "Metal"; array[0].likes = 0;
+    array[1].genre = "Reggae"; array[1].likes = 0;
+    array[2].genre = "Jazz"; array[2].likes = 0;
+    array[3].genre = "Hip Hop"; array[3].likes = 0;
+    array[4].genre = "Classical"; array[4].likes = 0;
+    array[5].genre = "Rock"; array[5].likes = 0;
+    array[6].genre = "Blues"; array[6].likes = 0;
+    array[7].genre = "Country"; array[7].likes = 0;
+    array[8].genre = "Pop"; array[8].likes = 0;
+    array[9].genre = "Electronic"; array[9].likes = 0;
+}
+
+int compareLikes(const void* a, const void* b) {
+    const TupleMusics* tupleA = (const TupleMusics*)a;
+    const TupleMusics* tupleB = (const TupleMusics*)b;
+
+    if (tupleA->likes > tupleB->likes) return -1;  // descending order
+    if (tupleA->likes < tupleB->likes) return 1;
+ 
+    // if the likes are equal, orders alphabetically
+    if(tupleA->genre[0] > tupleB->genre[0]) return 1;
+    if(tupleA->genre[0] < tupleB->genre[0]) return -1;
+
+    return 0;
 }
