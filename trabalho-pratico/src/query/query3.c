@@ -29,15 +29,39 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr){
                 Music* music = lookupMusicHash (m_mngr, idAtual);
                 char* genre = getMusicGenre (music);
 
+                addToResults (arrayResults, genre);
 
-                //ver as musicas e adicionar à contagem do array
             }
         }
 
     };
+    for (int j=0; j<10; j++)
+        printf("%s, %d\n", arrayResults[j].gender, arrayResults[j].likes);
+    printf ("\n");
 }
 
-
+void addToResults(TupleMusics *array, char* genre){
+    if (strcmp (genre, "Metal") == 0)
+        array[0].likes++;
+    else if (strcmp (genre, "Reggae") == 0)
+        array[1].likes++;
+    else if (strcmp (genre, "Jazz") == 0)
+        array[2].likes++;
+    else if (strcmp (genre, "Hip Hop") == 0)
+        array[3].likes++;
+    else if (strcmp (genre, "Classical") == 0)
+        array[4].likes++;
+    else if (strcmp (genre, "Rock") == 0)
+        array[5].likes++;
+    else if (strcmp (genre, "Blues") == 0)
+        array[6].likes++;
+    else if (strcmp (genre, "Country") == 0)
+        array[7].likes++;
+    else if (strcmp (genre, "Pop") == 0)
+        array[8].likes++;
+    else if (strcmp (genre, "Electronic") == 0)
+        array[9].likes++;
+}
 
 void defineGender (TupleMusics *array){
     array[0].gender = "Metal";

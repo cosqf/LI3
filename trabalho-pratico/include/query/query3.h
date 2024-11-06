@@ -12,6 +12,7 @@ typedef struct {
 void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr);
 
 //void iter_hash (GHashTable* userHashTable, GHashTable* musicHashTable, int AgeMin, int AgeMax);
+void addToResults(TupleMusics *array, char* genre);
 
 void defineGender (TupleMusics *array);
 
