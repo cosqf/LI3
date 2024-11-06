@@ -25,6 +25,7 @@ char* getUserSubscriptionTypeString (User *user);
 int* getUserLikedMusicsID(User* user);
 char* getUserLikedMusicsIDString (User *user);
 int getUserLikedCounter (User* user);
+int getUserAge (User* user);
 
 // SETTERs
 void setUserID(User* user, const char* username);

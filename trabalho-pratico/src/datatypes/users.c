@@ -136,7 +136,21 @@ int getUserLikedCounter (User* user) {
     return user->liked_musics_count;
 }
 
+/* Getter for the age of the user
+Current date 2024/09/09 */
+int getUserAge (User* user) {
+    int age = -1;
+    int birthYear, birthMonth, birthDay;
+    char* bdate = getUserBirthDateString(user);
 
+    if (sscanf(bdate, "%d/%d/%d", &birthYear, &birthMonth, &birthDay) == 3) {
+        age = 2024 - birthYear;
+        if (birthMonth > 9 || (birthMonth == 9 && birthDay > 9)) age--;
+    }
+
+    free(bdate);
+    return age;
+}
 
 // SETTERS
 

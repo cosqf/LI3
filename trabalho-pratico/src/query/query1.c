@@ -21,7 +21,7 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
         char* email = getUserEmail(user);
         char* firstname = getUserFirstName(user);
         char* lastname = getUserLastName(user);
-        int age = calculateAge(user);
+        int age = getUserAge(user);
         char* country = getUserCountry(user);
 
         fprintf(results, "%s;%s;%s;%d;%s", email, firstname, lastname, age, country); //email;first_name;last_name;age;country
@@ -34,18 +34,4 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
 
     fprintf(results, "\n");
     fclose(results);
-}
-
-int calculateAge(User* user) {
-    int age = -1;
-    int birthYear, birthMonth, birthDay;
-    char* bdate = getUserBirthDateString(user);
-
-    if (sscanf(bdate, "%d/%d/%d", &birthYear, &birthMonth, &birthDay) == 3) {
-        age = 2024 - birthYear;
-        if (birthMonth > 9 || (birthMonth == 9 && birthDay > 9)) age--;
-    }
-
-    free(bdate);
-    return age;
 }
