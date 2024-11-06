@@ -4,38 +4,39 @@
 #include <stdlib.h>
 
 
-void query3 (CMD *cmd, UserManager *u_mngr){
-    (void) u_mngr;
+void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr){
     GHashTable* userHashTable = getUserTable (u_mngr);
+   // GHashTable* musicHashTable = getMusicTable (m_mngr);
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, userHashTable);
+
     int AgeMin = getCMDAgeMin(cmd);
     int AgeMax = getCMDAgeMax(cmd);
     TupleMusics arrayResults [10];
 
     defineGender (arrayResults);
 
-    printf ("%d %d\n", AgeMin, AgeMax);
-    iter_hash (userHashTable);
-
-};
-
-
-void iter_hash(GHashTable* userHashTable) {
-    GHashTableIter iter;
-    gpointer key, value;
-
-    g_hash_table_iter_init(&iter, userHashTable);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
+    while (g_hash_table_iter_next(&iter, &key, &value)) { //para cada user
         User* user = (User*) value;
-        int age = getUserAge (user);
-        //int id = getUserID (user);
-        //if (age == 50)
-            //printf ("%d\n", id);
+        int age = getUserAge (user), nLikes = getUserLikedCounter (user);
+        int* LikedMusics = getUserLikedMusicsID (user);
+
+        if (age >= AgeMin && age <= AgeMax){
+            for (int i=0; i<nLikes; i++){ //para cada musica
+                int idAtual = LikedMusics[i];
+                Music* music = lookupMusicHash (m_mngr, idAtual);
+                char* genre = getMusicGenre (music);
 
 
-
+                //ver as musicas e adicionar à contagem do array
+            }
         }
-    }
+
+    };
+}
+
 
 
 void defineGender (TupleMusics *array){
