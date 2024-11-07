@@ -24,10 +24,10 @@ Duration parseDuration(char*);
 
 
 // for debug
-void insertErrorFileUser (User *user, FILE *fp);
+void insertErrorFileUser (UserString *user, FILE *fp);
 
-void insertErrorFileMusics (Music *music, FILE *fp);
+void insertErrorFileMusics (MusicString *music, FILE *fp);
 
-void insertErrorFileArtists (Artist *artist, FILE *fp);
+void insertErrorFileArtists (ArtistString *artist, FILE *fp);
 
 #endif

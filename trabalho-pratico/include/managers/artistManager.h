@@ -16,6 +16,8 @@ Artist* lookupArtistHash (ArtistManager *a_mngr, int id);
 
 GHashTable* getArtistTable (ArtistManager *a_mngr);
 
+void getDataArtist (char *path, ArtistManager* mngr);
+
 void callbackArtist(char **tokens, void *manager, FILE *errorFile);
 
 #endif

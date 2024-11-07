@@ -14,7 +14,7 @@ typedef struct {
 
 Date parseDate(char*);
 
-int* parseIDs(char *, void*, DataType);
+int* parseIDs(char *);
 
 char* trimString (char *);
 

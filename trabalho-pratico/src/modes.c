@@ -12,17 +12,13 @@
 #include <query1.h>
 #include <query2.h>
 #include <query3.h>
-#include <entityManager.h>
+#include <hashtableManager.h>
 #include <cmdManager.h>
 
 int principal (char* pathData, char* pathCmd) {
-    EntityManager* mngr = initializeHash ();
+    hashtableManager* mngr = initializeHash ();
 
     getData (pathData, mngr);
-
-    //writeUsersToErrorFile(getUserTable (getUserManager(mngr)));
-    //writeArtistsToErrorFile(getArtistTable (getArtistManager(mngr)));
-    //writeMusicsToErrorFile(getMusicTable (getMusicManager(mngr)));
 
     cmdManager* cmdMngr = createCmdManager ();
     int cmdNumber = readCommands (pathCmd, cmdMngr);
@@ -59,7 +55,7 @@ void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, 
 
     int i = 1, q1c = 0, q2c = 0, q3c = 0; // i counts the total commands run, the others count the commands run for each query
     int correctQ1 = 0, correctQ2 = 0, correctQ3 = 0; // counts the commands that execute correctly
-    EntityManager* mngr = initializeHash ();
+    hashtableManager* mngr = initializeHash ();
 
     getData (pathData, mngr);
 
@@ -118,7 +114,6 @@ void test_principal (char* pathData, char* pathCmd) { // argv[1]: path to data, 
     
             if(compareFiles(output, expected, i) == true) correctQ3++;
             break;
-
         default:
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);

@@ -5,6 +5,7 @@
 #include <utils.h>
 #include <validation.h>
 #include <validateDatatypes.h>
+#include <parsing.h>
 
 typedef struct artistManager {
     GHashTable *artist;
@@ -39,12 +40,24 @@ GHashTable* getArtistTable (ArtistManager *a_mngr) {
     return a_mngr->artist;
 }
 
+
+void getDataArtist (char *path, ArtistManager* mngr) {
+    FILE *errorFileArtist = openErrorFileArtists();
+
+    parseFile(path, callbackArtist, mngr, errorFileArtist);
+
+    fclose(errorFileArtist); 
+}
+
 void callbackArtist(char **tokens, void *manager, FILE *errorFile) {
     ArtistManager* artistManager = (ArtistManager*) manager;
  
-    Artist* artist = createArtist(tokens);
-    if (!validArtist(artist)) {
-            insertErrorFileArtists(artist, errorFile);
-            deleteArtist(artist);
-    } else insertArtistHash(artistManager, getArtistID(artist), artist);
+    ArtistString* artistS = createArtistString(tokens);
+    if (!validArtist(artistS)) insertErrorFileArtists(artistS, errorFile);
+    else {
+        Artist* artist = createArtist (tokens);
+        insertArtistHash(artistManager, getArtistID(artist), artist);
+    }
+    deleteArtistString(artistS);
+
 }

@@ -16,7 +16,7 @@ typedef struct {
 } FeederData;
 
 
-void query2(CMD *cmd, EntityManager *mngr, int cmdCounter) {
+void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     GHashTable *hashDuration = createHash(); // temporary hash table 
     char* country = getCMDCountry(cmd);
     FeederData data = { 
@@ -73,7 +73,6 @@ void feeder(gpointer value, gpointer music_data) {
     int idsCounter = getMusicArtistIDCount (music);
 
     getArtistsDiscography(ids, idsCounter, hashDuration, duration, country_filter, a_mngr);
-    free (ids);
 }
 
 //Insert the duration of an artist's discography in the new hashtable, using the id as key
@@ -144,13 +143,16 @@ void updateDurationHash(int id, GHashTable* newtable, int duration) {
 
 void printResult (Artist* artist, Duration dur, FILE* fp) {
     char* name = getArtistName (artist);
-    char* type = getArtistTypeString(artist);
+    bool type = getArtistType(artist);
     char* artist_country = getArtistCountry(artist); 
     char* duration = durationInString (dur);
 
-    fprintf (fp, "%s;%s;%s;%s\n", name, type, duration, artist_country);
+    char typeString[11];
+    if (type) strcpy (typeString, "group");
+    else strcpy (typeString, "individual");
+
+    fprintf (fp, "%s;%s;%s;%s\n", name, typeString, duration, artist_country);
     free (name);
-    free(type);
     free(artist_country);
     free(duration);
 }

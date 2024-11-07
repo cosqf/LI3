@@ -1,34 +1,26 @@
 #include <parsing.h>
 #include <utils.h>
 #include <validation.h>
+#include <userManager.h>
 
 /* 1. Artists, because it doesn't mess with any other hashtable
    2. Musics, because it needs the artists' hastable for validation
    3. Users, because it needs the musics' hashtable for validation
 */
 
-void getData (char *path, EntityManager *mngr) {
+void getData (char *path, hashtableManager *mngr) {
     char *artistPath = changePath(path, Artists);
     char *musicPath = changePath(path, Musics);
     char *userPath = changePath(path, Users);
 
-    FILE *errorFileArtist = openErrorFileArtists();
-    FILE *errorFileMusic = openErrorFileMusics();
-    FILE *errorFileUser = openErrorFileUser();
-
-    parseFile(artistPath, callbackArtist, getArtistManager(mngr), errorFileArtist);
-    parseFile(musicPath, callbackMusic, mngr, errorFileMusic);
-    parseFile(userPath, callbackUser, mngr, errorFileUser);
-
-    fclose(errorFileUser); 
-    fclose(errorFileMusic); 
-    fclose(errorFileArtist); 
+    getDataArtist (artistPath, getArtistManager (mngr));
+    getDataMusic (musicPath, mngr);
+    getDataUser (userPath, mngr);
     
     free(artistPath);
     free(musicPath);
     free(userPath);
 }
-
 
 void parseFile (char* pathToFile, void (processLine)(char**, void*, FILE*), void* manager, FILE* errorFile) {
     FILE* fileData = openFile (pathToFile);

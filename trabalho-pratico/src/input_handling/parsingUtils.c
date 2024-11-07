@@ -22,7 +22,7 @@ Date parseDate(char* dateStr) {
     return date;
 }
 
-int* parseIDs(char *line, void* IDnum, DataType type) {
+int* parseIDs(char *line) {
     if (line == NULL) return NULL;
 
     char *copy = strdup(line);
@@ -49,9 +49,6 @@ int* parseIDs(char *line, void* IDnum, DataType type) {
         ids[count] = id;
         count++;
     }
-    
-    updateCount (IDnum, type, count);
-
     free(copy);
     return ids;
 }

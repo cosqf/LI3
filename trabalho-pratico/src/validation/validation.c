@@ -17,13 +17,13 @@ FILE * openErrorFileUser () {
     return fp;
 }
 
-void insertErrorFileUser(User *user, FILE *fp) {
+void insertErrorFileUser(UserString *user, FILE *fp) {
     char* username = getUserIDString(user);
-    char* email = getUserEmail(user);
-    char* firstName = getUserFirstName(user);
-    char* lastName = getUserLastName(user);
+    char* email = getUserEmailString(user);
+    char* firstName = getUserFirstNameString(user);
+    char* lastName = getUserLastNameString(user);
     char* birthDate = getUserBirthDateString(user);
-    char* country = getUserCountry(user);
+    char* country = getUserCountryString(user);
     char* subscriptionType = getUserSubscriptionTypeString(user);
     char* likedMusicsID = getUserLikedMusicsIDString(user);
 
@@ -49,13 +49,13 @@ FILE * openErrorFileArtists (){
     return fp;
 }
 
-void insertErrorFileArtists (Artist *artist, FILE *fp) {
+void insertErrorFileArtists (ArtistString *artist, FILE *fp) {
     char* id = getArtistIDString(artist);
-    char* name = getArtistName(artist);
-    char* description = getArtistDescription(artist);
+    char* name = getArtistNameString(artist);
+    char* description = getArtistDescriptionString(artist);
     char* recipePerStream = getArtistRecipePerStreamString(artist);
     char* idConstituent = getArtistIDConstituentString(artist);
-    char* country = getArtistCountry(artist);
+    char* country = getArtistCountryString(artist);
     char* type = getArtistTypeString(artist);
 
     fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", id, name, description, recipePerStream, idConstituent, country, type);
@@ -80,14 +80,14 @@ FILE * openErrorFileMusics (){
     return fp;
 }
 
-void insertErrorFileMusics(Music *music, FILE *fp) {
+void insertErrorFileMusics(MusicString *music, FILE *fp) {
     char* id = getMusicIDString(music);
-    char* title = getMusicTitle(music);
+    char* title = getMusicTitleString(music);
     char* artistID = getMusicArtistIDString(music);
     char* duration = getMusicDurationString(music);
-    char* genre = getMusicGenre(music);
+    char* genre = getMusicGenreString(music);
     char* year = getMusicYearString(music);
-    char* lyrics = getMusicLyrics(music);
+    char* lyrics = getMusicLyricsString(music);
 
     fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", id, title, artistID, duration, genre, year, lyrics);
 
