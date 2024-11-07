@@ -14,6 +14,8 @@
 #include <artistManager.h>
 #include <userManager.h>
 #include <musicManager.h>
+#include <errno.h>
+#include <limits.h>
 
 FILE* openFile (char * argv) { 
     FILE* fp = fopen (argv, "r");
@@ -129,4 +131,42 @@ char* durationInString(Duration time) {
     sprintf(str, "%02d:%02d:%02d", time.hours, time.minutes, time.seconds);
 
     return str; 
+}
+
+// Function to safely convert a string to int with error handling
+bool convertToInt(const char *str, int *out) {
+    char *endptr;
+    errno = 0; 
+    long val = strtol(str, &endptr, 10); 
+
+    // Error handling: check for overflow and underflow
+    if (errno == ERANGE) {
+        if (val == LONG_MAX) {
+            fprintf(stderr, "Overflow: value is too large.\n");
+        } else if (val == LONG_MIN) {
+            fprintf(stderr, "Underflow: value is too small.\n");
+        }
+        return false;
+    }
+
+    // Check if no digits were found
+    if (endptr == str) {
+        fprintf(stderr, "Invalid input: No digits were found.\n");
+        return false;
+    }
+
+    // Check if there were any leftover characters
+    if (*endptr != '\0') {
+        fprintf(stderr, "Invalid input: Non-numeric characters found: '%s'\n", endptr);
+        return false;
+    }
+
+    // Check if the value fits within the range of int
+    if (val < INT_MIN || val > INT_MAX) {
+        fprintf(stderr,"Error: Value is out of int range.\n");
+        return false;
+    }
+
+    *out = (int)val;
+    return true;
 }

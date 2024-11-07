@@ -15,8 +15,6 @@ char *trimString(char *str);
 
 char* trimStringWithoutBrackets (char* str);
 
-void updateCount(void*, DataType, int);
-
 int isletter(char);
 
 int isDigit(char);
@@ -35,5 +33,5 @@ void writeMusicsToErrorFile(GHashTable* );
 void writeUsersToErrorFile(GHashTable* );
 void writeArtistsToErrorFile(GHashTable* );
 
-void printHash (GHashTable* table);
+bool convertToInt(const char *str, int *out);
 #endif

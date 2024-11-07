@@ -32,13 +32,19 @@ Music* createMusic(char** tokens) {
     Music* music = (Music*) malloc (sizeof(Music));
     if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
-    music->id = atoi (trimString(tokens[0]) + 1);
+    int id, year;
+    if (convertToInt (trimString((tokens[0])) + 1, &id)) music->id = id;
+    else exit (EXIT_FAILURE);
+
     music->title = strdup (trimString(tokens[1]));
     music->artist_id = parseIDs (trimStringWithoutBrackets(tokens[2]));
     music->artist_id_count = IdCounter (tokens[2]);
     music->duration = parseDuration (trimString(tokens[3]));
     music->genre = getGenre (trimString(tokens[4]));
-    music->year = atoi (trimString(tokens[5]));
+
+    if (convertToInt (trimString((tokens[5])), &year)) music->year = year;
+    else exit (EXIT_FAILURE);
+
     music->lyrics = strdup (trimString(tokens[6]));
     
     return music;

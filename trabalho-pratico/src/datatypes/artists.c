@@ -32,7 +32,10 @@ Artist* createArtist(char **tokens) {
     Artist* artist = malloc(sizeof(Artist));
     if (mallocErrorCheck (artist)) exit (EXIT_FAILURE);
 
-    artist->id = atoi (trimString(tokens[0]) + 1);
+    int id;
+    if (convertToInt (trimString((tokens[0])) + 1, &id)) artist->id = id;
+    else exit (EXIT_FAILURE);
+
     artist->name = strdup (trimString(tokens[1]));
     artist->description = strdup (trimString(tokens[2]));
     artist->recipe_per_stream = atof (trimString(tokens[3]));

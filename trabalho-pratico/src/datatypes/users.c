@@ -51,7 +51,9 @@ UserString* createUserString (char** tokens) {
 User* createUser (char** tokens) {
     User* user = malloc(sizeof(User));
     if (mallocErrorCheck (user)) exit (EXIT_FAILURE);
-    user->id = atoi (trimString((tokens[0])) + 1);
+    int id;
+    if (convertToInt (trimString((tokens[0])) + 1, &id)) user->id = id;
+    else exit (EXIT_FAILURE);
     user->email = strdup (trimString((tokens[1])));
     user->first_name = strdup (trimString((tokens[2])));
     user->last_name = strdup (trimString((tokens[3])));

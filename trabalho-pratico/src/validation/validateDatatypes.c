@@ -106,13 +106,15 @@ bool validLikes(int* liked_musics_id, int liked_musics_count, MusicManager *m_mn
 
 // Validates the music as a whole
 bool validMusic(MusicString* music, ArtistManager *a_mngr){
-    Duration dur = parseDuration (getMusicDurationString(music));
+    char* durString = getMusicDurationString(music);
+    Duration dur = parseDuration (durString);
     char* idsString = getMusicArtistIDString(music);
-    int* ids =  parseIDs (getMusicArtistIDString (music));
+    int* ids = parseIDs (idsString);
     int artistIDCount = getMusicArtistIDCountString(music);
 
     bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr));
 
+    free (durString);
     free (idsString);
     free (ids);
     

@@ -35,8 +35,20 @@ int* parseIDs(char *line) {
     while ((token = strsep(&copyPtr, ",")) != NULL) {
 
         while (*token == ' ' || *token == '\'' || *token == 'U' || *token == 'S' || *token == 'A' || *token == '[' || *token == ']') token++;
+        if (*token == '\0') continue;
+        char *end = token + strlen(token) - 1;
+        while (end >= token && (*end == ' ' || *end == '\'' || *end == 'U' || *end == 'S' || *end == 'A' || *end == ']' || *end == '[')) {
+            end--;
+        }
+        *(end + 1) = '\0';
 
-        int id = atoi(token);
+        int id;
+        if (!convertToInt (token, &id)) {
+            fprintf(stderr, "Conversion error for token: %s\n", token);
+            free(ids);
+            free(copy);
+            exit(EXIT_FAILURE);
+        }
 
         int* temp = realloc(ids, sizeof(int) * (count + 1));
         if (temp == NULL) {
@@ -52,7 +64,6 @@ int* parseIDs(char *line) {
     free(copy);
     return ids;
 }
-
 
 
 int IdCounter(char* id_counter) {
