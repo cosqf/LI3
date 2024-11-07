@@ -9,6 +9,7 @@
 
 #include <validateDatatypes.h>
 #include <utils.h>
+#include <validation.h>
 
 #include <artistManager.h>
 #include <musicManager.h>
@@ -16,13 +17,13 @@
 //USERS
 
 // Validates the user as a whole
-bool validUser(User* user, MusicManager *m_mngr){
-    char* email = getUserEmail(user);
+bool validUser(UserString* user, MusicManager *m_mngr){
+    char* email = getUserEmailString(user);
     char* birthdate = getUserBirthDateString(user);
     char* subscription = getUserSubscriptionTypeString(user);
     char* likedMusicsString = getUserLikedMusicsIDString(user);
-    int* likedMusics = getUserLikedMusicsID(user);
-    int likedMusicsCount = getUserLikedCounter(user);
+    int* likedMusics = getUserLikedMusicsIDStringArray(user);
+    int likedMusicsCount = getUserLikedCounterString(user);
 
     bool valid = (validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validList(likedMusicsString) && validLikes(likedMusics, likedMusicsCount, m_mngr));
     
@@ -104,14 +105,14 @@ bool validLikes(int* liked_musics_id, int liked_musics_count, MusicManager *m_mn
 //MUSICS
 
 // Validates the music as a whole
-bool validMusic(Music* music, ArtistManager *a_mngr){
-    Duration dur = getMusicDuration(music);
+bool validMusic(MusicString* music, ArtistManager *a_mngr){
+    Duration dur = parseDuration (getMusicDurationString(music));
     char* idsString = getMusicArtistIDString(music);
-    int* ids =  getMusicArtistID (music);
-    int artistIDCount = getMusicArtistIDCount(music);
+    int* ids =  parseIDs (getMusicArtistIDString (music));
+    int artistIDCount = getMusicArtistIDCountString(music);
 
     bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr));
-    
+
     free (idsString);
     free (ids);
     
@@ -144,9 +145,9 @@ bool validArtistId(int* id, int n, ArtistManager *a_mngr){
 //ARTISTS
 
 // Validates the artist as a whole
-bool validArtist(Artist* artist){
+bool validArtist(ArtistString* artist){
     char* type = getArtistTypeString(artist);
-    int constituentCounter = getArtistIDConstituentCounter(artist);
+    int constituentCounter = getArtistIDConstituentCounterString(artist);
     char* constituents = getArtistIDConstituentString(artist);
 
     bool valid = (validList(constituents) && validIdConst(type, constituentCounter));

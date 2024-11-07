@@ -11,7 +11,7 @@
 #define _VALIDATEDATATYPES_H_
 
 //USERS
-bool validUser(User*, MusicManager*);
+bool validUser(UserString*, MusicManager *);
 
 bool validEmail(char*);
 
@@ -22,14 +22,14 @@ bool validSubscription(char*);
 bool validLikes(int*, int, MusicManager*);
 
 //MUSICS
-bool validMusic(Music*, ArtistManager*);
+bool validMusic(MusicString*, ArtistManager*);
 
 bool validDuration(Duration);
 
 bool validArtistId(int*, int, ArtistManager*);    
 
 //ARTISTS
-bool validArtist(Artist*);
+bool validArtist(ArtistString*);
 
 bool validIdConst(char*, int);
 

@@ -5,20 +5,20 @@
 #include <artistManager.h>
 #include <musicManager.h>
 
-#ifndef ENTITY_MANAGER_H 
-#define ENTITY_MANAGER_H
+#ifndef HASHTABLE_MANAGER_H 
+#define HASHTABLE_MANAGER_H
 
 //GHashTable *hashUser = g_hash_table_new(g_int_hash, g_int_equal);
 
-typedef struct entityManager EntityManager;
+typedef struct hashtableManager hashtableManager;
 
-EntityManager* initializeHash ();
+hashtableManager* initializeHash ();
 
-void freeHash (EntityManager *mngr);
+void freeHash (hashtableManager *mngr);
 
-UserManager* getUserManager (EntityManager *mngr);
-MusicManager* getMusicManager (EntityManager *mngr);
-ArtistManager* getArtistManager (EntityManager *mngr);
+UserManager* getUserManager (hashtableManager *mngr);
+MusicManager* getMusicManager (hashtableManager *mngr);
+ArtistManager* getArtistManager (hashtableManager *mngr);
 #endif
 
 

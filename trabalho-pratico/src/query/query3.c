@@ -9,14 +9,12 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
    // GHashTable* musicHashTable = getMusicTable (m_mngr);
     GHashTableIter iter;
     gpointer key, value;
-//
     char filename[50];  // buffer for the formatted file name
 
     // Format the filename with the counter value
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
 
     FILE* results = fopen (filename, "w");
-//
 
     g_hash_table_iter_init(&iter, userHashTable);
 
@@ -35,13 +33,11 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
             for (int i=0; i<nLikes; i++){ //para cada musica
                 int idAtual = LikedMusics[i];
                 Music* music = lookupMusicHash (m_mngr, idAtual);
-                char* genre = getMusicGenre (music);
+                Genre genre = getMusicGenre (music);
                 
                 addToResults (arrayResults, genre);
-                free (genre);
             }
         }
-        free (LikedMusics);
     }
 
     qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
@@ -60,25 +56,10 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
     fclose(results);
 }
 
-GenreID getGenreID(const char *genre) {
-    if (strcmp(genre, "Metal") == 0) return GENRE_METAL;
-    if (strcmp(genre, "Reggae") == 0) return GENRE_REGGAE;
-    if (strcmp(genre, "Jazz") == 0) return GENRE_JAZZ;
-    if (strcmp(genre, "Hip Hop") == 0) return GENRE_HIPHOP;
-    if (strcmp(genre, "Classical") == 0) return GENRE_CLASSICAL;
-    if (strcmp(genre, "Rock") == 0) return GENRE_ROCK;
-    if (strcmp(genre, "Blues") == 0) return GENRE_BLUES;
-    if (strcmp(genre, "Country") == 0) return GENRE_COUNTRY;
-    if (strcmp(genre, "Pop") == 0) return GENRE_POP;
-    if (strcmp(genre, "Electronic") == 0) return GENRE_ELECTRONIC;
-    return -1; // Invalid genre
-}
 
-
-void addToResults(TupleMusics *array, const char* genre) {
-    GenreID genreID = getGenreID(genre);
-    if (genreID >= 0 && genreID < 10) {
-        array[genreID].likes++;
+void addToResults(TupleMusics *array, Genre genre) {
+    if (genre >= 0 && genre < 10) {
+        array[genre].likes++;
     }
 }
 

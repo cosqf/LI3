@@ -10,7 +10,7 @@
 #include <validation.h>
 #include <parsing.h>
 #include <validateDatatypes.h>
-#include <entityManager.h>
+#include <hashtableManager.h>
 #include <artistManager.h>
 #include <userManager.h>
 #include <musicManager.h>
@@ -64,21 +64,6 @@ char* trimStringWithoutBrackets (char* str) {
     }
 
     return start; 
-}
-
-void updateCount(void* IDnum, DataType type, int count) {
-    if (type == Users) {
-        User *user = (User*)IDnum;
-        setUserLikedMusicsCount (user, count);
-
-    } else if (type == Artists) {
-        Artist *artist = (Artist*)IDnum;
-        setArtistIDConstituentCounter (artist, count);
-
-    } else if (type == Musics) {
-        Music *music = (Music*)IDnum;
-        setMusicArtistIDCount (music, count);
-    }
 }
 
 // Checks if the given character is an undercase letter
@@ -144,61 +129,4 @@ char* durationInString(Duration time) {
     sprintf(str, "%02d:%02d:%02d", time.hours, time.minutes, time.seconds);
 
     return str; 
-}
-// for debugging:
-
-void writeUsersToErrorFile(GHashTable* userTable) {
-    FILE *fp = openResultFileUsers();
-    
-    GHashTableIter iter;
-    gpointer key, value;
-    g_hash_table_iter_init(&iter, userTable);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        User* user = (User*)value;
-        insertErrorFileUser(user, fp);
-    }
-    
-    fclose(fp);
-}
-
-void writeArtistsToErrorFile(GHashTable* artistTable) {
-    FILE *fp = openResultFileArtists();
-    
-    GHashTableIter iter;
-    gpointer key, value;
-    g_hash_table_iter_init(&iter, artistTable);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        Artist* artist = (Artist*)value;
-        insertErrorFileArtists(artist, fp);
-    }
-
-    fclose(fp);
-}
-
-void writeMusicsToErrorFile(GHashTable* musicTable) {
-    FILE *fp = openResultsFileMusics();
-    
-    GHashTableIter iter;
-    gpointer key, value;
-    g_hash_table_iter_init(&iter, musicTable);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        Music* music = (Music*)value;
-        insertErrorFileMusics(music, fp);
-    }
-
-    fclose(fp);
-}
-
-void printHash (GHashTable* table) {
-    GHashTableIter iter;
-    gpointer key, value;
-    g_hash_table_iter_init(&iter, table);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        printf ("id:%d, duration:%d\t", GPOINTER_TO_INT(key), GPOINTER_TO_INT(value));
-    }
-    printf ("\n");
 }

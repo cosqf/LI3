@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <cmd.h>
 #include <musics.h>
-#include <entityManager.h>
+#include <hashtableManager.h>
 
 #ifndef _QUERY2_H_
 #define _QUERY2_H_
@@ -11,7 +11,7 @@ typedef struct {
     int duration;
 } Tuple;
 
-void query2(CMD *cmd, EntityManager* mngr, int cmdCounter);
+void query2(CMD *cmd, hashtableManager* mngr, int cmdCounter);
 
 void getArtistsDiscography (int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr);
 

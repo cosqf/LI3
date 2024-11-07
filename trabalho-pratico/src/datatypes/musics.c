@@ -4,8 +4,18 @@
 #include <validation.h>
 #include <stdlib.h>
 
-
 typedef struct music {
+    int id;              //– identificador único da música;
+    char* title;         //– nome da música;
+    int* artist_id;     //– lista de identificadores dos autores da música;
+    unsigned int artist_id_count;
+    Duration duration;   //– tempo de duração;
+    Genre genre;         //– género da música;
+    short int year;            //– ano de lançamento;
+    char* lyrics;        //– letra da música.
+} Music;
+
+typedef struct musicString {
     char* id;              //– identificador único da música;
     char* title;         //– nome da música;
     char* artist_id;     //– lista de identificadores dos autores da música;
@@ -14,12 +24,41 @@ typedef struct music {
     char* genre;         //– género da música;
     char* year;            //– ano de lançamento;
     char* lyrics;        //– letra da música.
-} Music;
+} MusicString;
 
 
 /* Creator function for Music */
 Music* createMusic(char** tokens) {
-    Music* music = (Music*)malloc(sizeof(Music));
+    Music* music = (Music*) malloc (sizeof(Music));
+    if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
+
+    music->id = atoi (trimString(tokens[0]) + 1);
+    music->title = strdup (trimString(tokens[1]));
+    music->artist_id = parseIDs (trimStringWithoutBrackets(tokens[2]));
+    music->artist_id_count = IdCounter (tokens[2]);
+    music->duration = parseDuration (trimString(tokens[3]));
+    music->genre = getGenre (trimString(tokens[4]));
+    music->year = atoi (trimString(tokens[5]));
+    music->lyrics = strdup (trimString(tokens[6]));
+    
+    return music;
+}
+
+/* Destructor function for Music */
+void deleteMusic(Music* music) {
+    if (music == NULL) {
+        return;
+    }
+
+    free(music->title);
+    free(music->artist_id);
+    free(music->lyrics);
+    free(music);
+}
+
+/* Creator function for Music */
+MusicString* createMusicString (char** tokens) {
+    MusicString* music = (MusicString*) malloc(sizeof(MusicString));
     if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
     music->id = strdup (trimString(tokens[0]));
@@ -35,7 +74,7 @@ Music* createMusic(char** tokens) {
 }
 
 /* Destructor function for Music */
-void deleteMusic(Music* music) {
+void deleteMusicString (MusicString* music) {
     if (music == NULL) {
         return;
     }
@@ -50,32 +89,25 @@ void deleteMusic(Music* music) {
     free(music);
 }
 
-
-void printMusic(const Music* music) {
-    if (music == NULL) {
-        printf("Music is NULL\n");
-        return;
-    }
-
-    printf("ID: %s, Title: %s, Artists: %s, Duration: %s, Genre: %s, Year: %s\n",
-           music->id ? music->id : "N/A",
-           music->title ? music->title : "N/A",
-           music->artist_id ? music->artist_id : "N/A",
-           music->duration ? music->duration : "N/A",
-           music->genre ? music->genre : "N/A",
-           music->year ? music->year : "N/A");
+Genre getGenre(const char *genre) {
+    if (strcmp(genre, "Metal") == 0) return GENRE_METAL;
+    if (strcmp(genre, "Reggae") == 0) return GENRE_REGGAE;
+    if (strcmp(genre, "Jazz") == 0) return GENRE_JAZZ;
+    if (strcmp(genre, "Hip Hop") == 0) return GENRE_HIPHOP;
+    if (strcmp(genre, "Classical") == 0) return GENRE_CLASSICAL;
+    if (strcmp(genre, "Rock") == 0) return GENRE_ROCK;
+    if (strcmp(genre, "Blues") == 0) return GENRE_BLUES;
+    if (strcmp(genre, "Country") == 0) return GENRE_COUNTRY;
+    if (strcmp(genre, "Pop") == 0) return GENRE_POP;
+    if (strcmp(genre, "Electronic") == 0) return GENRE_ELECTRONIC;
+    return -1; // Invalid genre
 }
 
 // GETTERs
 
 /* Getter for id */
 int getMusicID(Music* music) {
-    return atoi (music->id + 1);
-}
-
-/* Getter for id in string format */
-char* getMusicIDString(Music* music) {
-    return strdup (music->id);
+    return music->id;
 }
 
 /* Getter for title */
@@ -85,13 +117,7 @@ char* getMusicTitle(Music* music) {
 
 /* Getter for artist's ID */
 int* getMusicArtistID(Music* music) {
-    int* result = parseIDs (music->artist_id, music, Musics);
-    return result;
-}
-
-/* Getter for artist's ID  in string format */
-char* getMusicArtistIDString(Music* music) {
-    return strdup (music->artist_id);
+    return music->artist_id;
 }
 
 /* Getter for artist's ID count */
@@ -101,27 +127,17 @@ int getMusicArtistIDCount (Music* music) {
 
 /* Getter for song's duration */
 Duration getMusicDuration(Music* music) {
-    return parseDuration (music->duration);
-}
-
-/* Getter for song's duration in string format */
-char* getMusicDurationString(Music* music) {
-    return strdup (music->duration);
+    return music->duration;
 }
 
 /* Getter for genre */
-char* getMusicGenre(Music* music) {
-    return strdup(music->genre);
+Genre getMusicGenre(Music* music) {
+    return music->genre;
 }
 
 /* Getter for year */
 int getMusicYear(Music* music) {
-    return atoi(music->year);
-}
-
-/* Getter for year in string format */
-char* getMusicYearString(Music* music) {
-    return strdup(music->year);
+    return music->year;
 }
 
 /* Getter for lyrics */
@@ -129,44 +145,45 @@ char* getMusicLyrics(Music* music) {
     return strdup(music->lyrics);
 }
 
-// SETTERs
 
-void setMusicID(Music* music, const char* id) {
-    if (music->id) free(music->id);
-    music->id = strdup(id);
+// GETTERs STRING
+
+/* Getter for id in string format */
+char* getMusicIDString (MusicString* music) {
+    return strdup (music->id);
 }
 
-void setMusicTitle(Music* music, const char* title) {
-    if (music->title) free(music->title);
-    music->title = strdup(title);
+/* Getter for title in string format */
+char* getMusicTitleString (MusicString* music) {
+    return strdup(music->title);
 }
 
-void setMusicArtistID(Music* music, const char* artist_id) {
-    if (music->artist_id) free(music->artist_id);
-    music->artist_id = strdup(artist_id);
+/* Getter for artist's ID  in string format */
+char* getMusicArtistIDString(MusicString* music) {
+    return strdup (music->artist_id);
 }
 
-void setMusicDuration(Music* music, const char* duration) {
-    if (music->duration) free(music->duration);
-    music->duration = strdup(duration);
+/* Getter for artist's ID count in string format */
+int getMusicArtistIDCountString (MusicString* music) {
+    return music->artist_id_count;
 }
 
-void setMusicGenre(Music* music, const char* genre) {
-    if (music->genre) free(music->genre);
-    music->genre = strdup(genre);
+/* Getter for song's duration in string format */
+char* getMusicDurationString(MusicString* music) {
+    return strdup (music->duration);
 }
 
-void setMusicYear(Music* music, const char* year) {
-    if (music->year) free(music->year);
-    music->year = strdup(year);
+/* Getter for genre in string format */
+char* getMusicGenreString(MusicString* music) {
+    return strdup(music->genre);
 }
 
-void setMusicLyrics(Music* music, const char* lyrics) {
-    if (music->lyrics) free(music->lyrics);
-    if (lyrics) music->lyrics = strdup(lyrics); 
-    else music->lyrics = NULL;  
+/* Getter for year in string format */
+char* getMusicYearString(MusicString* music) {
+    return strdup(music->year);
 }
 
-void setMusicArtistIDCount (Music* music, int x) {
-    music->artist_id_count = x;
+/* Getter for lyrics in string format */
+char* getMusicLyricsString(MusicString* music) {
+    return strdup(music->lyrics);
 }

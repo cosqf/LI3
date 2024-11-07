@@ -53,14 +53,25 @@ void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, g
     }
 }
 
+
+void getDataMusic (char *path, hashtableManager* mngr) {
+    FILE *errorFileMusic = openErrorFileMusics();
+
+    parseFile(path, callbackMusic, mngr, errorFileMusic);
+
+    fclose(errorFileMusic); 
+}
+
 void callbackMusic (char** tokens, void* manager, FILE* errorFile) { // receives entity manager
-    EntityManager* mngr = (EntityManager*) manager;
+    hashtableManager* mngr = (hashtableManager*) manager;
     MusicManager* music_mngr = getMusicManager (mngr);
     ArtistManager* artist_mngr = getArtistManager (mngr);
 
-    Music* music = createMusic (tokens);
-    if (!validMusic(music, artist_mngr)) {
-            insertErrorFileMusics(music, errorFile);
-            deleteMusic (music);
-    } else insertMusicHash(music_mngr, getMusicID(music), music);
+    MusicString* musicS = createMusicString (tokens);
+    if (!validMusic(musicS, artist_mngr)) insertErrorFileMusics(musicS, errorFile);
+    else {
+        Music* music = createMusic (tokens);
+        insertMusicHash(music_mngr, getMusicID(music), music);
+    }
+    deleteMusicString (musicS);
 }

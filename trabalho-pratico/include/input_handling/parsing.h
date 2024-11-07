@@ -1,6 +1,6 @@
 #include <users.h>
 
-#include <entityManager.h>
+#include <hashtableManager.h>
 #include <userManager.h>
 #include <musicManager.h>
 #include <artistManager.h>
@@ -9,7 +9,7 @@
 #ifndef _PARSING_H_
 #define _PARSING_H_
 
-void getData (char *path, EntityManager *mngr);
+void getData (char *path, hashtableManager *mngr);
 
 void parseFile (char* pathToFile, void (processLine)(char**, void*, FILE*), void* manager, FILE* errorFile);
 

@@ -11,36 +11,53 @@ typedef struct {
     short int error; 
 } Duration;
 
+typedef enum {
+    GENRE_METAL,
+    GENRE_REGGAE,
+    GENRE_JAZZ,
+    GENRE_HIPHOP,
+    GENRE_CLASSICAL,
+    GENRE_ROCK,
+    GENRE_BLUES,
+    GENRE_COUNTRY,
+    GENRE_POP,
+    GENRE_ELECTRONIC
+} Genre;
+
 typedef struct music Music;
 
-Music* createMusic(char** tokens);
+typedef struct musicString MusicString;
 
-void deleteMusic(Music* music);
 
-void printMusic(const Music* music);
+Music* createMusic (char** tokens);
+
+void deleteMusic (Music* music);
+
+MusicString* createMusicString (char** tokens);
+
+void deleteMusicString (MusicString* music); 
+
+Genre getGenre (const char *genre);
+
 
 /* Getters */
 int getMusicID(Music* music);
-char* getMusicIDString(Music* music);
 char* getMusicTitle(Music* music);
 int* getMusicArtistID(Music* music);
-char* getMusicArtistIDString(Music* music);
 Duration getMusicDuration(Music* music);
-char* getMusicDurationString(Music* music);
-char* getMusicGenre(Music* music);
+Genre getMusicGenre(Music* music);
 int getMusicYear(Music* music);
-char* getMusicYearString(Music* music);
 char* getMusicLyrics(Music* music);
 int getMusicArtistIDCount (Music* music);
 
-/* Setters */
-void setMusicID(Music* music, const char* id);
-void setMusicTitle(Music* music, const char* title);
-void setMusicArtistID(Music* music, const char* artist_id);
-void setMusicDuration(Music* music, const char* duration);
-void setMusicGenre(Music* music, const char* genre);
-void setMusicYear(Music* music, const char* year);
-void setMusicLyrics(Music* music, const char* lyrics);
-void setMusicArtistIDCount (Music* music, int x);
+/* Getters string */
+char* getMusicIDString(MusicString* music);
+char* getMusicTitleString (MusicString* music);
+char* getMusicArtistIDString(MusicString* music);
+int getMusicArtistIDCountString (MusicString* music);
+char* getMusicDurationString(MusicString* music);
+char* getMusicGenreString(MusicString* music);
+char* getMusicYearString(MusicString* music);
+char* getMusicLyricsString(MusicString* music);
 
 #endif  

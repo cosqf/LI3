@@ -1,40 +1,40 @@
-#include <entityManager.h>
+#include <hashtableManager.h>
 #include <parsingUtils.h>
 #include <userManager.h>
 #include <artistManager.h>
 #include <musicManager.h>
 #include <stdbool.h>
 
-typedef struct entityManager {
+typedef struct hashtableManager {
     UserManager* user;
     ArtistManager* artist;
     MusicManager* music;
-} EntityManager;
+} hashtableManager;
 
-EntityManager* initializeHash () {
-    EntityManager *mngr = malloc (sizeof (EntityManager));
+hashtableManager* initializeHash () {
+    hashtableManager *mngr = malloc (sizeof (hashtableManager));
     mngr->artist = initializeHashArtist();
     mngr->user = initializeHashUser();
     mngr->music = initializeHashMusic();
     return mngr;
 }
 
-void freeHash (EntityManager *mngr) {
+void freeHash (hashtableManager *mngr) {
     freeHashArtist (mngr->artist);
     freeHashUser (mngr->user);
     freeHashMusic (mngr->music);
     free (mngr);
 }
 
-UserManager* getUserManager (EntityManager *mngr) {
+UserManager* getUserManager (hashtableManager *mngr) {
     return mngr->user;
 }
 
-MusicManager* getMusicManager (EntityManager *mngr) {
+MusicManager* getMusicManager (hashtableManager *mngr) {
     return mngr->music;
 }
 
-ArtistManager* getArtistManager (EntityManager *mngr) {
+ArtistManager* getArtistManager (hashtableManager *mngr) {
     return mngr->artist;
 }
 

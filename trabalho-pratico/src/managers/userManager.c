@@ -1,7 +1,7 @@
 #include <users.h>
 #include <glib.h>
 #include <userManager.h>
-#include <entityManager.h>
+#include <hashtableManager.h>
 #include <musicManager.h>
 #include <parsingUtils.h>
 #include <parsing.h>
@@ -41,16 +41,25 @@ GHashTable* getUserTable (UserManager *u_mngr) {
     return u_mngr->user;
 }
 
+
+void getDataUser (char* path, hashtableManager* mngr) {
+    FILE *errorFileUser = openErrorFileUser();
+
+    parseFile(path, callbackUser, mngr, errorFileUser);
+
+    fclose(errorFileUser); 
+}
+
 void callbackUser(char **tokens, void *manager, FILE *errorFile) { // receives entity manager
-    EntityManager* mngr = (EntityManager*) manager;
+    hashtableManager* mngr = (hashtableManager*) manager;
     UserManager* user_mngr = getUserManager(mngr);
     MusicManager* music_mngr = getMusicManager(mngr);
 
-    User *user = createUser(tokens);
-    if (!validUser(user, music_mngr)) {
-        insertErrorFileUser(user, errorFile);
-        deleteUser(user);
-    } else {
+    UserString* userS = createUserString(tokens);
+    if (!validUser(userS, music_mngr)) insertErrorFileUser(userS, errorFile);
+    else {
+        User* user = createUser (tokens);
         insertUserHash(user_mngr, getUserID(user), user);
     }
+    deleteUserString(userS);
 }
