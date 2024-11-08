@@ -9,26 +9,33 @@ CFLAGS := -c -g -Og -std=gnu99 -Wall -Wextra $(addprefix -I,$(INCLUDE_DIRS)) `pk
 
 LDFLAGS := `pkg-config --libs glib-2.0` -lm
 
-SRC := $(shell find src/ -name "*.c")
+SRC_PRINCIPAL := $(shell find src/ -name "*.c" -not -name "test.c")
+SRC_TESTS := $(shell find src/ -name "*.c" -not -name "principal.c")
 
-OBJ := $(patsubst src/%.c,build/%.o,$(SRC))
+OBJ_PRINCIPAL := $(patsubst src/%.c,build/%.o,$(SRC_PRINCIPAL))
+OBJ_TESTS := $(patsubst src/%.c,build/%.o,$(SRC_TESTS))
 
 .PHONY: all
 all: $(EXEC) $(EXEC_TEST)
 
-$(EXEC): $(OBJ)
-	@$(CC) $(OBJ) $(LDFLAGS) -o $@
+.PHONY: principal
+principal: $(EXEC)
 
-$(EXEC_TEST): $(OBJ)
-	@$(CC) $(OBJ) $(LDFLAGS) -o $@
+.PHONY: test
+test: $(EXEC_TEST)
+
+$(EXEC): $(OBJ_PRINCIPAL)
+	@$(CC) $(OBJ_PRINCIPAL) $(LDFLAGS) -o $@
+
+$(EXEC_TEST): $(OBJ_TESTS)
+	@$(CC) $(OBJ_TESTS) $(LDFLAGS) -o $@
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
-
 clean:
 	rm -rf build/*
-	rm -f programa-principal programa-testes
+	rm -f $(EXEC) $(EXEC_TEST)
 	rm -f resultados/*
