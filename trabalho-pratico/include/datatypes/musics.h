@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <parsingUtils.h>
 
 #ifndef _MUSICS_H_
 #define _MUSICS_H_

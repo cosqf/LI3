@@ -6,7 +6,7 @@
 #include <parsing.h>
 #include <stdlib.h>
 #include <utils.h>
-#include <validation.h>
+#include <errorfiles.h>
 #include <validateDatatypes.h>
 
 typedef struct musicManager {

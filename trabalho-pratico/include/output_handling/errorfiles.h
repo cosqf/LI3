@@ -3,8 +3,8 @@
 #include <musics.h>
 #include <stdlib.h>
 
-#ifndef _VALIDATION_H_
-#define _VALIDATION_H_
+#ifndef _ERRORFILES_H_
+#define _ERRORFILES_H_
 
 FILE * openErrorFileUser ();
 

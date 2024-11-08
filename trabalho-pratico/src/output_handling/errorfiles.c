@@ -4,7 +4,7 @@
 #include <utils.h>
 #include <artists.h>
 #include <stdlib.h>
-#include <validation.h>
+#include <errorfiles.h>
 #include <outputWriter.h>
 
 
@@ -100,53 +100,3 @@ void insertErrorFileMusics(MusicString *music, FILE *fp) {
     free(year);
     free(lyrics);
 }
-
-
-//SYNTAX VALIDATION
-
-
-Duration parseDuration(char* dur) {
-    Duration duration = {0, 0, 0, 0};
-
-    if (strlen(dur) > 8) {
-        duration.error = 1;
-        return duration;
-    }
-
-    if (sscanf(dur, "%d:%d:%d", &duration.hours, &duration.minutes, &duration.seconds) != 3) duration.error = 1;
-
-    return duration;
-}
-//
-//FILE * openResultFileArtists (){
-//    FILE* fp = fopen ("resultados/artists.csv", "w");
-//    if (!fp) {
-//        perror ("Error opening Error file");
-//        exit (1);
-//        }
-//    fprintf (fp, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
-//    return fp;
-//}
-//
-//
-//FILE * openResultsFileMusics (){
-//    FILE* fp = fopen ("resultados/musics.csv", "w");
-//    if (!fp) {
-//        perror ("Error opening Error file");
-//        exit (1);
-//        }
-//    fprintf (fp, "\"id\";\"title\";\"artist_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
-//    return fp;
-//}
-//
-//FILE * openResultFileUsers (){
-//    FILE* fp = fopen ("resultados/users.csv", "w");
-//    if (!fp) {
-//        perror ("Error opening Error file");
-//        exit (1);
-//    }
-//    fprintf (fp, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");
-//    return fp;
-//}
-//
-//
