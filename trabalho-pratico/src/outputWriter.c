@@ -14,7 +14,11 @@ void writeQuery3 (FILE* results, char* genre, char* str){
     fprintf(results, "%s;%s\n", genre, str);
 }
 
-void writeErrorsArtists (FILE* fp){
+void writeErrorsArtistsContent(FILE* fp, char* id, char* name, char* description, char* recipePerStream, char* idConstituent, char* country, char* type){
+        fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", id, name, description, recipePerStream, idConstituent, country, type);
+}
+
+void writeErrorsArtistsHeader (FILE* fp){
     fprintf (fp, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
 }
 

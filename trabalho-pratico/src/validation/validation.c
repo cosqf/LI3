@@ -5,6 +5,7 @@
 #include <artists.h>
 #include <stdlib.h>
 #include <validation.h>
+#include <outputWriter.h>
 
 
 FILE * openErrorFileUser () {
@@ -45,7 +46,7 @@ FILE * openErrorFileArtists (){
         perror ("Error opening Error file");
         exit (1);
         }
-    fprintf (fp, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
+    writeErrorsArtistsHeader(fp);
     return fp;
 }
 
@@ -58,7 +59,7 @@ void insertErrorFileArtists (ArtistString *artist, FILE *fp) {
     char* country = getArtistCountryString(artist);
     char* type = getArtistTypeString(artist);
 
-    fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", id, name, description, recipePerStream, idConstituent, country, type);
+    writeErrorsArtistsContent(fp, id, name, description, recipePerStream, idConstituent, country, type);
 
     free(id);
     free(name);
@@ -116,35 +117,36 @@ Duration parseDuration(char* dur) {
 
     return duration;
 }
-
-FILE * openResultFileArtists (){
-    FILE* fp = fopen ("resultados/artists.csv", "w");
-    if (!fp) {
-        perror ("Error opening Error file");
-        exit (1);
-        }
-    fprintf (fp, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
-    return fp;
-}
-
-
-FILE * openResultsFileMusics (){
-    FILE* fp = fopen ("resultados/musics.csv", "w");
-    if (!fp) {
-        perror ("Error opening Error file");
-        exit (1);
-        }
-    fprintf (fp, "\"id\";\"title\";\"artist_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
-    return fp;
-}
-
-FILE * openResultFileUsers (){
-    FILE* fp = fopen ("resultados/users.csv", "w");
-    if (!fp) {
-        perror ("Error opening Error file");
-        exit (1);
-    }
-    fprintf (fp, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");
-    return fp;
-}
-
+//
+//FILE * openResultFileArtists (){
+//    FILE* fp = fopen ("resultados/artists.csv", "w");
+//    if (!fp) {
+//        perror ("Error opening Error file");
+//        exit (1);
+//        }
+//    fprintf (fp, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
+//    return fp;
+//}
+//
+//
+//FILE * openResultsFileMusics (){
+//    FILE* fp = fopen ("resultados/musics.csv", "w");
+//    if (!fp) {
+//        perror ("Error opening Error file");
+//        exit (1);
+//        }
+//    fprintf (fp, "\"id\";\"title\";\"artist_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
+//    return fp;
+//}
+//
+//FILE * openResultFileUsers (){
+//    FILE* fp = fopen ("resultados/users.csv", "w");
+//    if (!fp) {
+//        perror ("Error opening Error file");
+//        exit (1);
+//    }
+//    fprintf (fp, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");
+//    return fp;
+//}
+//
+//

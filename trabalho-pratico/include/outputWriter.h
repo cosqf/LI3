@@ -7,6 +7,10 @@ void writeQuery2 (FILE* fp, char* name, char* typeString, char* duration, char* 
 
 void writeQuery3 (FILE* results, char* genre, char* str);
 
+void writeErrorsArtistsContent(FILE* fp, char* id, char* name, char* description, char* recipePerStream, char* idConstituent, char* country, char* type);
+
+void writeErrorsArtistsHeader (FILE* fp);
+
 void writeNewLine (FILE* results);
 
 
