@@ -1,7 +1,6 @@
 #include <cmd.h>
 #include <utils.h>
 #include <cmdManager.h>
-#include <parsing.h>
 
 typedef struct cmdmanager {
     CMD** cmdArray;
@@ -25,27 +24,9 @@ void addCommandToManager(cmdManager* mngr, CMD* cmd) {
     mngr->cmdArray[mngr->counter - 1] = cmd;
 }
 
-int readCommands (char* path, cmdManager *mngr) {
-    FILE* fp = openFile(path);
-    if (fp == NULL) {
-        perror("Failed to open file");
-        exit (EXIT_FAILURE);
-    }
-
-    int i = 0;
-    char str[DEFAULT];
-    while (fgets (str, sizeof (str), fp) != NULL) {
-        
-        char* tokens[3];
-        int count = parseCmdLine(str, tokens);
-
-        CMD* cmd = createCMD (tokens, count);
-        if (cmd != NULL) addCommandToManager(mngr, cmd);
-        i++;
-    }
-    fclose (fp);
-    mngr->counter = i;
-    return i;
+void processCmdLine (char** tokens, int numberTokens, cmdManager* manager) {
+    CMD* cmd = createCMD (tokens, numberTokens);
+    if (cmd != NULL) addCommandToManager (manager, cmd);
 }
 
 int getCommandsCounter (cmdManager *mngr) {

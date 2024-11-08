@@ -61,7 +61,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
     getData (pathData, mngr);
 
     cmdManager* cmdMngr = createCmdManager ();
-    int cmdNumber = readCommands (pathCmd, cmdMngr);
+    int cmdNumber = parseCmdFile (pathCmd, cmdMngr);
 
     for (; i< cmdNumber+1; i++) {
         CMD* cmd = getCommandFromMngr (cmdMngr, i-1);
