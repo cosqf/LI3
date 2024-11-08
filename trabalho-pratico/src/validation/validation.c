@@ -14,7 +14,7 @@ FILE * openErrorFileUser () {
         perror ("Error opening Error file");
         exit (1);
     }
-    void writeErrorsUsersHeader (fp);
+    writeErrorsUsersHeader (fp);
     return fp;
 }
 
@@ -77,7 +77,7 @@ FILE * openErrorFileMusics (){
         perror ("Error opening Error file");
         exit (1);
         }
-    fprintf (fp, "\"id\";\"title\";\"artist_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
+    writeErrorsMusicsHeader (fp);
     return fp;
 }
 
@@ -90,7 +90,7 @@ void insertErrorFileMusics(MusicString *music, FILE *fp) {
     char* year = getMusicYearString(music);
     char* lyrics = getMusicLyricsString(music);
 
-    fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", id, title, artistID, duration, genre, year, lyrics);
+    writeErrorsMusicsContent (fp, id, title, artistID, duration, genre, year, lyrics);
 
     free(id);
     free(title);

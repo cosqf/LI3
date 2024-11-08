@@ -15,6 +15,10 @@ void writeErrorsArtistsContent(FILE* fp, char* id, char* name, char* description
 
 void writeErrorsArtistsHeader (FILE* fp);
 
+void writeErrorsMusicsContent (FILE* fp, char* id, char* title, char* artistID, char* duration, char* genre, char* year, char* lyrics);
+
+void writeErrorsMusicsHeader (FILE* fp);
+
 void writeNewLine (FILE* results);
 
 
