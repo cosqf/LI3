@@ -14,6 +14,9 @@ void writeQuery3 (FILE* results, char* genre, char* str){
     fprintf(results, "%s;%s\n", genre, str);
 }
 
+void writeErrorsUsersContent(FILE* fp, char* username, char* email, char* firstName, char* lastName, char* birthDate, char* country, char* subscriptionType, char* likedMusicsID){
+        fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", username, email, firstName, lastName, birthDate, country, subscriptionType, likedMusicsID);
+}
 void writeErrorsArtistsContent(FILE* fp, char* id, char* name, char* description, char* recipePerStream, char* idConstituent, char* country, char* type){
         fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", id, name, description, recipePerStream, idConstituent, country, type);
 }
@@ -25,3 +28,5 @@ void writeErrorsArtistsHeader (FILE* fp){
 void writeNewLine (FILE* results){
         fprintf(results, "\n");
 }
+
+  //  fprintf (fp, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");

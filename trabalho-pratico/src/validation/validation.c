@@ -28,7 +28,7 @@ void insertErrorFileUser(UserString *user, FILE *fp) {
     char* subscriptionType = getUserSubscriptionTypeString(user);
     char* likedMusicsID = getUserLikedMusicsIDString(user);
 
-    fprintf(fp, "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n", username, email, firstName, lastName, birthDate, country, subscriptionType, likedMusicsID);
+    writeErrorsUsersContent (fp, username, email, firstName, lastName, birthDate, country, subscriptionType, likedMusicsID);
 
     free(username);
     free(email);
