@@ -9,6 +9,7 @@
 
 #include <validateDatatypes.h>
 #include <utils.h>
+#include <parsingUtils.h>
 #include <validation.h>
 
 #include <artistManager.h>
@@ -64,20 +65,20 @@ bool validEmail(char* email){
     return false;
 }
 
-// Validates the user's birthdate, ensuring it's in the correct format (aaa/mm/dd)
+// Validates the user's birthdate, ensuring it's in the correct format (aaa/mm/dd) and not more recent than 09/09/2024
 bool validBirthdate(char* bdate){
-    int year, month, day;
+    Date birthdate = parseDate(bdate);
 
-    if (sscanf(bdate, "%d/%d/%d", &year, &month, &day) != 3) return false;
+    if(birthdate.error == 1) return false;
 
-    else if (year > 2024) return false;
+    else if (birthdate.year > 2024) return false;
 
-    else if (year == 2024){
-        if (month > 9) return false;
-        else if (month == 9 && (day < 1 || day > 9)) return false;
+    else if (birthdate.year == 2024){
+        if (birthdate.month > 9) return false;
+        else if (birthdate.month == 9 && (birthdate.day < 1 || birthdate.day > 9)) return false;
     }
 
-    else if (month < 1 || month > 12 || day < 1 || day > 31) return false;
+    else if (birthdate.month < 1 || birthdate.month > 12 || birthdate.day < 1 || birthdate.day > 31) return false;
 
     return true;
 }

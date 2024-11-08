@@ -11,8 +11,16 @@ typedef struct {
     short int error; 
 } Date;
 
+typedef struct {
+    int hours;     //hh (00-99)
+    int minutes;   //mm (00-59)
+    int seconds;   //ss (00-59)
+    short int error; 
+} Duration;
 
 Date parseDate(char*);
+
+Duration parseDuration(char*);
 
 int* parseIDs(char *);
 

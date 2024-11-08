@@ -20,7 +20,6 @@ FILE * openResultFileArtists ();
 
 FILE * openResultFileUsers ();
 
-Duration parseDuration(char*);
 
 
 // for debug

@@ -4,12 +4,6 @@
 #ifndef _MUSICS_H_
 #define _MUSICS_H_
 
-typedef struct {
-    int hours;     //hh (00-99)
-    int minutes;   //mm (00-59)
-    int seconds;   //ss (00-59)
-    short int error; 
-} Duration;
 
 typedef enum {
     GENRE_METAL,
