@@ -9,6 +9,8 @@ void writeQuery3 (FILE* results, char* genre, char* str);
 
 void writeErrorsUsersContent(FILE* fp, char* username, char* email, char* firstName, char* lastName, char* birthDate, char* country, char* subscriptionType, char* likedMusicsID);
 
+void writeErrorsUsersHeader (FILE* fp);
+
 void writeErrorsArtistsContent(FILE* fp, char* id, char* name, char* description, char* recipePerStream, char* idConstituent, char* country, char* type);
 
 void writeErrorsArtistsHeader (FILE* fp);

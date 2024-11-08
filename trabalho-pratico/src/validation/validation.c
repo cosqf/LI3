@@ -14,7 +14,7 @@ FILE * openErrorFileUser () {
         perror ("Error opening Error file");
         exit (1);
     }
-    fprintf (fp, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");
+    void writeErrorsUsersHeader (fp);
     return fp;
 }
 
