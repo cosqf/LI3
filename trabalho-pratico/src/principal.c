@@ -28,7 +28,7 @@ int principal (char* pathData, char* pathCmd) {
     getData (pathData, mngr);
 
     cmdManager* cmdMngr = createCmdManager ();
-    int cmdNumber = readCommands (pathCmd, cmdMngr);
+    int cmdNumber = parseCmdFile (pathCmd, cmdMngr);
 
     for (int i = 0; i< cmdNumber; i++) {
         CMD* cmd = getCommandFromMngr (cmdMngr, i);

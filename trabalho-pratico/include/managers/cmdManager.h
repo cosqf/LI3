@@ -1,3 +1,4 @@
+#include <cmd.h>
 #ifndef _CMDMANAGER_H_
 #define _CMDMANAGER_H_
 
@@ -5,7 +6,7 @@ typedef struct cmdmanager cmdManager;
 
 cmdManager* createCmdManager ();
 
-int readCommands (char* path, cmdManager *mngr);
+void processCmdLine (char** tokens, int numberTokens, cmdManager* manager);
 
 int getCommandsCounter (cmdManager *mngr);
 
