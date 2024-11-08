@@ -8,6 +8,7 @@
 #include <glib.h>
 #include <musicManager.h>
 #include <stdlib.h>
+#include <outputWriter.h>
 
 typedef struct {
     char* country;
@@ -42,7 +43,7 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     else limit = topN;
     
     FILE *fp = openFileQuery2 (cmdCounter);
-    if (limit == 0) fprintf (fp, "\n");
+    if (limit == 0) writeNewLine(fp);
     for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
@@ -151,7 +152,7 @@ void printResult (Artist* artist, Duration dur, FILE* fp) {
     if (type) strcpy (typeString, "group");
     else strcpy (typeString, "individual");
 
-    fprintf (fp, "%s;%s;%s;%s\n", name, typeString, duration, artist_country);
+    writeQuery2(fp, name, typeString, duration, artist_country);
     free (name);
     free(artist_country);
     free(duration);

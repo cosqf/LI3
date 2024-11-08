@@ -15,6 +15,8 @@ void parseFile (char* pathToFile, void (processLine)(char**, void*, FILE*), void
 
 int parseLine(char* line, char* tokens[], const char* separator);
 
+int parseCmdFile (char* pathToFile, void* manager);
+
 int parseCmdLine(char* line, char* tokens[]);
 
 char * changePath(char *path, DataType type);

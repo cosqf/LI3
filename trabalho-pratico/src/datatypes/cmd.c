@@ -31,64 +31,22 @@ CMD* createCMD (char** tokens, int counter) {
     }
     switch (cmd->query) {
     case 1:
-        if (tokens[1]) cmd->id = atoi (tokens[1]+1);
+        int id;
+        if (tokens[1] && convertToInt (tokens[1]+1, &id)) cmd->id = id;
         break;
     case 2:
-        if (tokens[1]) cmd->topN = atoi (tokens[1]);
+        int topN;
+        if (tokens[1] && convertToInt (tokens[1], &topN)) cmd->topN = topN;
         if (counter == 3 && tokens[2]) cmd->paises = strdup (trimString (tokens[2]));
         break;
     case 3:
-        if (tokens[1]) cmd->ageMin = atoi (tokens[1]);
-        if (tokens[2]) cmd->ageMax = atoi (tokens[2]);
+        int ageMin, ageMax;
+        if (tokens[1] && convertToInt (tokens[1], &ageMin)) cmd->ageMin = ageMin;
+        if (tokens[2]&& convertToInt (tokens[2], &ageMax)) cmd->ageMax = ageMax;
         break;
     }
 
     return cmd;
-}
-
-CMD* getCommand (char* line, CMD* cmd) {
-    char *token = strsep(&line, " ");
-    cmd->query = atoi(token);
-    switch (cmd->query){
-    case 1:
-        getCommandQuery1 (line, cmd);
-        break;
-
-    case 2:
-        getCommandQuery2 (line, cmd, token);
-        break;
-
-    case 3:
-        getCommandQuery3 (line, cmd, token);
-        break;
-    default:
-        perror ("Error Fetching the command from input");
-        return NULL;
-    }
-    return cmd;
-}
-
-void getCommandQuery1 (char* line, CMD* cmd) {
-    cmd->id = atoi (line+1);
-}
-
-void getCommandQuery2 (char* line, CMD* cmd, char* token) {
-    token = strsep (&line, " ");
-    cmd->topN = atoi(token);
-    if (line && line[0] != '\0') {
-        line ++;
-        token = strsep(&line, "\"");
-        cmd->paises = malloc(strlen(token) + 1);
-        if (mallocErrorCheck (cmd->paises)) exit (EXIT_FAILURE);
-        strcpy(cmd->paises, token); 
-    }
-    else cmd->paises = NULL;
-}
-
-void getCommandQuery3 (char* line, CMD* cmd, char* token) {
-    token = strsep (&line, " ");
-        cmd->ageMin = atoi(token);
-        cmd->ageMax = atoi(line);
 }
 
 void freeCmd (CMD *cmd) {

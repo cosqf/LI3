@@ -2,6 +2,7 @@
 #include <utils.h>
 #include <validation.h>
 #include <userManager.h>
+#include <cmdManager.h>
 
 /* 1. Artists, because it doesn't mess with any other hashtable
    2. Musics, because it needs the artists' hastable for validation
@@ -50,6 +51,20 @@ int parseLine(char* line, char* tokens[], const char* separator) {
   return tokenCount;
 }
 
+int parseCmdFile (char* pathToFile, void* manager) {
+    FILE* fileData = openFile (pathToFile);
+    char str[DEFAULT];
+    int i;
+    for (i = 0; fgets (str, sizeof (str), fileData) != NULL; i++) {
+        char* tokens[4];
+        int tokensNumber = parseCmdLine(str, tokens);
+        processCmdLine (tokens, tokensNumber, manager);
+    }
+    fclose (fileData);
+    return i;
+}
+
+
 int parseCmdLine(char* line, char* tokens[]) {
     int tokenCount = 0;
     line[strcspn(line, "\n")] = 0;
@@ -77,10 +92,7 @@ int parseCmdLine(char* line, char* tokens[]) {
                 line++;
             }
         }
-
-        if (*line == '\0') break;
     }
-
     return tokenCount;
 }
 
