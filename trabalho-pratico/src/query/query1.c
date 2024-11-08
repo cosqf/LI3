@@ -4,6 +4,7 @@
 #include <userManager.h>
 #include <users.h>
 #include <stdio.h>
+#include <outputWriter.h>
 
 
 void query1(CMD* cmd, UserManager *u_mngr, int counter) {
@@ -24,7 +25,7 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
         int age = getUserAge(user);
         char* country = getUserCountry(user);
 
-        fprintf(results, "%s;%s;%s;%d;%s", email, firstname, lastname, age, country); //email;first_name;last_name;age;country
+        writeQuery1 (results, email, firstname, lastname, age, country);
 
         free(email);
         free(firstname);
@@ -32,6 +33,6 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
         free(country);
     }
 
-    fprintf(results, "\n");
+    writeNewLine(results);
     fclose(results);
 }

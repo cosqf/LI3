@@ -2,6 +2,7 @@
 #include <parsing.h>
 #include <glib.h>
 #include <stdlib.h>
+#include <outputWriter.h>
 
 
 void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter){
@@ -44,12 +45,12 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
 
     for (int j=0; j<10; j++){
         if(arrayResults[j].likes == 0) {
-            fprintf(results, "\n");
+            writeNewLine(results);
             break;
         }
         char str[20];
         snprintf(str, sizeof(str), "%d", arrayResults[j].likes);
-        fprintf(results, "%s;%s\n", arrayResults[j].genre, str);
+        writeQuery3 (results, arrayResults[j].genre, str);
     }
     //printf ("\n");
     //fprintf(results, "\n");
