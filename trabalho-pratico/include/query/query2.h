@@ -2,6 +2,7 @@
 #include <cmd.h>
 #include <musics.h>
 #include <hashtableManager.h>
+#include "output_handling/outputWriter.h"
 
 #ifndef _QUERY2_H_
 #define _QUERY2_H_
@@ -29,8 +30,8 @@ int compareTuple(const void* a, const void* b);
 
 Tuple* sortHash (GHashTable* hash);
 
-void printResult (Artist* artist, Duration dur, FILE* fp);
+void printResult (Artist* artist, Duration dur, Output* output);
 
-FILE* openFileQuery2 (int i);
+char* getPathFileToQuery2 (int i);
 
 #endif  

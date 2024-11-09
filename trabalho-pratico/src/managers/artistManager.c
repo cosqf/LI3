@@ -3,7 +3,7 @@
 #include <artistManager.h>
 #include <parsingUtils.h>
 #include <utils.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 #include <validateDatatypes.h>
 #include <parsing.h>
 
@@ -42,18 +42,18 @@ GHashTable* getArtistTable (ArtistManager *a_mngr) {
 
 
 void getDataArtist (char *path, ArtistManager* mngr) {
-    FILE *errorFileArtist = openErrorFileArtists();
+    Output* output = openErrorOutputArtists ();
 
-    parseFile(path, callbackArtist, mngr, errorFileArtist);
+    parseFile(path, callbackArtist, mngr, output);
 
-    fclose(errorFileArtist); 
+    closeOutputFile (output); 
 }
 
-void callbackArtist(char **tokens, void *manager, FILE *errorFile) {
+void callbackArtist(char **tokens, void *manager, Output *output) {
     ArtistManager* artistManager = (ArtistManager*) manager;
  
     ArtistString* artistS = createArtistString(tokens);
-    if (!validArtist(artistS)) insertErrorFileArtists(artistS, errorFile);
+    if (!validArtist(artistS)) insertErrorFileArtists(artistS, output);
     else {
         Artist* artist = createArtist (tokens);
         insertArtistHash(artistManager, getArtistID(artist), artist);

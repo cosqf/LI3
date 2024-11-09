@@ -2,31 +2,23 @@
 #include <artists.h>
 #include <musics.h>
 #include <stdlib.h>
+#include "output_handling/outputWriter.h"
 
 #ifndef _ERRORFILES_H_
 #define _ERRORFILES_H_
 
-FILE * openErrorFileUser ();
+Output* openErrorOutputUser ();
 
-FILE * openErrorFileArtists ();
+Output* openErrorOutputArtists ();
 
-FILE * openErrorFileMusics ();
-
-
-
-FILE * openResultsFileMusics ();
-
-FILE * openResultFileArtists ();
-
-FILE * openResultFileUsers ();
+Output* openErrorOutputMusics ();
 
 
 
-// for debug
-void insertErrorFileUser (UserString *user, FILE *fp);
+void insertErrorFileUser(UserString *user, Output* output);
 
-void insertErrorFileMusics (MusicString *music, FILE *fp);
+void insertErrorFileArtists(ArtistString *artist, Output* output);
 
-void insertErrorFileArtists (ArtistString *artist, FILE *fp);
+void insertErrorFileMusics(MusicString *music, Output* output);
 
 #endif
