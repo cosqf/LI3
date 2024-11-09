@@ -2,7 +2,7 @@
 #include <parsing.h>
 #include <glib.h>
 #include <stdlib.h>
-#include <outputWriter.h>
+#include <output_handling/outputWriter.h>
 
 
 void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter){
@@ -14,8 +14,6 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
 
     // Format the filename with the counter value
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
-
-    FILE* results = fopen (filename, "w");
 
     g_hash_table_iter_init(&iter, userHashTable);
 
@@ -43,18 +41,26 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
 
     qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
 
+    Output* output = openOutputFile (filename);
+
+
     for (int j=0; j<10; j++){
         if(arrayResults[j].likes == 0) {
-            writeNewLine(results);
+            writeNewLine(output);
             break;
         }
         char str[20];
         snprintf(str, sizeof(str), "%d", arrayResults[j].likes);
-        writeQuery3 (results, arrayResults[j].genre, str);
+
+        char* lines[10] = {NULL};
+        lines[0] = arrayResults[j].genre;
+        lines[1] = str;
+        setOutput (output, lines, 2);
+        writeQuerys (output);
     }
     //printf ("\n");
     //fprintf(results, "\n");
-    fclose(results);
+    closeOutputFile (output);
 }
 
 

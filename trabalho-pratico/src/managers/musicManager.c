@@ -6,7 +6,7 @@
 #include <parsing.h>
 #include <stdlib.h>
 #include <utils.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 #include <validateDatatypes.h>
 
 typedef struct musicManager {
@@ -55,20 +55,20 @@ void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, g
 
 
 void getDataMusic (char *path, hashtableManager* mngr) {
-    FILE *errorFileMusic = openErrorFileMusics();
+    Output* output = openErrorOutputMusics ();
 
-    parseFile(path, callbackMusic, mngr, errorFileMusic);
+    parseFile(path, callbackMusic, mngr, output);
 
-    fclose(errorFileMusic); 
+    closeOutputFile (output);
 }
 
-void callbackMusic (char** tokens, void* manager, FILE* errorFile) { // receives entity manager
+void callbackMusic (char** tokens, void* manager, Output* output) { // receives entity manager
     hashtableManager* mngr = (hashtableManager*) manager;
     MusicManager* music_mngr = getMusicManager (mngr);
     ArtistManager* artist_mngr = getArtistManager (mngr);
 
     MusicString* musicS = createMusicString (tokens);
-    if (!validMusic(musicS, artist_mngr)) insertErrorFileMusics(musicS, errorFile);
+    if (!validMusic(musicS, artist_mngr)) insertErrorFileMusics(musicS, output);
     else {
         Music* music = createMusic (tokens);
         insertMusicHash(music_mngr, getMusicID(music), music);

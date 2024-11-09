@@ -1,5 +1,6 @@
 #include <musics.h>
 #include <glib.h>
+#include <output_handling/errorfiles.h>
 
 typedef struct hashtableManager hashtableManager;
 
@@ -21,6 +22,6 @@ void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, g
 
 void getDataMusic (char *path, hashtableManager* mngr);
 
-void callbackMusic (char** tokens, void* manager, FILE* errorFile);
+void callbackMusic (char** tokens, void* manager, Output* output);
 
 #endif

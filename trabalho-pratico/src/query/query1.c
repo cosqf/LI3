@@ -4,7 +4,7 @@
 #include <userManager.h>
 #include <users.h>
 #include <stdio.h>
-#include <outputWriter.h>
+#include <output_handling/outputWriter.h>
 
 
 void query1(CMD* cmd, UserManager *u_mngr, int counter) {
@@ -13,26 +13,37 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
     // Format the filename with the counter value
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", counter);
 
-    FILE* results = fopen (filename, "w");
+    Output* output = openOutputFile (filename);
 
     int userID = getCMDId(cmd);
     User* user = lookupUserHash(u_mngr, userID);
 
-    if(user != NULL){
-        char* email = getUserEmail(user);
-        char* firstname = getUserFirstName(user);
-        char* lastname = getUserLastName(user);
-        int age = getUserAge(user);
-        char* country = getUserCountry(user);
+    char* lines[5] = {NULL};
+    
+    if (user == NULL) setOutput(output, NULL, 0);
+    else {
+        lines[0] = getUserEmail(user);
+        lines[1] = getUserFirstName(user);
+        lines[2] = getUserLastName(user);
 
-        writeQuery1 (results, email, firstname, lastname, age, country);
+        // Formatting the age as a string
+        static char ageString[4];
+        snprintf(ageString, sizeof(ageString), "%d", getUserAge(user));
+        lines[3] = ageString;
 
-        free(email);
-        free(firstname);
-        free(lastname);
-        free(country);
+        lines[4] = getUserCountry(user);
+
+        setOutput(output, lines, 5);
     }
 
-    writeNewLine(results);
-    fclose(results);
+    writeQuerys(output);
+
+    if (user != NULL) {
+        free(lines[0]);
+        free(lines[1]);
+        free(lines[2]);
+        free(lines[4]);
+    }
+
+    closeOutputFile(output);
 }

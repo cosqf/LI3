@@ -7,7 +7,7 @@
 #include <parsingUtils.h>
 #include <string.h>
 #include <glib.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 #include <parsing.h>
 #include <validateDatatypes.h>
 #include <hashtableManager.h>

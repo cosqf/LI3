@@ -1,5 +1,6 @@
 #include <artists.h>
 #include <glib.h>
+#include <output_handling/errorfiles.h>
 
 #ifndef _ARTISTMANAGER_H_
 #define _ARTISTMANAGER_H_
@@ -18,6 +19,6 @@ GHashTable* getArtistTable (ArtistManager *a_mngr);
 
 void getDataArtist (char *path, ArtistManager* mngr);
 
-void callbackArtist(char **tokens, void *manager, FILE *errorFile);
+void callbackArtist(char **tokens, void *manager, Output *output);
 
 #endif

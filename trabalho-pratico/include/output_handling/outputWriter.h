@@ -1,25 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <parsingUtils.h>
 
-void writeQuery1 (FILE* results, char* email, char* firstname, char* lastname, int age, char* country);
-
-void writeQuery2 (FILE* fp, char* name, char* typeString, char* duration, char* artist_country);
-
-void writeQuery3 (FILE* results, char* genre, char* str);
-
-void writeErrorsUsersContent(FILE* fp, char* username, char* email, char* firstName, char* lastName, char* birthDate, char* country, char* subscriptionType, char* likedMusicsID);
-
-void writeErrorsUsersHeader (FILE* fp);
-
-void writeErrorsArtistsContent(FILE* fp, char* id, char* name, char* description, char* recipePerStream, char* idConstituent, char* country, char* type);
-
-void writeErrorsArtistsHeader (FILE* fp);
-
-void writeErrorsMusicsContent (FILE* fp, char* id, char* title, char* artistID, char* duration, char* genre, char* year, char* lyrics);
-
-void writeErrorsMusicsHeader (FILE* fp);
-
-void writeNewLine (FILE* results);
+#ifndef _OUTPUTWRITER_H_
+#define _OUTPUTWRITER_H_
 
 
+typedef struct output Output;
 
+Output* openOutputFile (char* path);
+
+void closeOutputFile (Output* output);
+
+void setOutput (Output* output, char** lines, int counter);
+
+void writeQuerys (Output* output);
+
+void writeErrorFile (Output* output);
+
+void writeErrorFileHandle (Output* output, DataType type);
+
+void writeNewLine(Output* output);
+
+#endif
