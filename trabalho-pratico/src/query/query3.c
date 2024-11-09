@@ -28,7 +28,7 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
     while (g_hash_table_iter_next(&iter, &key, &value)) { //para cada user
         User* user = (User*) value;
         int age = getUserAge (user), nLikes = getUserLikedCounter (user);
-        int* LikedMusics = getUserLikedMusicsID (user);
+        const int* LikedMusics = getUserLikedMusicsID (user);
 
         if (age >= AgeMin && age <= AgeMax){
             for (int i=0; i<nLikes; i++){ //para cada musica

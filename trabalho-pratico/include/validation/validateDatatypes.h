@@ -19,7 +19,7 @@ bool validBirthdate(char*);
 
 bool validSubscription(char*);
 
-bool validLikes(int*, int, MusicManager*);
+bool validLikes(const int*, int, MusicManager*);
 
 //MUSICS
 bool validMusic(MusicString*, ArtistManager*);

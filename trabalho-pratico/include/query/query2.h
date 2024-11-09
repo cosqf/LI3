@@ -13,7 +13,7 @@ typedef struct {
 
 void query2(CMD *cmd, hashtableManager* mngr, int cmdCounter);
 
-void getArtistsDiscography (int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr);
+void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr);
 
 void updateDurationHash (int id, GHashTable* newtable, int duration) ;
 

@@ -115,7 +115,7 @@ float getArtistRecipePerStream(Artist* artist) {
 }
 
 /* Getter for id_constituent */
-int* getArtistIDConstituent(Artist* artist) {
+const int* getArtistIDConstituent(Artist* artist) {
     return artist->id_constituent;
 }
 

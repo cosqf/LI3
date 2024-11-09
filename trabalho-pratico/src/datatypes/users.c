@@ -155,8 +155,9 @@ bool getUserSubscriptionType(User* user) {
 }
 
 /* Getter for liked_musics_id */
-int* getUserLikedMusicsID(User* user) {
-    return user->liked_musics_id;
+const int* getUserLikedMusicsID(User* user) {
+    int* array = user->liked_musics_id;
+    return array;
 }
 
 /* Getter for liked_musics_count */
@@ -223,7 +224,7 @@ char* getUserLikedMusicsIDString (UserString *user) {
 }
 
 /* Getter for liked_musics_id in string format in an array */
-int* getUserLikedMusicsIDStringArray (UserString *user) {
+const int* getUserLikedMusicsIDStringArray (UserString *user) {
     int* result = parseIDs(user->liked_musics_id); 
     return result;
 }

@@ -23,7 +23,7 @@ bool validUser(UserString* user, MusicManager *m_mngr){
     char* birthdate = getUserBirthDateString(user);
     char* subscription = getUserSubscriptionTypeString(user);
     char* likedMusicsString = getUserLikedMusicsIDString(user);
-    int* likedMusics = getUserLikedMusicsIDStringArray(user);
+    const int* likedMusics = getUserLikedMusicsIDStringArray(user);
     int likedMusicsCount = getUserLikedCounterString(user);
 
     bool valid = (validEmail(email) && validBirthdate(birthdate) && validSubscription(subscription) && validList(likedMusicsString) && validLikes(likedMusics, likedMusicsCount, m_mngr));
@@ -32,7 +32,7 @@ bool validUser(UserString* user, MusicManager *m_mngr){
     free (birthdate);
     free (subscription);
     free (likedMusicsString);
-    free (likedMusics);
+    free ((int*)likedMusics);
     
     return valid;
 }
@@ -92,7 +92,7 @@ bool validSubscription(char* subs){
 }
 
 // Validates the liked musics IDs of the user, ensuring they are all existent and valid musics.
-bool validLikes(int* liked_musics_id, int liked_musics_count, MusicManager *m_mngr){
+bool validLikes(const int* liked_musics_id, int liked_musics_count, MusicManager *m_mngr){
     int i;
 
     for(i = 0; i < liked_musics_count && lookupMusicHash (m_mngr, liked_musics_id[i]) != NULL; i++);

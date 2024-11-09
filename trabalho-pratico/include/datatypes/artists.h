@@ -28,7 +28,7 @@ int getArtistID(Artist* artist);
 char* getArtistName(Artist* artist);
 char* getArtistDescription(Artist* artist);
 float getArtistRecipePerStream(Artist* artist);
-int* getArtistIDConstituent(Artist* artist);
+const int* getArtistIDConstituent(Artist* artist);
 unsigned int getArtistIDConstituentCounter(Artist* artist);
 char* getArtistCountry(Artist* artist);
 int getArtistType(Artist* artist);

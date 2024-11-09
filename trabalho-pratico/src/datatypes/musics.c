@@ -122,7 +122,7 @@ char* getMusicTitle(Music* music) {
 }
 
 /* Getter for artist's ID */
-int* getMusicArtistID(Music* music) {
+const int* getMusicArtistID(Music* music) {
     return music->artist_id;
 }
 

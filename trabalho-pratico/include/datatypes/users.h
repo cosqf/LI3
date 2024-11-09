@@ -21,7 +21,7 @@ char* getUserLastName(User* user);
 Date getUserBirthDate(User* user);
 char* getUserCountry(User* user);
 bool getUserSubscriptionType(User* user);
-int* getUserLikedMusicsID(User* user);
+const int* getUserLikedMusicsID(User* user);
 int getUserLikedCounter (User* user);
 int getUserAge (User* user);
 
@@ -34,6 +34,6 @@ char* getUserCountryString(UserString* user);
 char* getUserSubscriptionTypeString (UserString *user);
 char* getUserLikedMusicsIDString (UserString *user);
 int getUserLikedCounterString (UserString* user);
-int* getUserLikedMusicsIDStringArray (UserString *user);
+const int* getUserLikedMusicsIDStringArray (UserString *user);
 
 #endif  

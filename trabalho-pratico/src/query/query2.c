@@ -70,14 +70,14 @@ void feeder(gpointer value, gpointer music_data) {
 
     // Extracting data from value
     int duration = durationInSeconds (getMusicDuration (music));
-    int* ids = getMusicArtistID (music);
+    const int* ids = getMusicArtistID (music);
     int idsCounter = getMusicArtistIDCount (music);
 
     getArtistsDiscography(ids, idsCounter, hashDuration, duration, country_filter, a_mngr);
 }
 
 //Insert the duration of an artist's discography in the new hashtable, using the id as key
-void getArtistsDiscography (int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr) {
+void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr) {
     for (int i = 0; i < count; i++) {
         Artist* artist = lookupArtistHash (a_mngr, id[i]);
         if (artist == NULL) continue;

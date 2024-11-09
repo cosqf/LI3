@@ -38,7 +38,7 @@ Genre getGenre (const char *genre);
 /* Getters */
 int getMusicID(Music* music);
 char* getMusicTitle(Music* music);
-int* getMusicArtistID(Music* music);
+const int* getMusicArtistID(Music* music);
 Duration getMusicDuration(Music* music);
 Genre getMusicGenre(Music* music);
 int getMusicYear(Music* music);
