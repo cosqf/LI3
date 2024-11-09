@@ -6,7 +6,7 @@
 #include <parsingUtils.h>
 #include <parsing.h>
 #include <utils.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 #include <validateDatatypes.h>
 
 typedef struct userManager {
@@ -43,20 +43,19 @@ GHashTable* getUserTable (UserManager *u_mngr) {
 
 
 void getDataUser (char* path, hashtableManager* mngr) {
-    FILE *errorFileUser = openErrorFileUser();
+    Output* output = openErrorOutputUser ();
+    parseFile(path, callbackUser, mngr, output);
 
-    parseFile(path, callbackUser, mngr, errorFileUser);
-
-    fclose(errorFileUser); 
+    closeOutputFile (output);
 }
 
-void callbackUser(char **tokens, void *manager, FILE *errorFile) { // receives entity manager
+void callbackUser(char **tokens, void *manager, Output *output) { // receives entity manager
     hashtableManager* mngr = (hashtableManager*) manager;
     UserManager* user_mngr = getUserManager(mngr);
     MusicManager* music_mngr = getMusicManager(mngr);
 
     UserString* userS = createUserString(tokens);
-    if (!validUser(userS, music_mngr)) insertErrorFileUser(userS, errorFile);
+    if (!validUser(userS, music_mngr)) insertErrorFileUser(userS, output);
     else {
         User* user = createUser (tokens);
         insertUserHash(user_mngr, getUserID(user), user);

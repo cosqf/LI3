@@ -8,7 +8,7 @@
 #include <glib.h>
 #include <musicManager.h>
 #include <stdlib.h>
-#include <outputWriter.h>
+#include <output_handling/outputWriter.h>
 
 typedef struct {
     char* country;
@@ -42,15 +42,18 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     if (lengthHash < topN) limit = lengthHash;
     else limit = topN;
     
-    FILE *fp = openFileQuery2 (cmdCounter);
-    if (limit == 0) writeNewLine(fp);
+    char* filePath = getPathFileToQuery2 (cmdCounter);
+    Output* output = openOutputFile (filePath);
+    
+    if (limit == 0) writeNewLine(output);
     for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
         Duration dur = secondsInDuration (hashArray[i].duration);
-        printResult (artist, dur, fp);
+        printResult (artist, dur, output);
     }
-    fclose (fp);
+    closeOutputFile (output);
+    free (filePath);
     free (hashArray);
     free (country);
     deleteHash(hashDuration);
@@ -142,7 +145,7 @@ void updateDurationHash(int id, GHashTable* newtable, int duration) {
     else g_hash_table_insert(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(duration));
 }
 
-void printResult (Artist* artist, Duration dur, FILE* fp) {
+void printResult (Artist* artist, Duration dur, Output* output) {
     char* name = getArtistName (artist);
     bool type = getArtistType(artist);
     char* artist_country = getArtistCountry(artist); 
@@ -152,25 +155,28 @@ void printResult (Artist* artist, Duration dur, FILE* fp) {
     if (type) strcpy (typeString, "group");
     else strcpy (typeString, "individual");
 
-    writeQuery2(fp, name, typeString, duration, artist_country);
+    char* lines[10] = {NULL};
+
+    lines[0] = name;
+    lines[1] = typeString;
+    lines[2] = duration;
+    lines[3] = artist_country;
+
+    setOutput (output, lines, 4);
+    writeQuerys (output);
+
     free (name);
     free(artist_country);
     free(duration);
 }
 
-FILE* openFileQuery2 (int i) {
-    int required_size = 11 + 21 + 1;
+char* getPathFileToQuery2 (int i) {
+    int required_size = 31 + 2 + 1; // characters + number + terminator
 
     char* fullpath = malloc(required_size);
     if (mallocErrorCheck (fullpath)) exit(EXIT_FAILURE);
 
     snprintf(fullpath, required_size, "resultados/command%d_output.txt", i);
     
-    FILE* fp = fopen (fullpath, "w");
-    if (!fp) {
-        perror ("Error opening Error file");
-        exit (1);
-    }
-    free (fullpath);
-    return fp;
+    return fullpath;
 }

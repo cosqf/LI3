@@ -4,99 +4,80 @@
 #include <utils.h>
 #include <artists.h>
 #include <stdlib.h>
-#include <errorfiles.h>
-#include <outputWriter.h>
+#include <output_handling/errorfiles.h>
+#include <output_handling/outputWriter.h>
 
 
-FILE * openErrorFileUser () {
-    FILE* fp = fopen ("resultados/users_errors.csv", "w");
-    if (!fp) {
-        perror ("Error opening Error file");
-        exit (1);
-    }
-    writeErrorsUsersHeader (fp);
-    return fp;
+Output* openErrorOutputUser () {
+    Output* output = openOutputFile  ("resultados/users_errors.csv");
+
+    writeErrorFileHandle (output, Users);
+    return output;
 }
 
-void insertErrorFileUser(UserString *user, FILE *fp) {
-    char* username = getUserIDString(user);
-    char* email = getUserEmailString(user);
-    char* firstName = getUserFirstNameString(user);
-    char* lastName = getUserLastNameString(user);
-    char* birthDate = getUserBirthDateString(user);
-    char* country = getUserCountryString(user);
-    char* subscriptionType = getUserSubscriptionTypeString(user);
-    char* likedMusicsID = getUserLikedMusicsIDString(user);
+void insertErrorFileUser(UserString *user, Output* output) {
+    char* lines[10] = {NULL};
+    lines[0] = getUserIDString(user);
+    lines[1] = getUserEmailString(user);
+    lines[2] = getUserFirstNameString(user);
+    lines[3] = getUserLastNameString(user);
+    lines[4] = getUserBirthDateString(user);
+    lines[5] = getUserCountryString(user);
+    lines[6] = getUserSubscriptionTypeString(user);
+    lines[7] = getUserLikedMusicsIDString(user);
 
-    writeErrorsUsersContent (fp, username, email, firstName, lastName, birthDate, country, subscriptionType, likedMusicsID);
-
-    free(username);
-    free(email);
-    free(firstName);
-    free(lastName);
-    free(birthDate);
-    free(country);
-    free(subscriptionType);
-    free(likedMusicsID);
+    setOutput (output, lines, 8);
+    writeErrorFile (output);
+ 
+    for (int i = 0; i < 8; i++) free(lines[i]);
 }
 
-FILE * openErrorFileArtists (){
-    FILE* fp = fopen ("resultados/artists_errors.csv", "w");
-    if (!fp) {
-        perror ("Error opening Error file");
-        exit (1);
-        }
-    writeErrorsArtistsHeader(fp);
-    return fp;
+Output* openErrorOutputArtists () {
+    Output* output = openOutputFile ("resultados/artists_errors.csv");
+
+    writeErrorFileHandle (output, Artists);
+    return output;
 }
 
-void insertErrorFileArtists (ArtistString *artist, FILE *fp) {
-    char* id = getArtistIDString(artist);
-    char* name = getArtistNameString(artist);
-    char* description = getArtistDescriptionString(artist);
-    char* recipePerStream = getArtistRecipePerStreamString(artist);
-    char* idConstituent = getArtistIDConstituentString(artist);
-    char* country = getArtistCountryString(artist);
-    char* type = getArtistTypeString(artist);
+void insertErrorFileArtists(ArtistString *artist, Output* output) {
+    char* lines[10] = {NULL};
+    lines[0] = getArtistIDString(artist);
+    lines[1] = getArtistNameString(artist);
+    lines[2] = getArtistDescriptionString(artist);
+    lines[3] = getArtistRecipePerStreamString(artist);
+    lines[4] = getArtistIDConstituentString(artist);
+    lines[5] = getArtistCountryString(artist);
+    lines[6] = getArtistTypeString(artist);
 
-    writeErrorsArtistsContent(fp, id, name, description, recipePerStream, idConstituent, country, type);
+    setOutput (output, lines, 7);
 
-    free(id);
-    free(name);
-    free(description);
-    free(recipePerStream);
-    free(idConstituent);
-    free(country);
-    free(type);
+    writeErrorFile (output);
+    
+    for (int i = 0; i < 7; i++) free(lines[i]);
 }
 
 
-FILE * openErrorFileMusics (){
-    FILE* fp = fopen ("resultados/musics_errors.csv", "w");
-    if (!fp) {
-        perror ("Error opening Error file");
-        exit (1);
-        }
-    writeErrorsMusicsHeader (fp);
-    return fp;
+Output* openErrorOutputMusics (){
+    Output* output = openOutputFile ("resultados/musics_errors.csv");
+
+    writeErrorFileHandle (output, Musics);
+    return output;
 }
 
-void insertErrorFileMusics(MusicString *music, FILE *fp) {
-    char* id = getMusicIDString(music);
-    char* title = getMusicTitleString(music);
-    char* artistID = getMusicArtistIDString(music);
-    char* duration = getMusicDurationString(music);
-    char* genre = getMusicGenreString(music);
-    char* year = getMusicYearString(music);
-    char* lyrics = getMusicLyricsString(music);
+void insertErrorFileMusics(MusicString *music, Output* output) {
+    char* lines [10] = {NULL};
 
-    writeErrorsMusicsContent (fp, id, title, artistID, duration, genre, year, lyrics);
+    lines[0] = getMusicIDString(music);
+    lines[1] = getMusicTitleString(music);
+    lines[2] = getMusicArtistIDString(music);
+    lines[3] = getMusicDurationString(music);
+    lines[4] = getMusicGenreString(music);
+    lines[5] = getMusicYearString(music);
+    lines[6] = getMusicLyricsString(music);
 
-    free(id);
-    free(title);
-    free(artistID);
-    free(duration);
-    free(genre);
-    free(year);
-    free(lyrics);
+    setOutput (output, lines, 7);
+
+    writeErrorFile (output);
+    
+    for (int i = 0; i < 7; i++) free(lines[i]);
 }

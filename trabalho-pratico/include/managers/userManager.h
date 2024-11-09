@@ -1,5 +1,6 @@
 #include <users.h>
 #include <glib.h>
+#include <output_handling/errorfiles.h>
 
 typedef struct hashtableManager hashtableManager;
 
@@ -20,6 +21,6 @@ GHashTable* getUserTable (UserManager *u_mngr);
 
 void getDataUser (char* path, hashtableManager* mngr);
 
-void callbackUser(char **tokens, void *manager, FILE *errorFile);
+void callbackUser(char **tokens, void *manager, Output *output);
 
 #endif

@@ -1,6 +1,6 @@
 #include <parsing.h>
 #include <utils.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 #include <userManager.h>
 #include <cmdManager.h>
 
@@ -23,7 +23,7 @@ void getData (char *path, hashtableManager *mngr) {
     free(userPath);
 }
 
-void parseFile (char* pathToFile, void (processLine)(char**, void*, FILE*), void* manager, FILE* errorFile) {
+void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
     FILE* fileData = openFile (pathToFile);
     char str[DEFAULT];
     if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
@@ -33,7 +33,7 @@ void parseFile (char* pathToFile, void (processLine)(char**, void*, FILE*), void
     while (fgets (str, sizeof (str), fileData) != NULL) {
         char* tokens[8];
         parseLine(str, tokens, ";");
-        processLine (tokens, manager, errorFile);
+        processLine (tokens, manager, output);
     }
     fclose (fileData);
 }
