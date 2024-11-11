@@ -10,7 +10,7 @@
 #include <validateDatatypes.h>
 #include <utils.h>
 #include <parsingUtils.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 
 #include <artistManager.h>
 #include <musicManager.h>

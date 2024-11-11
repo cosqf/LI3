@@ -36,11 +36,6 @@ Artist* lookupArtistHash (ArtistManager *a_mngr, int id) {
     return artist;
 }
 
-GHashTable* getArtistTable (ArtistManager *a_mngr) {
-    return a_mngr->artist;
-}
-
-
 void getDataArtist (char *path, ArtistManager* mngr) {
     Output* output = openErrorOutputArtists ();
 
@@ -49,6 +44,8 @@ void getDataArtist (char *path, ArtistManager* mngr) {
     closeOutputFile (output); 
 }
 
+// creates an artistString according to its tokens and validates them. 
+// if valid, its converted to an artist and added to the hashtable
 void callbackArtist(char **tokens, void *manager, Output *output) {
     ArtistManager* artistManager = (ArtistManager*) manager;
  

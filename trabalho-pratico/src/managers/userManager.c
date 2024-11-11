@@ -49,6 +49,8 @@ void getDataUser (char* path, hashtableManager* mngr) {
     closeOutputFile (output);
 }
 
+// creates an userString according to its tokens and validates them. 
+// if valid, its converted to an user and added to the hashtable
 void callbackUser(char **tokens, void *manager, Output *output) { // receives entity manager
     hashtableManager* mngr = (hashtableManager*) manager;
     UserManager* user_mngr = getUserManager(mngr);

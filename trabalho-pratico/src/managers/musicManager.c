@@ -23,7 +23,7 @@ MusicManager* initializeHashMusic () {
         perror("Failed to allocate memory for MusicManager");
         exit(EXIT_FAILURE); 
     }
-    m_mngr->music = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteMusic);
+    m_mngr->music = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) deleteMusic);
     return m_mngr;
 }
 
@@ -36,11 +36,6 @@ Music* lookupMusicHash (MusicManager *m_mngr, int id) {
     Music* Music = g_hash_table_lookup (m_mngr->music, GINT_TO_POINTER(id));
     return Music;
 }
-
-GHashTable* getMusicTable (MusicManager *m_mngr) {
-    return m_mngr->music;
-}
-
 
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data) {
     GHashTableIter iter;
@@ -62,6 +57,8 @@ void getDataMusic (char *path, hashtableManager* mngr) {
     closeOutputFile (output);
 }
 
+// creates a musicString according to its tokens and validates them. 
+// if valid, its converted to a music and added to the hashtable
 void callbackMusic (char** tokens, void* manager, Output* output) { // receives entity manager
     hashtableManager* mngr = (hashtableManager*) manager;
     MusicManager* music_mngr = getMusicManager (mngr);

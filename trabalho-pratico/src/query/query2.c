@@ -26,7 +26,8 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
         data.artistManager = getArtistManager(mngr) 
         };
 
-    iterateMusic(getMusicManager(mngr), feeder, &data);
+    // will iterate the hashtable and get the artists discography
+    iterateMusic(getMusicManager(mngr), feeder, &data); 
 
     Tuple* hashArray = sortHash (hashDuration);
     if (hashArray == NULL) {
@@ -60,14 +61,14 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
 }
 
 
-//will feed insertArtistHash
+// Will feed getArtistsDiscography
 void feeder(gpointer value, gpointer music_data) {
     Music* music = (Music*) value;
 
     // Extracting data from music_data
     FeederData* data = (FeederData*) music_data;
 
-    char* country_filter = data->country;
+    char* countryFilter = data->country;
     GHashTable* hashDuration = data->hashDuration;
     ArtistManager* a_mngr = data->artistManager;
 
@@ -76,10 +77,10 @@ void feeder(gpointer value, gpointer music_data) {
     const int* ids = getMusicArtistID (music);
     int idsCounter = getMusicArtistIDCount (music);
 
-    getArtistsDiscography(ids, idsCounter, hashDuration, duration, country_filter, a_mngr);
+    getArtistsDiscography(ids, idsCounter, hashDuration, duration, countryFilter, a_mngr);
 }
 
-//Insert the duration of an artist's discography in the new hashtable, using the id as key
+// Inserts the duration of an artist's discography in the new hashtable, using the id as key
 void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr) {
     for (int i = 0; i < count; i++) {
         Artist* artist = lookupArtistHash (a_mngr, id[i]);

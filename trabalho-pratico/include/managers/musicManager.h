@@ -16,8 +16,6 @@ void freeHashMusic (MusicManager* a_mngr);
 
 Music* lookupMusicHash (MusicManager *a_mngr, int id);
 
-GHashTable* getMusicTable (MusicManager *m_mngr);
-
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data);
 
 void getDataMusic (char *path, hashtableManager* mngr);

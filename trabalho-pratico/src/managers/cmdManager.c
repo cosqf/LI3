@@ -17,13 +17,14 @@ cmdManager* createCmdManager () {
 void addCommandToManager(cmdManager* mngr, CMD* cmd) {
     CMD** temp = realloc(mngr->cmdArray, ++mngr->counter * sizeof(CMD*));
     if (temp == NULL) {
-        perror("Error adding cmd to manager");
+        perror("Error during realloc in cmd manager");
         exit(EXIT_FAILURE);
     }
     mngr->cmdArray = temp;
     mngr->cmdArray[mngr->counter - 1] = cmd;
 }
 
+// creates cmd by its tokens and adds it to the cmd manager
 void processCmdLine (char** tokens, int numberTokens, cmdManager* manager) {
     CMD* cmd = createCMD (tokens, numberTokens);
     if (cmd != NULL) addCommandToManager (manager, cmd);

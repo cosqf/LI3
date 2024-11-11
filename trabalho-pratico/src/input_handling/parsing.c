@@ -23,6 +23,7 @@ void getData (char *path, hashtableManager *mngr) {
     free(userPath);
 }
 
+// opens a file, gets its tokens and processes the line accordingly using a callback 
 void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
     FILE* fileData = openFile (pathToFile);
     char str[DEFAULT];
@@ -38,6 +39,7 @@ void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), vo
     fclose (fileData);
 }
 
+// divides a line in tokens
 int parseLine(char* line, char* tokens[], const char* separator) {
   int tokenCount = 0;
   char* token;
@@ -51,6 +53,7 @@ int parseLine(char* line, char* tokens[], const char* separator) {
   return tokenCount;
 }
 
+// opens the cmd file, gets its tokens and creates the cmd, line by line
 int parseCmdFile (char* pathToFile, void* manager) {
     FILE* fileData = openFile (pathToFile);
     char str[DEFAULT];
@@ -64,7 +67,7 @@ int parseCmdFile (char* pathToFile, void* manager) {
     return i;
 }
 
-
+// divides a line in tokens using the spaces as separators, except when finding ' " '
 int parseCmdLine(char* line, char* tokens[]) {
     int tokenCount = 0;
     line[strcspn(line, "\n")] = 0;
@@ -96,7 +99,7 @@ int parseCmdLine(char* line, char* tokens[]) {
     return tokenCount;
 }
 
-
+// changes path to the file according to its datatype
 char* changePath(char *path, DataType type) {
     const char* file;
 

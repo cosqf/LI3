@@ -27,7 +27,7 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
         lines[2] = getUserLastName(user);
 
         // Formatting the age as a string
-        static char ageString[4];
+        static char ageString[4]; // max age: 3 digits + \0
         snprintf(ageString, sizeof(ageString), "%d", getUserAge(user));
         lines[3] = ageString;
 
