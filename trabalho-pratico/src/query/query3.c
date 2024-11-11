@@ -22,22 +22,36 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
 
     defineGenre (arrayResults); // initialize arrayResults
 
-    while (g_hash_table_iter_next(&iter, &key, &value)) { // for each user
-        User* user = (User*) value;
-        int age = getUserAge (user), nLikes = getUserLikedCounter (user);
-        const int* LikedMusics = getUserLikedMusicsID (user);
+GHashTable* musicCache = g_hash_table_new(g_direct_hash, g_direct_equal);
 
-        if (age >= AgeMin && age <= AgeMax){
-            for (int i = 0; i < nLikes; i++){ // for each music
-                int idAtual = LikedMusics[i];
-                Music* music = lookupMusicHash (m_mngr, idAtual);
-                Genre genre = getMusicGenre (music);
-                
-                addToResults (arrayResults, genre);
+while (g_hash_table_iter_next(&iter, &key, &value)) {
+    User* user = (User*) value;
+    int age = getUserAge(user), nLikes = getUserLikedCounter(user);
+    const int* LikedMusics = getUserLikedMusicsID(user);
+
+    if (age >= AgeMin && age <= AgeMax) {
+        for (int i = 0; i < nLikes; i++) {
+            int idAtual = LikedMusics[i];
+
+            // Check cache first using g_direct_hash
+            Music* music = g_hash_table_lookup(musicCache, GINT_TO_POINTER(idAtual));
+            if (!music) {
+                // Perform lookup if not in cache
+                music = lookupMusicHash(m_mngr, idAtual);
+                if (music) {
+                    g_hash_table_insert(musicCache, GINT_TO_POINTER(idAtual), music);
+                } else {
+                    continue;
+                }
             }
+
+            Genre genre = getMusicGenre(music);
+            addToResults(arrayResults, genre);
         }
     }
+}
 
+g_hash_table_destroy(musicCache);
     qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
 
 
@@ -62,6 +76,7 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
 
     closeOutputFile (output);
 }
+
 
 
 void addToResults(TupleMusics *array, Genre genre) {

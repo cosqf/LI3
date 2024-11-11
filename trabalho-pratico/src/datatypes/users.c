@@ -97,26 +97,6 @@ void deleteUser(User* user) {
     }
 }
 
-// // DEBUG
-// void printUser(const User* user) {
-//     if (user == NULL) {
-//         printf("User is NULL\n");
-//         return;
-//     }
-
-//     printf("id: %s, Email: %s, First Name: %s, Last Name: %s, Birth Date: %s, "
-//            "Country: %s, Subscription Type: %s, Liked Musics ID: %s, Liked Musics Count: %u\n",
-//            user->id ? user->id : "N/A",
-//            user->email ? user->email : "N/A",
-//            user->first_name ? user->first_name : "N/A",
-//            user->last_name ? user->last_name : "N/A",
-//            user->birth_date ? user->birth_date : "N/A",
-//            user->country ? user->country : "N/A",
-//            user->subscription_type ? user->subscription_type : "N/A",
-//            user->liked_musics_id ? user->liked_musics_id : "N/A",
-//            user->liked_musics_count);
-// }
-
 // GETTER
 
 /* Getter for id */
@@ -233,58 +213,3 @@ const int* getUserLikedMusicsIDStringArray (UserString *user) {
 int getUserLikedCounterString (UserString* user) {
     return user->liked_musics_count;
 }
-
-// // SETTERS
-
-// /* Setter for id */
-// void setUserID(User* user, const char* id) {
-//     if (user->id) free(user->id);  
-//     user->id = strdup(id);
-// }
-
-// /* Setter for email */
-// void setUserEmail(User* user, const char* email) {
-//     if (user->email) free(user->email);  
-//     user->email = strdup(email);  // 
-// }
-
-// /* Setter for first_name */
-// void setUserFirstName(User* user, const char* first_name) {
-//     if (user->first_name) free(user->first_name);  
-//     user->first_name = strdup(first_name);
-// }
-
-// /* Setter for last_name */
-// void setUserLastName(User* user, const char* last_name) {
-//     if (user->last_name) free (user->last_name);  
-//     user->last_name = strdup(last_name);
-// }
-
-// /* Setter for birth_date */
-// void setUserBirthDate(User* user, const char* birth_date) {
-//     if (user->birth_date) free (user->birth_date);  
-//     user->birth_date = strdup(birth_date);
-// }
-
-// /* Setter for country */
-// void setUserCountry(User* user, const char* country) {
-//     if (user->country) free(user->country);  
-//     user->country = strdup(country);
-// }
-
-// /* Setter for subscription_type */
-// void setUserSubscriptionType(User* user, const char* subscription_type) {
-//     if (user->subscription_type) free(user->subscription_type);  
-//     user->subscription_type = strdup(subscription_type);
-// }
-
-// /* Setter for liked_musics_id */
-// void setUserLikedMusicsID(User* user, const char* liked_musics_id) {
-//     if (user->liked_musics_id) free(user->liked_musics_id);  
-//     user->liked_musics_id = strdup(liked_musics_id);
-// }
-
-// /* Setter for liked_musics_count */
-// void setUserLikedMusicsCount(User* user, int liked_musics_count) {
-//     user->liked_musics_count = liked_musics_count;
-// }

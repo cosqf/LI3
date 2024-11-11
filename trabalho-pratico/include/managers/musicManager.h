@@ -8,6 +8,7 @@ typedef struct hashtableManager hashtableManager;
 #define _MUSICMANAGER_H_
 
 typedef struct musicManager MusicManager;
+
 void insertMusicHash (MusicManager *a_mngr, int key, Music *Music);
 
 MusicManager* initializeHashMusic ();
