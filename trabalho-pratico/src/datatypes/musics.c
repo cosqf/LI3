@@ -1,7 +1,7 @@
 #include <musics.h>
 #include <utils.h>
 #include <parsingUtils.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 #include <stdlib.h>
 
 typedef struct music {
@@ -107,6 +107,24 @@ Genre getGenre(const char *genre) {
     if (strcmp(genre, "Pop") == 0) return GENRE_POP;
     if (strcmp(genre, "Electronic") == 0) return GENRE_ELECTRONIC;
     return -1; // Invalid genre
+}
+
+Music* copyMusic (Music* musicOg) {   // needs work
+    Music* music = malloc (sizeof (Music));
+    if (!music) {
+        perror ("Error copying user");
+        return NULL;
+    }
+    music->id = musicOg->id;
+    music->title = strdup (musicOg->title);
+    music->artist_id = musicOg->artist_id;
+    music->artist_id_count = musicOg->artist_id_count;
+    music->duration = musicOg-> duration;
+    music->genre = musicOg-> genre;
+    music->year = musicOg->year;
+    music->lyrics = strdup(musicOg->lyrics);
+
+    return music;
 }
 
 // GETTERs

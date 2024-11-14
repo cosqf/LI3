@@ -24,6 +24,7 @@ bool getUserSubscriptionType(User* user);
 const int* getUserLikedMusicsID(User* user);
 int getUserLikedCounter (User* user);
 int getUserAge (User* user);
+User* copyUser (User* userOg);
 
 char* getUserIDString (UserString* user);
 char* getUserEmailString (UserString *user);

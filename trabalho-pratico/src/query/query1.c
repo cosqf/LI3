@@ -44,6 +44,7 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
         free(lines[2]);
         free(lines[4]);
     }
+    deleteUser (user);
 
     closeOutputFile(output);
 }

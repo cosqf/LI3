@@ -159,6 +159,50 @@ int getUserAge (User* user) {
     return age;
 }
 
+User* copyUser( User* userOg) {
+    if (userOg == NULL) {
+        return NULL;
+    }
+
+    User* userCopy = malloc(sizeof(User));
+    if (!userCopy) {
+        perror("Error allocating memory for User");
+        return NULL;
+    }
+
+    userCopy->id = userOg->id;
+    userCopy->birth_date = userOg->birth_date;
+    userCopy->subscription_type = userOg->subscription_type;
+
+    // copy for string fields
+    userCopy->email = userOg->email ? strdup(userOg->email) : NULL;
+    userCopy->first_name = userOg->first_name ? strdup(userOg->first_name) : NULL;
+    userCopy->last_name = userOg->last_name ? strdup(userOg->last_name) : NULL;
+    userCopy->country = userOg->country ? strdup(userOg->country) : NULL;
+
+    // copy for the int array
+    int arrayCount = userOg->liked_musics_count;
+    if (userOg->liked_musics_id != NULL &&  arrayCount > 0) {
+        
+        userCopy->liked_musics_id = malloc(arrayCount * sizeof(int));
+        if (userCopy->liked_musics_id == NULL) {
+            perror("Error allocating memory for liked_musics_id");
+            free(userCopy->email);
+            free(userCopy->first_name);
+            free(userCopy->last_name);
+            free(userCopy->country);
+            free(userCopy);
+            return NULL;
+        }
+        // Copy the contents of the original liked_musics_id array
+        memcpy(userCopy->liked_musics_id, userOg->liked_musics_id, arrayCount * sizeof(int));
+
+    } else userCopy->liked_musics_id = NULL;
+
+    userCopy->liked_musics_count = arrayCount;
+
+    return userCopy;
+}
 
 
 // GETTERS FOR USER STRING

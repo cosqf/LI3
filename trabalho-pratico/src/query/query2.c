@@ -52,6 +52,7 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
         Duration dur = secondsInDuration (hashArray[i].duration);
         printResult (artist, dur, output);
+        deleteArtist (artist);
     }
     closeOutputFile (output);
     free (filePath);
@@ -83,11 +84,8 @@ void feeder(gpointer value, gpointer music_data) {
 // Inserts the duration of an artist's discography in the new hashtable, using the id as key
 void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr) {
     for (int i = 0; i < count; i++) {
-        Artist* artist = lookupArtistHash (a_mngr, id[i]);
-        if (artist == NULL) continue;
-
-        if (country!= NULL) {  // country filter is active
-            char* countryArtist = getArtistCountry (artist);
+        if (country != NULL) {  // country filter is active
+            char* countryArtist = lookupArtistCountryHash (a_mngr, id[i]);
             if (strcmp (country, countryArtist) != 0) {
                 free (countryArtist);
                 continue;

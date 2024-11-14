@@ -15,6 +15,10 @@ void freeHashArtist (ArtistManager* a_mngr);
 
 Artist* lookupArtistHash (ArtistManager *a_mngr, int id);
 
+bool isArtistInHash (ArtistManager *a_mngr, int id);
+
+char* lookupArtistCountryHash (ArtistManager *a_mngr, int id);
+
 void getDataArtist (char *path, ArtistManager* mngr);
 
 void callbackArtist(char **tokens, void *manager, Output *output);

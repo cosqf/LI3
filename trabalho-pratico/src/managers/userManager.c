@@ -33,8 +33,9 @@ void freeHashUser (UserManager* u_mngr) {
 }
 
 User* lookupUserHash (UserManager *u_mngr, int id) {
-    User* User = g_hash_table_lookup (u_mngr->user, GINT_TO_POINTER(id));
-    return User;
+    User* user = g_hash_table_lookup (u_mngr->user, GINT_TO_POINTER(id));
+    if (user == NULL) return NULL;
+    return copyUser (user);
 }
 
 GHashTable* getUserTable (UserManager *u_mngr) {

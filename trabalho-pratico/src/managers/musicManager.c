@@ -32,9 +32,15 @@ void freeHashMusic (MusicManager* m_mngr) {
     free (m_mngr);
 }
 
-Music* lookupMusicHash (MusicManager *m_mngr, int id) {
-    Music* Music = g_hash_table_lookup (m_mngr->music, GINT_TO_POINTER(id));
-    return Music;
+bool isMusicInHash (MusicManager *m_mngr, int id) {
+    Music* music = g_hash_table_lookup (m_mngr->music, GINT_TO_POINTER(id));
+    if (music == NULL) return 0;
+    else return 1;
+}
+
+Genre lookupMusicGenreHash (MusicManager *m_mngr, int id) {
+    Music* music = g_hash_table_lookup (m_mngr->music, GINT_TO_POINTER(id));
+    return getMusicGenre (music);
 }
 
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data) {

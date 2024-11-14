@@ -30,9 +30,7 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
         if (age >= AgeMin && age <= AgeMax){
             for (int i = 0; i < nLikes; i++){ // for each music
                 int idAtual = LikedMusics[i];
-                Music* music = lookupMusicHash (m_mngr, idAtual);
-                Genre genre = getMusicGenre (music);
-                
+                Genre genre = lookupMusicGenreHash (m_mngr, idAtual);
                 addToResults (arrayResults, genre);
             }
         }

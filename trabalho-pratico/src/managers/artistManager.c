@@ -33,7 +33,18 @@ void freeHashArtist (ArtistManager* a_mngr) {
 
 Artist* lookupArtistHash (ArtistManager *a_mngr, int id) {
     Artist* artist = g_hash_table_lookup (a_mngr->artist, GINT_TO_POINTER(id));
-    return artist;
+    return copyArtist (artist);
+}
+
+char* lookupArtistCountryHash (ArtistManager *a_mngr, int id) {
+    Artist* artist = g_hash_table_lookup (a_mngr->artist, GINT_TO_POINTER(id));
+    return getArtistCountry (artist);
+}
+
+bool isArtistInHash (ArtistManager *a_mngr, int id) {
+    Artist* artist = g_hash_table_lookup (a_mngr->artist, GINT_TO_POINTER(id));
+    if (artist == NULL) return 0;
+    else return 1;
 }
 
 void getDataArtist (char *path, ArtistManager* mngr) {

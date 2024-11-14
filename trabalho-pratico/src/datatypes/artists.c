@@ -91,6 +91,48 @@ void deleteArtistString (ArtistString* artist) {
     }
 }
 
+Artist* copyArtist(Artist* artistOG) {
+    if (artistOG == NULL) {
+        return NULL;
+    }
+
+    Artist* artistCopy = malloc(sizeof(Artist));
+    if (!artistCopy) {
+        perror("Error allocating memory for Artist");
+        return NULL;
+    }
+
+    artistCopy->id = artistOG->id;
+    artistCopy->recipe_per_stream = artistOG->recipe_per_stream;
+    artistCopy->type = artistOG->type;
+
+    // copy for string fields
+    artistCopy->name = artistOG->name ? strdup(artistOG->name) : NULL;
+    artistCopy->description = artistOG->description ? strdup(artistOG->description) : NULL;
+    artistCopy->country = artistOG->country ? strdup(artistOG->country) : NULL;
+
+    // copy for the int array
+    int arrayCount = artistOG->id_constituent_counter;
+    if (artistOG->id_constituent != NULL &&  arrayCount > 0) {
+        
+        artistCopy->id_constituent = malloc(arrayCount * sizeof(int));
+        if (artistCopy->id_constituent == NULL) {
+            perror("Error allocating memory for id_constituent");
+            free(artistCopy->name);
+            free(artistCopy->description);
+            free(artistCopy->country);
+            free(artistCopy);
+            return NULL;
+        }
+        memcpy(artistCopy->id_constituent, artistOG->id_constituent, arrayCount * sizeof(int));
+
+    } else artistCopy->id_constituent = NULL;
+
+    artistCopy->id_constituent_counter = arrayCount;
+
+    return artistCopy;
+}
+
 
 // GETTERs
 
