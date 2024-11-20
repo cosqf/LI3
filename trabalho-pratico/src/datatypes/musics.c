@@ -12,7 +12,7 @@ typedef struct music {
     unsigned int album_id;          //– identificador único do álbum ao qual a música pertence;
     Duration duration;              //– tempo de duração;
     Genre genre;                    //– género da música;
-    short int year;        //– ano de lançamento;
+    short int year;                 //– ano de lançamento;     -- irrelevante?
 } Music;
 
 typedef struct musicString {
@@ -30,7 +30,7 @@ typedef struct musicString {
 
 /* Creator function for Music */
 Music* createMusic(char** tokens) {
-    Music* music = (Music*) malloc (sizeof(Music));
+    Music* music = malloc (sizeof(Music));
     if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
     int id, year, album_id;
@@ -53,9 +53,7 @@ Music* createMusic(char** tokens) {
 
 /* Destructor function for Music */
 void deleteMusic(Music* music) {
-    if (music == NULL) {
-        return;
-    }
+    if (music == NULL) return;
 
     free(music->title);
     free(music->artist_id);
@@ -64,7 +62,7 @@ void deleteMusic(Music* music) {
 
 /* Creator function for Music */
 MusicString* createMusicString (char** tokens) {
-    MusicString* music = (MusicString*) malloc(sizeof(MusicString));
+    MusicString* music = malloc(sizeof(MusicString));
     if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
     music->id = strdup (trimString(tokens[0]));
@@ -81,9 +79,7 @@ MusicString* createMusicString (char** tokens) {
 
 /* Destructor function for Music */
 void deleteMusicString (MusicString* music) {
-    if (music == NULL) {
-        return;
-    }
+    if (music == NULL) return;
 
     free(music->id);
     free(music->title);
@@ -122,7 +118,6 @@ Music* copyMusic (Music* musicOg) {   // needs work
     music->duration = musicOg-> duration;
     music->genre = musicOg-> genre;
     music->year = musicOg->year;
-    music->lyrics = strdup(musicOg->lyrics);
 
     return music;
 }

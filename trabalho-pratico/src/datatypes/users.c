@@ -11,9 +11,9 @@ typedef struct user {
     char* email;                       //– email de registo do utilizador;
     char* first_name;                  //– primeiro nome do utilizador;
     char* last_name;                   //– apelido do utilizador;
-    Date birth_date;                  //– data de nascimento;
+    Date birth_date;                  //– data de nascimento;                                    -- irrelevante?
     char* country;                     //– país onde a conta do utilizador foi registada;
-    bool subscription_type;           //– tipo de subscrição, i.e., normal(0) ou premium(1);
+    bool subscription_type;           //– tipo de subscrição, i.e., normal(0) ou premium(1);     -- irrelevante?
     int* liked_musics_id;             //– lista de identificadores únicos das músicas gostadas pelo utilizador.
     unsigned int liked_musics_count;   //– número de quantas músicas o utlizador gosta
 } User;

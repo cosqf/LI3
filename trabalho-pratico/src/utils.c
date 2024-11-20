@@ -68,6 +68,13 @@ char* trimStringWithoutBrackets (char* str) {
     return start; 
 }
 
+// needs to be freed by whoever calls it
+char** lower (char** line) {
+    char** lineCopy = strdup (line);
+    for(int i = 0; lineCopy[i]; i++) lineCopy[i] = tolower(lineCopy[i]);
+    return lineCopy;
+}
+
 // Checks if the given character is an undercase letter
 int isletter(char a){
     if (a >= 'a' && a <= 'z') return 1;
@@ -142,28 +149,28 @@ bool convertToInt(const char *str, int *out) {
     // Error handling: check for overflow and underflow
     if (errno == ERANGE) {
         if (val == LONG_MAX) {
-            fprintf(stderr, "Overflow: value is too large.\n");
+            ferror("Overflow: value is too large.\n");
         } else if (val == LONG_MIN) {
-            fprintf(stderr, "Underflow: value is too small.\n");
+            ferror("Underflow: value is too small.\n");
         }
         return false;
     }
 
     // Check if no digits were found
     if (endptr == str) {
-        fprintf(stderr, "Invalid input: No digits were found.\n");
+        ferror("Invalid input: No digits were found.\n");
         return false;
     }
 
     // Check if there were any leftover characters
     if (*endptr != '\0') {
-        fprintf(stderr, "Invalid input: Non-numeric characters found: '%s'\n", endptr);
+        ferror("Invalid input: Non-numeric characters found\n");
         return false;
     }
 
     // Check if the value fits within the range of int
     if (val < INT_MIN || val > INT_MAX) {
-        fprintf(stderr,"Error: Value is out of int range.\n");
+        ferror("Error: Value is out of int range.\n");
         return false;
     }
 
