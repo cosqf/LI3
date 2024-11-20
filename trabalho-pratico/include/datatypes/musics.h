@@ -42,7 +42,6 @@ const int* getMusicArtistID(Music* music);
 Duration getMusicDuration(Music* music);
 Genre getMusicGenre(Music* music);
 int getMusicYear(Music* music);
-char* getMusicLyrics(Music* music);
 int getMusicArtistIDCount (Music* music);
 
 /* Getters string */

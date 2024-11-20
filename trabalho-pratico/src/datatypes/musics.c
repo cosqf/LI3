@@ -12,7 +12,6 @@ typedef struct music {
     Duration duration;   //– tempo de duração;
     Genre genre;         //– género da música;
     short int year;            //– ano de lançamento;
-    char* lyrics;        //– letra da música.
 } Music;
 
 typedef struct musicString {
@@ -44,8 +43,6 @@ Music* createMusic(char** tokens) {
 
     if (convertToInt (trimString((tokens[5])), &year)) music->year = year;
     else exit (EXIT_FAILURE);
-
-    music->lyrics = strdup (trimString(tokens[6]));
     
     return music;
 }
@@ -58,7 +55,6 @@ void deleteMusic(Music* music) {
 
     free(music->title);
     free(music->artist_id);
-    free(music->lyrics);
     free(music);
 }
 
@@ -146,10 +142,6 @@ int getMusicYear(Music* music) {
     return music->year;
 }
 
-/* Getter for lyrics */
-char* getMusicLyrics(Music* music) {
-    return strdup(music->lyrics);
-}
 
 
 // GETTERs STRING
