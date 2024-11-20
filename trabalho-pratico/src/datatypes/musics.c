@@ -5,24 +5,26 @@
 #include <stdlib.h>
 
 typedef struct music {
-    int id;              //– identificador único da música;
-    char* title;         //– nome da música;
-    int* artist_id;     //– lista de identificadores dos autores da música;
+    int id;                         //– identificador único da música;
+    char* title;                    //– nome da música;
+    int* artist_id;                 //– lista de identificadores dos autores da música;
     unsigned int artist_id_count;
-    Duration duration;   //– tempo de duração;
-    Genre genre;         //– género da música;
-    short int year;            //– ano de lançamento;
+    unsigned int album_id;          //– identificador único do álbum ao qual a música pertence;
+    Duration duration;              //– tempo de duração;
+    Genre genre;                    //– género da música;
+    short int year;        //– ano de lançamento;
 } Music;
 
 typedef struct musicString {
-    char* id;              //– identificador único da música;
-    char* title;         //– nome da música;
-    char* artist_id;     //– lista de identificadores dos autores da música;
+    char* id;                   //– identificador único da música;
+    char* title;                //– nome da música;
+    char* artist_id;            //– lista de identificadores dos autores da música;
     unsigned int artist_id_count;
-    char* duration;   //– tempo de duração;
-    char* genre;         //– género da música;
-    char* year;            //– ano de lançamento;
-    char* lyrics;        //– letra da música.
+    char* album_id;             //– identificador único do álbum ao qual a música pertence;
+    char* duration;             //– tempo de duração;
+    char* genre;                //– género da música;
+    char* year;                 //– ano de lançamento;
+    char* lyrics;               //– letra da música.
 } MusicString;
 
 
@@ -31,17 +33,19 @@ Music* createMusic(char** tokens) {
     Music* music = (Music*) malloc (sizeof(Music));
     if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
-    int id, year;
+    int id, year, album_id;
     if (convertToInt (trimString((tokens[0])) + 1, &id)) music->id = id;
     else exit (EXIT_FAILURE);
 
     music->title = strdup (trimString(tokens[1]));
     music->artist_id = parseIDs (trimStringWithoutBrackets(tokens[2]));
     music->artist_id_count = IdCounter (tokens[2]);
-    music->duration = parseDuration (trimString(tokens[3]));
-    music->genre = getGenre (trimString(tokens[4]));
+    if (convertToInt (trimString((tokens[3])) + 1, &album_id)) music->album_id = album_id;
+    else exit (EXIT_FAILURE);
+    music->duration = parseDuration (trimString(tokens[4]));
+    music->genre = getGenre (trimString(tokens[5]));
 
-    if (convertToInt (trimString((tokens[5])), &year)) music->year = year;
+    if (convertToInt (trimString((tokens[6])), &year)) music->year = year;
     else exit (EXIT_FAILURE);
     
     return music;
