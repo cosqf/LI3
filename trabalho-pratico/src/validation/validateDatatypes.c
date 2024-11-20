@@ -10,7 +10,7 @@
 #include <validateDatatypes.h>
 #include <utils.h>
 #include <parsingUtils.h>
-#include <errorfiles.h>
+#include <output_handling/errorfiles.h>
 
 #include <artistManager.h>
 #include <musicManager.h>
@@ -95,7 +95,7 @@ bool validSubscription(char* subs){
 bool validLikes(const int* liked_musics_id, int liked_musics_count, MusicManager *m_mngr){
     int i;
 
-    for(i = 0; i < liked_musics_count && lookupMusicHash (m_mngr, liked_musics_id[i]) != NULL; i++);
+    for(i = 0; i < liked_musics_count && isMusicInHash (m_mngr, liked_musics_id[i]); i++);
     
     if (i == liked_musics_count) return true;
 
@@ -136,7 +136,7 @@ bool validDuration(Duration duration){
 bool validArtistId(int* id, int n, ArtistManager *a_mngr){    
     int i;
 
-    for(i = 0; i < n && lookupArtistHash (a_mngr, id[i]) != NULL; i++);
+    for(i = 0; i < n && isArtistInHash (a_mngr, id[i]); i++);
     
 
     if (i == n) return true;

@@ -22,6 +22,8 @@ ArtistString* createArtistString(char **tokens);
 /* Destructor: Frees the memory of an Artist struct */
 void deleteArtistString(ArtistString* artist);
 
+Artist* copyArtist(Artist* artistOG);
+
 
 /* Getters */
 int getArtistID(Artist* artist);

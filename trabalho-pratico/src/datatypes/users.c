@@ -97,26 +97,6 @@ void deleteUser(User* user) {
     }
 }
 
-// // DEBUG
-// void printUser(const User* user) {
-//     if (user == NULL) {
-//         printf("User is NULL\n");
-//         return;
-//     }
-
-//     printf("id: %s, Email: %s, First Name: %s, Last Name: %s, Birth Date: %s, "
-//            "Country: %s, Subscription Type: %s, Liked Musics ID: %s, Liked Musics Count: %u\n",
-//            user->id ? user->id : "N/A",
-//            user->email ? user->email : "N/A",
-//            user->first_name ? user->first_name : "N/A",
-//            user->last_name ? user->last_name : "N/A",
-//            user->birth_date ? user->birth_date : "N/A",
-//            user->country ? user->country : "N/A",
-//            user->subscription_type ? user->subscription_type : "N/A",
-//            user->liked_musics_id ? user->liked_musics_id : "N/A",
-//            user->liked_musics_count);
-// }
-
 // GETTER
 
 /* Getter for id */
@@ -179,6 +159,50 @@ int getUserAge (User* user) {
     return age;
 }
 
+User* copyUser( User* userOg) {
+    if (userOg == NULL) {
+        return NULL;
+    }
+
+    User* userCopy = malloc(sizeof(User));
+    if (!userCopy) {
+        perror("Error allocating memory for User");
+        return NULL;
+    }
+
+    userCopy->id = userOg->id;
+    userCopy->birth_date = userOg->birth_date;
+    userCopy->subscription_type = userOg->subscription_type;
+
+    // copy for string fields
+    userCopy->email = userOg->email ? strdup(userOg->email) : NULL;
+    userCopy->first_name = userOg->first_name ? strdup(userOg->first_name) : NULL;
+    userCopy->last_name = userOg->last_name ? strdup(userOg->last_name) : NULL;
+    userCopy->country = userOg->country ? strdup(userOg->country) : NULL;
+
+    // copy for the int array
+    int arrayCount = userOg->liked_musics_count;
+    if (userOg->liked_musics_id != NULL &&  arrayCount > 0) {
+        
+        userCopy->liked_musics_id = malloc(arrayCount * sizeof(int));
+        if (userCopy->liked_musics_id == NULL) {
+            perror("Error allocating memory for liked_musics_id");
+            free(userCopy->email);
+            free(userCopy->first_name);
+            free(userCopy->last_name);
+            free(userCopy->country);
+            free(userCopy);
+            return NULL;
+        }
+        // Copy the contents of the original liked_musics_id array
+        memcpy(userCopy->liked_musics_id, userOg->liked_musics_id, arrayCount * sizeof(int));
+
+    } else userCopy->liked_musics_id = NULL;
+
+    userCopy->liked_musics_count = arrayCount;
+
+    return userCopy;
+}
 
 
 // GETTERS FOR USER STRING
@@ -233,58 +257,3 @@ const int* getUserLikedMusicsIDStringArray (UserString *user) {
 int getUserLikedCounterString (UserString* user) {
     return user->liked_musics_count;
 }
-
-// // SETTERS
-
-// /* Setter for id */
-// void setUserID(User* user, const char* id) {
-//     if (user->id) free(user->id);  
-//     user->id = strdup(id);
-// }
-
-// /* Setter for email */
-// void setUserEmail(User* user, const char* email) {
-//     if (user->email) free(user->email);  
-//     user->email = strdup(email);  // 
-// }
-
-// /* Setter for first_name */
-// void setUserFirstName(User* user, const char* first_name) {
-//     if (user->first_name) free(user->first_name);  
-//     user->first_name = strdup(first_name);
-// }
-
-// /* Setter for last_name */
-// void setUserLastName(User* user, const char* last_name) {
-//     if (user->last_name) free (user->last_name);  
-//     user->last_name = strdup(last_name);
-// }
-
-// /* Setter for birth_date */
-// void setUserBirthDate(User* user, const char* birth_date) {
-//     if (user->birth_date) free (user->birth_date);  
-//     user->birth_date = strdup(birth_date);
-// }
-
-// /* Setter for country */
-// void setUserCountry(User* user, const char* country) {
-//     if (user->country) free(user->country);  
-//     user->country = strdup(country);
-// }
-
-// /* Setter for subscription_type */
-// void setUserSubscriptionType(User* user, const char* subscription_type) {
-//     if (user->subscription_type) free(user->subscription_type);  
-//     user->subscription_type = strdup(subscription_type);
-// }
-
-// /* Setter for liked_musics_id */
-// void setUserLikedMusicsID(User* user, const char* liked_musics_id) {
-//     if (user->liked_musics_id) free(user->liked_musics_id);  
-//     user->liked_musics_id = strdup(liked_musics_id);
-// }
-
-// /* Setter for liked_musics_count */
-// void setUserLikedMusicsCount(User* user, int liked_musics_count) {
-//     user->liked_musics_count = liked_musics_count;
-// }

@@ -33,8 +33,9 @@ void freeHashUser (UserManager* u_mngr) {
 }
 
 User* lookupUserHash (UserManager *u_mngr, int id) {
-    User* User = g_hash_table_lookup (u_mngr->user, GINT_TO_POINTER(id));
-    return User;
+    User* user = g_hash_table_lookup (u_mngr->user, GINT_TO_POINTER(id));
+    if (user == NULL) return NULL;
+    return copyUser (user);
 }
 
 GHashTable* getUserTable (UserManager *u_mngr) {
@@ -49,6 +50,8 @@ void getDataUser (char* path, hashtableManager* mngr) {
     closeOutputFile (output);
 }
 
+// creates an userString according to its tokens and validates them. 
+// if valid, its converted to an user and added to the hashtable
 void callbackUser(char **tokens, void *manager, Output *output) { // receives entity manager
     hashtableManager* mngr = (hashtableManager*) manager;
     UserManager* user_mngr = getUserManager(mngr);

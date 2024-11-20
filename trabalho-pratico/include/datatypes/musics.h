@@ -34,6 +34,8 @@ void deleteMusicString (MusicString* music);
 
 Genre getGenre (const char *genre);
 
+Music* copyMusic (Music* musicOg);
+
 
 /* Getters */
 int getMusicID(Music* music);

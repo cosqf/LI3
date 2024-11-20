@@ -7,7 +7,6 @@
 
 void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter){
     GHashTable* userHashTable = getUserTable (u_mngr);
-   // GHashTable* musicHashTable = getMusicTable (m_mngr);
     GHashTableIter iter;
     gpointer key, value;
     char filename[50];  // buffer for the formatted file name
@@ -21,19 +20,17 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
     int AgeMax = getCMDAgeMax(cmd);
     TupleMusics arrayResults [10];
 
-    defineGenre (arrayResults);
+    defineGenre (arrayResults); // initialize arrayResults
 
-    while (g_hash_table_iter_next(&iter, &key, &value)) { //para cada user
+    while (g_hash_table_iter_next(&iter, &key, &value)) { // for each user
         User* user = (User*) value;
         int age = getUserAge (user), nLikes = getUserLikedCounter (user);
         const int* LikedMusics = getUserLikedMusicsID (user);
 
         if (age >= AgeMin && age <= AgeMax){
-            for (int i=0; i<nLikes; i++){ //para cada musica
+            for (int i = 0; i < nLikes; i++){ // for each music
                 int idAtual = LikedMusics[i];
-                Music* music = lookupMusicHash (m_mngr, idAtual);
-                Genre genre = getMusicGenre (music);
-                
+                Genre genre = lookupMusicGenreHash (m_mngr, idAtual);
                 addToResults (arrayResults, genre);
             }
         }
@@ -41,8 +38,10 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
 
     qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
 
-    Output* output = openOutputFile (filename);
 
+    // printing segment
+
+    Output* output = openOutputFile (filename);
 
     for (int j=0; j<10; j++){
         if(arrayResults[j].likes == 0) {
@@ -58,10 +57,10 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
         setOutput (output, lines, 2);
         writeQuerys (output);
     }
-    //printf ("\n");
-    //fprintf(results, "\n");
+
     closeOutputFile (output);
 }
+
 
 
 void addToResults(TupleMusics *array, Genre genre) {
