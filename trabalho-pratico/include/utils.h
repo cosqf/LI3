@@ -15,7 +15,7 @@ char *trimString(char *str);
 
 char* trimStringWithoutBrackets (char* str);
 
-char** lower (char** line);
+char* lower (char* line);
 
 int isletter(char);
 

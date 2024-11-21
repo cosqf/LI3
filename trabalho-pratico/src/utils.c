@@ -1,6 +1,7 @@
 #include <utils.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <users.h>
 #include <musics.h>
 #include <artists.h>
@@ -69,8 +70,8 @@ char* trimStringWithoutBrackets (char* str) {
 }
 
 // needs to be freed by whoever calls it
-char** lower (char** line) {
-    char** lineCopy = strdup (line);
+char* lower (char* line) {
+    char* lineCopy = strdup (line);
     for(int i = 0; lineCopy[i]; i++) lineCopy[i] = tolower(lineCopy[i]);
     return lineCopy;
 }
@@ -149,28 +150,28 @@ bool convertToInt(const char *str, int *out) {
     // Error handling: check for overflow and underflow
     if (errno == ERANGE) {
         if (val == LONG_MAX) {
-            ferror("Overflow: value is too large.\n");
+            perror("Overflow: value is too large.\n");
         } else if (val == LONG_MIN) {
-            ferror("Underflow: value is too small.\n");
+            perror("Underflow: value is too small.\n");
         }
         return false;
     }
 
     // Check if no digits were found
     if (endptr == str) {
-        ferror("Invalid input: No digits were found.\n");
+        perror("Invalid input: No digits were found.\n");
         return false;
     }
 
     // Check if there were any leftover characters
     if (*endptr != '\0') {
-        ferror("Invalid input: Non-numeric characters found\n");
+        perror("Invalid input: Non-numeric characters found\n");
         return false;
     }
 
     // Check if the value fits within the range of int
     if (val < INT_MIN || val > INT_MAX) {
-        ferror("Error: Value is out of int range.\n");
+        perror("Error: Value is out of int range.\n");
         return false;
     }
 
