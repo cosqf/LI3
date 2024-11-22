@@ -7,7 +7,7 @@
 #include <output_handling/outputWriter.h>
 
 
-void query1(CMD* cmd, UserManager *u_mngr, int counter) {
+void query1(CMD* cmd, UserManager *u_mngr, ArtistManager *a_mngr, int counter) {
     char filename[50];  // buffer for the formatted file name
 
     // Format the filename with the counter value
@@ -15,36 +15,77 @@ void query1(CMD* cmd, UserManager *u_mngr, int counter) {
 
     Output* output = openOutputFile (filename);
 
-    int userID = getCMDId(cmd);
-    User* user = lookupUserHash(u_mngr, userID);
+    int ID = getCMDId(cmd);
+    User* user = lookupUserHash(u_mngr, ID);
 
-    char* lines[5] = {NULL};
-    
-    if (user == NULL) setOutput(output, NULL, 0);
-    else {
-        lines[0] = getUserEmail(user);
-        lines[1] = getUserFirstName(user);
-        lines[2] = getUserLastName(user);
+    if (user) {
+        userinfo(user, output);
+    } else {
+        Artist* artist = lookupArtistHash(a_mngr, ID);
 
-        // Formatting the age as a string
-        static char ageString[4]; // max age: 3 digits + \0
-        snprintf(ageString, sizeof(ageString), "%d", getUserAge(user));
-        lines[3] = ageString;
+        if (artist) {
+            artistinfo(artist, output);
+        } else {
+            writeNewLine(output);
+            deleteArtist(artist);
+            deleteUser(user);
+        }
 
-        lines[4] = getUserCountry(user);
-
-        setOutput(output, lines, 5);
     }
-
-    writeQuerys(output);
-
-    if (user != NULL) {
-        free(lines[0]);
-        free(lines[1]);
-        free(lines[2]);
-        free(lines[4]);
-    }
-    deleteUser (user);
 
     closeOutputFile(output);
+}
+
+
+void userinfo (User* user, Output* file) {
+    char* lines[5] = {NULL};
+
+    lines[0] = getUserEmail(user);
+    lines[1] = getUserFirstName(user);
+    lines[2] = getUserLastName(user);
+
+    // Formatting the age as a string
+    static char ageString[4]; // max age: 3 digits + \0
+    snprintf(ageString, sizeof(ageString), "%d", getUserAge(user));
+    lines[3] = ageString;
+    
+    lines[4] = getUserCountry(user);
+
+    setOutput(file, lines, 5);
+
+    writeQuerys(file);
+
+    free(lines[0]);
+    free(lines[1]);
+    free(lines[2]);
+    free(lines[4]);
+
+    deleteUser(user);
+}
+
+
+void artistinfo (Artist* artist, Output* file) {
+    char* lines[5] = {NULL};
+
+    lines[0] = getArtistName(artist);
+    
+    if(getArtistType(artist)) lines[1] = "group";
+    else lines[1] = "individual";
+
+    lines[2] = getArtistCountry(artist);
+
+    lines[3] = '2'; //num_albums_individual
+    
+    lines[4] = '3'; //total_recipe
+
+    setOutput(file, lines, 5);
+
+    writeQuerys(file);
+
+    free(lines[0]);
+    free(lines[1]);
+    free(lines[2]);
+    free(lines[4]);
+
+    deleteArtist(artist);
 }
