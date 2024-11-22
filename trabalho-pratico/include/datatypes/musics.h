@@ -39,18 +39,18 @@ Music* copyMusic (Music* musicOg);
 
 /* Getters */
 int getMusicID(Music* music);
-char* getMusicTitle(Music* music);
 const int* getMusicArtistID(Music* music);
+int getMusicArtistIDCount (Music* music);
+int getMusicAlbumID (Music* music);
 Duration getMusicDuration(Music* music);
 Genre getMusicGenre(Music* music);
-int getMusicYear(Music* music);
-int getMusicArtistIDCount (Music* music);
 
 /* Getters string */
 char* getMusicIDString(MusicString* music);
 char* getMusicTitleString (MusicString* music);
 char* getMusicArtistIDString(MusicString* music);
 int getMusicArtistIDCountString (MusicString* music);
+char* getMusicAlbumIDString (MusicString* music);
 char* getMusicDurationString(MusicString* music);
 char* getMusicGenreString(MusicString* music);
 char* getMusicYearString(MusicString* music);

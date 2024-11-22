@@ -6,10 +6,8 @@
 
 typedef struct album {
     int id;                         //– identificador único do álbum;
-    char* title;                    //– título do álbum;
     int* artist_id;                 //– lista de identificadores únicos dos artistas que lançaram o álbum;
     unsigned int artist_id_count;
-    short int year;                 //– ano de lançamento;  -- irrelevante?
 } Album;
 
 typedef struct albumString {
@@ -26,15 +24,12 @@ Album* createAlbum(char** tokens) {
     Album* album = malloc (sizeof(Album));
     if (mallocErrorCheck (album)) exit (EXIT_FAILURE);
 
-    int id, year;
+    int id;
     if (convertToInt (trimString((tokens[0])) + 1, &id)) album->id = id;
     else exit (EXIT_FAILURE);
 
-    album->title = strdup (trimString(tokens[1]));
     album->artist_id = parseIDs (trimStringWithoutBrackets(tokens[2]));
     album->artist_id_count = IdCounter (tokens[2]);
-    if (convertToInt (trimString((tokens[3])), &year)) album->year = (short int) year;
-    else exit (EXIT_FAILURE);
     
     return album;
 }
@@ -42,7 +37,6 @@ Album* createAlbum(char** tokens) {
 void deleteAlbum (Album* album) {
     if (album == NULL) return;
     
-    free (album->title);
     free (album->artist_id);
     free (album);
 }
@@ -54,11 +48,6 @@ int getAlbumId(Album* album) {
     return album->id;
 }
 
-// Getter for the title field
-char* getAlbumTitle(Album* album) {
-    return album->title;
-}
-
 // Getter for the artist_id field
 int* getAlbumArtistId(Album* album) {
     return album->artist_id;
@@ -67,11 +56,6 @@ int* getAlbumArtistId(Album* album) {
 // Getter for the artist_id_count field
 unsigned int getAlbumArtistIdCount(Album* album) {
     return album->artist_id_count;
-}
-
-// Getter for the year field
-short int getAlbumYear(Album* album) {
-    return album->year;
 }
 
 
@@ -116,8 +100,8 @@ char* getAlbumArtistIdString (AlbumString* album) {
 }
 
 // Getter for the artist_id_count field
-char* getAlbumArtistIdCountString (AlbumString* album) {
-    return strdup (album->artist_id_count);
+unsigned int getAlbumArtistIdCountString (AlbumString* album) {
+    return album->artist_id_count;
 }
 
 // Getter for the year field

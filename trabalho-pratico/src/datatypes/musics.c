@@ -6,13 +6,11 @@
 
 typedef struct music {
     int id;                         //– identificador único da música;
-    char* title;                    //– nome da música;
     int* artist_id;                 //– lista de identificadores dos autores da música;
     unsigned int artist_id_count;
     unsigned int album_id;          //– identificador único do álbum ao qual a música pertence;
     Duration duration;              //– tempo de duração;
     Genre genre;                    //– género da música;
-    short int year;                 //– ano de lançamento;     -- irrelevante?
 } Music;
 
 typedef struct musicString {
@@ -33,20 +31,16 @@ Music* createMusic(char** tokens) {
     Music* music = malloc (sizeof(Music));
     if (mallocErrorCheck (music)) exit (EXIT_FAILURE);
 
-    int id, year, album_id;
+    int id, album_id;
     if (convertToInt (trimString((tokens[0])) + 1, &id)) music->id = id;
     else exit (EXIT_FAILURE);
 
-    music->title = strdup (trimString(tokens[1]));
     music->artist_id = parseIDs (trimStringWithoutBrackets(tokens[2]));
     music->artist_id_count = IdCounter (tokens[2]);
     if (convertToInt (trimString((tokens[3])) + 1, &album_id)) music->album_id = album_id;
     else exit (EXIT_FAILURE);
     music->duration = parseDuration (trimString(tokens[4]));
     music->genre = getGenre (trimString(tokens[5]));
-
-    if (convertToInt (trimString((tokens[6])), &year)) music->year = year;
-    else exit (EXIT_FAILURE);
     
     return music;
 }
@@ -55,7 +49,6 @@ Music* createMusic(char** tokens) {
 void deleteMusic(Music* music) {
     if (music == NULL) return;
 
-    free(music->title);
     free(music->artist_id);
     free(music);
 }
@@ -69,10 +62,11 @@ MusicString* createMusicString (char** tokens) {
     music->title = strdup (trimString(tokens[1]));
     music->artist_id = strdup (trimStringWithoutBrackets(tokens[2]));
     music->artist_id_count = IdCounter (tokens[2]);
-    music->duration = strdup (trimString(tokens[3]));
-    music->genre = strdup (trimString(tokens[4]));
-    music->year = strdup (trimString(tokens[5]));
-    music->lyrics = strdup (trimString(tokens[6]));
+    music->album_id = strdup(trimString(tokens[3]));
+    music->duration = strdup (trimString(tokens[4]));
+    music->genre = strdup (trimString(tokens[5]));
+    music->year = strdup (trimString(tokens[6]));
+    music->lyrics = strdup (trimString(tokens[7]));
     
     return music;
 }
@@ -85,6 +79,7 @@ void deleteMusicString (MusicString* music) {
     free(music->title);
     free(music->artist_id);
     free(music->duration);
+    free(music->album_id);
     free(music->genre);
     free(music->year);
     free(music->lyrics);
@@ -112,12 +107,13 @@ Music* copyMusic (Music* musicOg) {   // needs work
         return NULL;
     }
     music->id = musicOg->id;
-    music->title = strdup (musicOg->title);
+    //music->title = strdup (musicOg->title);
     music->artist_id = musicOg->artist_id;
     music->artist_id_count = musicOg->artist_id_count;
+    music->album_id = musicOg->album_id;
     music->duration = musicOg-> duration;
     music->genre = musicOg-> genre;
-    music->year = musicOg->year;
+    //music->year = musicOg->year;
 
     return music;
 }
@@ -130,9 +126,9 @@ int getMusicID(Music* music) {
 }
 
 /* Getter for title */
-char* getMusicTitle(Music* music) {
-    return strdup(music->title);
-}
+// char* getMusicTitle(Music* music) {
+//     return strdup(music->title);
+// }
 
 /* Getter for artist's ID */
 const int* getMusicArtistID(Music* music) {
@@ -144,6 +140,11 @@ int getMusicArtistIDCount (Music* music) {
     return music->artist_id_count;
 }
 
+/* Getter for album ID*/
+int getMusicAlbumID (Music* music) {
+    return music->album_id;
+}
+
 /* Getter for song's duration */
 Duration getMusicDuration(Music* music) {
     return music->duration;
@@ -153,12 +154,6 @@ Duration getMusicDuration(Music* music) {
 Genre getMusicGenre(Music* music) {
     return music->genre;
 }
-
-/* Getter for year */
-int getMusicYear(Music* music) {
-    return music->year;
-}
-
 
 
 // GETTERs STRING
@@ -181,6 +176,11 @@ char* getMusicArtistIDString(MusicString* music) {
 /* Getter for artist's ID count in string format */
 int getMusicArtistIDCountString (MusicString* music) {
     return music->artist_id_count;
+}
+
+/* Getter for album ID in string format*/
+char* getMusicAlbumIDString (MusicString* music) {
+    return strdup (music->album_id);
 }
 
 /* Getter for song's duration in string format */

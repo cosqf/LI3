@@ -6,20 +6,19 @@
 
 typedef struct history {
     int id;                   //– identificador único do registo;
-    int user_id;              //– user_id – identificador único do utilizador a que o registo se refere;
-    int music_id;             //– music_id – identificador único da música a que o registo se refere;
-    Date timestamp;           //– timestamp – data e hora em que a música foi ouvida pelo utilizador;
-    Duration duration;        //– duration – tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
-    bool platform;            //– platform – plataforma em que a música foi reproduzida. I.e., computador ou dispositivo móvel. -- irrelevante?
+    int user_id;              //– identificador único do utilizador a que o registo se refere;
+    int music_id;             //– identificador único da música a que o registo se refere;
+    Date timestamp;           //– data e hora em que a música foi ouvida pelo utilizador;
+    Duration duration;        //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
 } History;
 
 typedef struct historyString {
     char* id;                   //– identificador único do registo;
-    char* user_id;              //– user_id – identificador único do utilizador a que o registo se refere;
-    char* music_id;             //– music_id – identificador único da música a que o registo se refere;
-    char* timestamp;            //– timestamp – data e hora em que a música foi ouvida pelo utilizador;
-    char* duration;             //– duration – tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
-    char* platform;             //– platform – plataforma em que a música foi reproduzida. I.e., computador ou dispositivo móvel.
+    char* user_id;              //– identificador único do utilizador a que o registo se refere;
+    char* music_id;             //– identificador único da música a que o registo se refere;
+    char* timestamp;            //– data e hora em que a música foi ouvida pelo utilizador;
+    char* duration;             //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
+    char* platform;             //– plataforma em que a música foi reproduzida. I.e., computador ou dispositivo móvel.
 } HistoryString;
 
 History* createHistory (char** tokens) {
@@ -40,11 +39,6 @@ History* createHistory (char** tokens) {
 
     history->duration = parseDuration (trimString (tokens[4]));
 
-    char** platform = lower (trimString(tokens[5]));
-    if (strcmp (platform, "desktop") == 0) history->platform = 0;
-    else history->platform = 1;
-
-    free (platform);
     return history;
 }
 
@@ -79,12 +73,6 @@ Date getHistoryTimestamp (History* history) {
 Duration getHistoryDuration (History* history) {
     return history->duration;
 }
-
-// Getter for the platform field
-bool getHistoryPlatform (History* history) {
-    return history->platform;
-}
-
 
 
 // String format 
@@ -142,14 +130,6 @@ char* getHistoryDurationString (HistoryString* history) {
 }
 
 // Getter for the platform field
-char* getHistoryPlatformString (History* history) {
+char* getHistoryPlatformString (HistoryString* history) {
     return strdup (history->platform);
 }
-
-
-//– id – identificador único do registo;
-//– user_id – identificador único do utilizador a que o registo se refere;
-//– music_id – identificador único da música a que o registo se refere;
-//– timestamp – data e hora em que a música foi ouvida pelo utilizador;
-//– duration – tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
-//– platform – plataforma em que a música foi reproduzida. I.e., computador ou dispositivo móvel.
