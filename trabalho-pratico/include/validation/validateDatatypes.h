@@ -22,18 +22,27 @@ bool validSubscription(char*);
 bool validLikes(const int*, int, MusicManager*);
 
 //MUSICS
-bool validMusic(MusicString*, ArtistManager*);
+bool validMusic(MusicString*, ArtistManager*, AlbumManager*);
 
 bool validDuration(Duration);
 
-bool validArtistId(int*, int, ArtistManager*);    
+bool validArtistId(int*, int, ArtistManager*);
+
+bool validAlbumID(int, AlbumManager*);
 
 //ARTISTS
 bool validArtist(ArtistString*);
 
 bool validIdConst(char*, int);
 
+bool validType(char*);
+
 //LISTS
 bool validList (char*);
+
+//HISTORY
+bool validHistory(HistoryString*);
+
+bool validPlatform(char*);
 
 #endif  
