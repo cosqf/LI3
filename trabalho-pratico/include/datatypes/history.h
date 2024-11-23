@@ -25,13 +25,12 @@ int getHistoryUserId (History* history);
 int getHistoryMusicId (History* history);
 Date getHistoryTimestamp (History* history);
 Duration getHistoryDuration (History* history);
-bool getHistoryPlatform (History* history);
 
 char* getHistoryIdString (HistoryString* history);
 char* getHistoryUserIdString (HistoryString* history);
 char* getHistoryMusicIdString (HistoryString* history);
 char* getHistoryTimestampString (HistoryString* history);
 char* getHistoryDurationString (HistoryString* history);
-char* getHistoryPlatformString (History* history);
+char* getHistoryPlatformString (HistoryString* history);
 
 #endif

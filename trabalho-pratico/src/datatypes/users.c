@@ -7,28 +7,27 @@
 
 /* The User struct */
 typedef struct user {
-    int id;                    //– identificador único do utilizador;
-    char* email;                       //– email de registo do utilizador;
-    char* first_name;                  //– primeiro nome do utilizador;
-    char* last_name;                   //– apelido do utilizador;
-    Date birth_date;                  //– data de nascimento;                                    -- irrelevante?
-    char* country;                     //– país onde a conta do utilizador foi registada;
-    bool subscription_type;           //– tipo de subscrição, i.e., normal(0) ou premium(1);     -- irrelevante?
-    int* liked_musics_id;             //– lista de identificadores únicos das músicas gostadas pelo utilizador.
-    unsigned int liked_musics_count;   //– número de quantas músicas o utlizador gosta
+    int id;                             //– identificador único do utilizador;
+    char* email;                        //– email de registo do utilizador;
+    char* first_name;                   //– primeiro nome do utilizador;
+    char* last_name;                    //– apelido do utilizador;
+    Date birth_date;                    //– data de nascimento;
+    char* country;                      //– país onde a conta do utilizador foi registada;
+    int* liked_musics_id;               //– lista de identificadores únicos das músicas gostadas pelo utilizador.
+    unsigned int liked_musics_count;    //– número de quantas músicas o utlizador gosta
 } User;
 
 /* Temporary User struct */
 typedef struct userString {
-    char* id;                    //– identificador único do utilizador;
-    char* email;                       //– email de registo do utilizador;
-    char* first_name;                  //– primeiro nome do utilizador;
-    char* last_name;                   //– apelido do utilizador;
-    char* birth_date;                  //– data de nascimento;
-    char* country;                     //– país onde a conta do utilizador foi registada;
-    char* subscription_type;           //– tipo de subscrição, i.e., normal(0) ou premium(1);
-    char* liked_musics_id;             //– lista de identificadores únicos das músicas gostadas pelo utilizador.
-    unsigned int liked_musics_count;   //– número de quantas músicas o utlizador gosta
+    char* id;                           //– identificador único do utilizador;
+    char* email;                        //– email de registo do utilizador;
+    char* first_name;                   //– primeiro nome do utilizador;
+    char* last_name;                    //– apelido do utilizador;
+    char* birth_date;                   //– data de nascimento;
+    char* country;                      //– país onde a conta do utilizador foi registada;
+    char* subscription_type;            //– tipo de subscrição, i.e., normal(0) ou premium(1);
+    char* liked_musics_id;              //– lista de identificadores únicos das músicas gostadas pelo utilizador.
+    unsigned int liked_musics_count;    //– número de quantas músicas o utlizador gosta
 } UserString;
 
 /* Create a new User using only strings */
@@ -59,12 +58,6 @@ User* createUser (char** tokens) {
     user->last_name = strdup (trimString((tokens[3])));
     user->birth_date = parseDate (trimString((tokens[4])));
     user->country = strdup (trimString((tokens[5])));
-
-    bool subscription;
-    if (strcmp (trimString((tokens[6])), "normal") == 0) subscription = 0;
-    else subscription = 1;
-    user->subscription_type = subscription;
-
     user->liked_musics_id = parseIDs (trimStringWithoutBrackets((tokens[7])));
     user->liked_musics_count = IdCounter ((tokens[7]));
     return user;
@@ -129,11 +122,6 @@ char* getUserCountry(User* user) {
     return strdup(user->country);
 }
 
-/* Getter for subscription_type */
-bool getUserSubscriptionType(User* user) {
-    return user->subscription_type;
-}
-
 /* Getter for liked_musics_id */
 const int* getUserLikedMusicsID(User* user) {
     int* array = user->liked_musics_id;
@@ -172,7 +160,7 @@ User* copyUser( User* userOg) {
 
     userCopy->id = userOg->id;
     userCopy->birth_date = userOg->birth_date;
-    userCopy->subscription_type = userOg->subscription_type;
+    //userCopy->subscription_type = userOg->subscription_type;
 
     // copy for string fields
     userCopy->email = userOg->email ? strdup(userOg->email) : NULL;
