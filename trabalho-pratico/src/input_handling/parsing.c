@@ -11,12 +11,25 @@
 
 void getData (char *path, hashtableManager *mngr) {
     char *artistPath = changePath(path, Artists);
-    char *musicPath = changePath(path, Musics);
-    char *userPath = changePath(path, Users);
+    if (getDataArtist (artistPath, getArtistManager (mngr))) {
+        free (artistPath);
+        return;
+    }
 
-    getDataArtist (artistPath, getArtistManager (mngr));
-    getDataMusic (musicPath, mngr);
-    getDataUser (userPath, mngr);
+    char *musicPath = changePath(path, Musics);
+    if (getDataMusic (musicPath, mngr)) {
+        free (artistPath);
+        free (musicPath);
+        freeHash (mngr);
+    }
+
+    char *userPath = changePath(path, Users);
+    if (getDataUser (userPath, mngr)) {
+        free (artistPath);
+        free (musicPath);
+        free (userPath);
+        freeHash (mngr);
+    }
     
     free(artistPath);
     free(musicPath);
@@ -24,12 +37,14 @@ void getData (char *path, hashtableManager *mngr) {
 }
 
 // opens a file, gets its tokens and processes the line accordingly using a callback 
-void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
+int parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
     FILE* fileData = openFile (pathToFile);
+    if (!fileData) return 1;
+
     char str[DEFAULT];
     if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
             perror ("skipping artist header error");
-            exit(EXIT_FAILURE);
+            return 1;
         }
     while (fgets (str, sizeof (str), fileData) != NULL) {
         char* tokens[8];
@@ -37,6 +52,7 @@ void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), vo
         processLine (tokens, manager, output);
     }
     fclose (fileData);
+    return 0;
 }
 
 // divides a line in tokens
@@ -56,6 +72,8 @@ int parseLine(char* line, char* tokens[], const char* separator) {
 // opens the cmd file, gets its tokens and creates the cmd, line by line
 int parseCmdFile (char* pathToFile, void* manager) {
     FILE* fileData = openFile (pathToFile);
+    if (!fileData) return -1;
+
     char str[DEFAULT];
     int i;
     for (i = 0; fgets (str, sizeof (str), fileData) != NULL; i++) {

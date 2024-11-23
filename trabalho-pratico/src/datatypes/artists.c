@@ -6,7 +6,6 @@
 typedef struct artist {
     int id;                       //– identificador único do artista;
     char* name;                     //– nome do artista;
-    char* description;              //– detalhes do artista;
     float recipe_per_stream;        //– dinheiro auferido de cada vez que uma das músicas do artista é reproduzida;
     int* id_constituent;            //– lista de identificadores únicos dos seus constituintes, no caso de se tratar de um artista coletivo. Este campo pode ser uma lista vazia.
     unsigned int id_constituent_counter;
@@ -37,7 +36,6 @@ Artist* createArtist(char **tokens) {
     else exit (EXIT_FAILURE);
 
     artist->name = strdup (trimString(tokens[1]));
-    artist->description = strdup (trimString(tokens[2]));
     artist->recipe_per_stream = atof (trimString(tokens[3]));
     artist->id_constituent = parseIDs (trimStringWithoutBrackets(tokens[4]));
     artist->id_constituent_counter = IdCounter (tokens[4]);
@@ -54,7 +52,6 @@ Artist* createArtist(char **tokens) {
 void deleteArtist(Artist* artist) {
     if (artist) {
         free(artist->name);
-        free(artist->description);
         free(artist->id_constituent);
         free(artist->country);
         free(artist);
@@ -106,20 +103,29 @@ Artist* copyArtist(Artist* artistOG) {
     artistCopy->recipe_per_stream = artistOG->recipe_per_stream;
     artistCopy->type = artistOG->type;
 
-    // copy for string fields
-    artistCopy->name = artistOG->name ? strdup(artistOG->name) : NULL;
-    artistCopy->description = artistOG->description ? strdup(artistOG->description) : NULL;
-    artistCopy->country = artistOG->country ? strdup(artistOG->country) : NULL;
+    // copy the string fields
+    artistCopy->name = strdup(artistOG->name);
+    if (!artistCopy->name) {
+        perror ("Error copying artist name");
+        free (artistCopy);
+        return NULL;
+    }
+    artistCopy->country = strdup(artistOG->country);
+    if (!artistCopy->country) {
+        perror ("Error copying artist country");
+        free (artistCopy->name);
+        free (artistCopy);
+        return NULL;
 
-    // copy for the int array
+    }
+
+    // copy the int array
     int arrayCount = artistOG->id_constituent_counter;
-    if (artistOG->id_constituent != NULL &&  arrayCount > 0) {
-        
+    if (artistOG->id_constituent && arrayCount > 0) {
         artistCopy->id_constituent = malloc(arrayCount * sizeof(int));
         if (artistCopy->id_constituent == NULL) {
             perror("Error allocating memory for id_constituent");
             free(artistCopy->name);
-            free(artistCopy->description);
             free(artistCopy->country);
             free(artistCopy);
             return NULL;
@@ -144,11 +150,6 @@ int getArtistID(Artist* artist) {
 /* Getter for name */
 char* getArtistName(Artist* artist) {
     return strdup(artist->name);
-}
-
-/* Getter for description */
-char* getArtistDescription(Artist* artist) {
-    return strdup(artist->description);
 }
 
 /* Getter for recipe_per_stream */

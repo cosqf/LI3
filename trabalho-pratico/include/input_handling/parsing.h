@@ -11,7 +11,7 @@
 
 void getData (char *path, hashtableManager *mngr);
 
-void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output);
+int parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output);
 
 int parseLine(char* line, char* tokens[], const char* separator);
 

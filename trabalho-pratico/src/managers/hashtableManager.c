@@ -20,9 +20,9 @@ hashtableManager* initializeHash () {
 }
 
 void freeHash (hashtableManager *mngr) {
-    freeHashArtist (mngr->artist);
-    freeHashUser (mngr->user);
-    freeHashMusic (mngr->music);
+    if (mngr->artist) freeHashArtist (mngr->artist);
+    if (mngr->user) freeHashUser (mngr->user);
+    if (mngr->music) freeHashMusic (mngr->music);
     free (mngr);
 }
 

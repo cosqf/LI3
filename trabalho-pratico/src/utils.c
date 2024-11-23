@@ -21,7 +21,7 @@ FILE* openFile (char * argv) {
     FILE* fp = fopen (argv, "r");
         if (!fp) {
             perror("Error: File didn't open");
-            exit (EXIT_FAILURE);
+            return NULL;
         }
     return fp;
 }
@@ -118,6 +118,7 @@ Duration secondsInDuration (int seconds) {
     return dur;
 }
 
+
 GHashTable* createHash () {
     return g_hash_table_new(g_direct_hash, g_direct_equal);
 }
@@ -176,4 +177,15 @@ bool convertToInt(const char *str, int *out) {
 
     *out = (int)val;
     return true;
+}
+
+int compareDate(Date dateA, Date dateB) { // if a > b returns -1, a < b returns 1, 0 otherwise
+    if (dateA.year > dateB.year) return -1; 
+    if (dateA.year < dateB.year) return 1;
+    if (dateA.month > dateB.month) return -1;
+    if (dateA.month < dateB.month) return 1;
+    if (dateA.day > dateB.day) return -1;
+    if (dateA.day < dateB.day) return 1;
+
+    return 0;
 }

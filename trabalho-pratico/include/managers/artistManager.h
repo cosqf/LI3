@@ -19,7 +19,7 @@ bool isArtistInHash (ArtistManager *a_mngr, int id);
 
 char* lookupArtistCountryHash (ArtistManager *a_mngr, int id);
 
-void getDataArtist (char *path, ArtistManager* mngr);
+int getDataArtist (char *path, ArtistManager* mngr);
 
 void callbackArtist(char **tokens, void *manager, Output *output);
 

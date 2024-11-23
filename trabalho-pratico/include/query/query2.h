@@ -16,7 +16,7 @@ void query2(CMD *cmd, hashtableManager* mngr, int cmdCounter);
 
 void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr);
 
-void updateDurationHash (int id, GHashTable* newtable, int duration) ;
+void updateHash (int id, GHashTable* newtable, int value) ;
 
 bool checkIfAlreadyInHashTable (int id, GHashTable* newtable);
 

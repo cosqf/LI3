@@ -47,12 +47,15 @@ bool isArtistInHash (ArtistManager *a_mngr, int id) {
     else return 1;
 }
 
-void getDataArtist (char *path, ArtistManager* mngr) {
+int getDataArtist (char *path, ArtistManager* mngr) {
     Output* output = openErrorOutputArtists ();
 
-    parseFile(path, callbackArtist, mngr, output);
-
+    int error = parseFile(path, callbackArtist, mngr, output);
+    
     closeOutputFile (output); 
+
+    if (error) return 1;
+    else return 0;
 }
 
 // creates an artistString according to its tokens and validates them. 

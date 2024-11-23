@@ -29,6 +29,11 @@ int principal (char* pathData, char* pathCmd) {
 
     cmdManager* cmdMngr = createCmdManager ();
     int cmdNumber = parseCmdFile (pathCmd, cmdMngr);
+    if (cmdNumber == -1) {
+        freeCmdManager (cmdMngr);
+        freeHash (mngr);
+        return 1;
+    }
 
     for (int i = 0; i< cmdNumber; i++) {
         CMD* cmd = getCommandFromMngr (cmdMngr, i);

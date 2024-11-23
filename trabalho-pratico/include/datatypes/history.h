@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <parsingUtils.h>
 
 #ifndef _HISTORY_H_
 #define _HISTORY_H_

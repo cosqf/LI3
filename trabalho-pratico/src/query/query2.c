@@ -131,17 +131,17 @@ int compareTuple(const void* a, const void* b) {
 }
 
 
-void updateDurationHash(int id, GHashTable* newtable, int duration) {
+void updateHash(int id, GHashTable* newtable, int newValue) {
     gpointer key, value;
     
     // the artist is already in the new table
     if (g_hash_table_lookup_extended (newtable, GINT_TO_POINTER(id), &key, &value)) {
-        int newValue = GPOINTER_TO_INT(value) + duration;
-        // update duration
-        g_hash_table_replace(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(newValue));
+        int updatedValue = GPOINTER_TO_INT(value) + newValue;
+        // update newValue
+        g_hash_table_replace(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(updatedValue));
     }
     // it isnt, so we need to add it
-    else g_hash_table_insert(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(duration));
+    else g_hash_table_insert(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(newValue));
 }
 
 void printResult (Artist* artist, Duration dur, Output* output) {
