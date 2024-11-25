@@ -19,7 +19,9 @@ int getCMDAgeMin (CMD* cmd);
 
 int getCMDAgeMax (CMD* cmd);
 
+char getCMDSeparator (CMD* cmd);
 
-void printCMD(const CMD* cmd);
+
+void printCMD(const CMD* cmd); //what is this ? was it for debug
 
 #endif

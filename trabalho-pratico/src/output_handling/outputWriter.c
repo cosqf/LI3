@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "output_handling/outputWriter.h"
+#include <cmd.h>
 
 #include <parsingUtils.h>
 
@@ -40,13 +42,17 @@ void setOutput(Output* output, char** lines, int counter) {
 }
 
 // generic function to write in the querys format
-void writeQuerys (Output* output) {
+void writeQuerys (Output* output, CMD* cmd) {
+    if (output == NULL || output->file == NULL || output->line == NULL) return;
+
     FILE* file = output->file;
+
+    const char separator = getCMDSeparator(cmd);
 
     int counter = output->lineCounter;
     for (int i = 0; i < counter; i++) {
         fprintf (file, "%s", output->line[i]);
-        if (i != counter - 1) fprintf (file, ";");
+        if (i != counter - 1) fprintf (file, separator);
     }
     fprintf (file, "\n");
 }

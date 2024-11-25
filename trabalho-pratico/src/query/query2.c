@@ -51,7 +51,7 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
         Duration dur = secondsInDuration (hashArray[i].duration);
-        printResult (artist, dur, output);
+        printResult (cmd, artist, dur, output);
         deleteArtist (artist);
     }
     closeOutputFile (output);
@@ -144,7 +144,7 @@ void updateDurationHash(int id, GHashTable* newtable, int duration) {
     else g_hash_table_insert(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(duration));
 }
 
-void printResult (Artist* artist, Duration dur, Output* output) {
+void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output) {
     char* name = getArtistName (artist);
     bool type = getArtistType(artist);
     char* artist_country = getArtistCountry(artist); 
@@ -162,7 +162,7 @@ void printResult (Artist* artist, Duration dur, Output* output) {
     lines[3] = artist_country;
 
     setOutput (output, lines, 4);
-    writeQuerys (output);
+    writeQuerys (output, cmd);
 
     free (name);
     free(artist_country);

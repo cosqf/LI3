@@ -30,7 +30,7 @@ int compareTuple(const void* a, const void* b);
 
 Tuple* sortHash (GHashTable* hash);
 
-void printResult (Artist* artist, Duration dur, Output* output);
+void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output);
 
 char* getPathFileToQuery2 (int i);
 

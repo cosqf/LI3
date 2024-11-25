@@ -12,6 +12,7 @@ typedef struct cmd {
     char *paises;   // (requires memory allocation)
     int ageMin;     // minimum age
     int ageMax;     // maximum age
+    char separator  // separator for output (';' or '=')
 } CMD;
 
 CMD* createCMD (char** tokens, int counter) {
@@ -23,12 +24,16 @@ CMD* createCMD (char** tokens, int counter) {
     cmd->paises = NULL;
     cmd->ageMin = -1;
     cmd->ageMax = -1;
+    cmd->separator = ';';
 
-    if (tokens[0]) cmd->query = atoi (tokens[0]);
+    int query;
+    if (tokens[0] && convertToInt (tokens[0][0], &query)) cmd->query = query;
     else {
         perror ("Error getting cmd query number");
         exit (EXIT_FAILURE);
     }
+    if (tokens[0][1] && strcmp (tokens[0][1], 'S') == 0) cmd->separator = '=';
+
     switch (cmd->query) {
     case 1:
         int id;
@@ -77,4 +82,8 @@ int getCMDAgeMin (CMD* cmd) {
 
 int getCMDAgeMax (CMD* cmd) {
     return cmd->ageMax;
+}
+
+char getCMDSeparator (CMD* cmd) {
+    return cmd->separator;
 }

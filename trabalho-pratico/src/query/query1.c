@@ -19,12 +19,12 @@ void query1(CMD* cmd, UserManager *u_mngr, ArtistManager *a_mngr, int counter) {
     User* user = lookupUserHash(u_mngr, ID);
 
     if (user) {
-        userinfo(user, output);
+        userinfo(cmd, user, output);
     } else {
         Artist* artist = lookupArtistHash(a_mngr, ID);
 
         if (artist) {
-            artistinfo(artist, output);
+            artistinfo(cmd, artist, output);
         } else {
             writeNewLine(output);
             deleteArtist(artist);
@@ -37,7 +37,7 @@ void query1(CMD* cmd, UserManager *u_mngr, ArtistManager *a_mngr, int counter) {
 }
 
 
-void userinfo (User* user, Output* file) {
+void userinfo (CMD* cmd, User* user, Output* file) {
     char* lines[5] = {NULL};
 
     lines[0] = getUserEmail(user);
@@ -53,7 +53,7 @@ void userinfo (User* user, Output* file) {
 
     setOutput(file, lines, 5);
 
-    writeQuerys(file);
+    writeQuerys(file, cmd);
 
     free(lines[0]);
     free(lines[1]);
@@ -64,7 +64,7 @@ void userinfo (User* user, Output* file) {
 }
 
 
-void artistinfo (Artist* artist, Output* file) {
+void artistinfo (CMD* cmd, Artist* artist, Output* file) {
     char* lines[5] = {NULL};
 
     lines[0] = getArtistName(artist);
@@ -80,7 +80,7 @@ void artistinfo (Artist* artist, Output* file) {
 
     setOutput(file, lines, 5);
 
-    writeQuerys(file);
+    writeQuerys(file, cmd);
 
     free(lines[0]);
     free(lines[1]);

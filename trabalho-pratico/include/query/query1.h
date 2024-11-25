@@ -8,8 +8,8 @@
 
 void query1(CMD*, UserManager*, ArtistManager*, int);
 
-void userinfo (User*, Output*);
+void userinfo (CMD* cmd, User* user, Output* file);
 
-void artistinfo (Artist*, Output*);
+void artistinfo (CMD* cmd, Artist* artist, Output* file);
 
 #endif  

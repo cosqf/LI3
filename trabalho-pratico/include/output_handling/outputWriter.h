@@ -14,7 +14,7 @@ void closeOutputFile (Output* output);
 
 void setOutput (Output* output, char** lines, int counter);
 
-void writeQuerys (Output* output);
+void writeQuerys (Output* output, CMD* cmd);
 
 void writeErrorFile (Output* output);
 
