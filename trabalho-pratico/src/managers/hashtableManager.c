@@ -9,6 +9,8 @@ typedef struct hashtableManager {
     UserManager* user;
     ArtistManager* artist;
     MusicManager* music;
+    AlbumManager* album;
+    HistoryManager* history;
 } hashtableManager;
 
 hashtableManager* initializeHash () {
@@ -36,6 +38,14 @@ MusicManager* getMusicManager (hashtableManager *mngr) {
 
 ArtistManager* getArtistManager (hashtableManager *mngr) {
     return mngr->artist;
+}
+
+AlbumManager* getAlbumManager (hashtableManager *mngr) {
+    return mngr->album;
+}
+
+HistoryManager* getHistoryManager (hashtableManager *mngr) {
+    return mngr->history;
 }
 
 bool checkIfAlreadyInHashTable (int key, GHashTable* table) {

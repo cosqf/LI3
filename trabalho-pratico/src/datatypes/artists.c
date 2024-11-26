@@ -8,7 +8,7 @@ typedef struct artist {
     char* name;                     //– nome do artista;
     float recipe_per_stream;        //– dinheiro auferido de cada vez que uma das músicas do artista é reproduzida;
     int* id_constituent;            //– lista de identificadores únicos dos seus constituintes, no caso de se tratar de um artista coletivo. Este campo pode ser uma lista vazia.
-    /*//?*/unsigned int id_constituent_counter;
+    unsigned int id_constituent_counter;
     char* country;                  //– nacionalidade do artista.
     bool type;                 //– tipo de artista, i.e., individual(0) ou grupo musical(1)
 } Artist;

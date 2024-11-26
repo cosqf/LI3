@@ -3,9 +3,11 @@
 #include <users.h>
 #include <musics.h>
 #include <artists.h>
+#include <history.h>
 
 #include <musicManager.h>
 #include <artistManager.h>
+#include <albumManager.h>
 
 #ifndef _VALIDATEDATATYPES_H_
 #define _VALIDATEDATATYPES_H_

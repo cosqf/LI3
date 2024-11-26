@@ -69,9 +69,10 @@ void callbackMusic (char** tokens, void* manager, Output* output) { // receives 
     hashtableManager* mngr = (hashtableManager*) manager;
     MusicManager* music_mngr = getMusicManager (mngr);
     ArtistManager* artist_mngr = getArtistManager (mngr);
+    AlbumManager* album_mngr = getAlbumManager (mngr);
 
     MusicString* musicS = createMusicString (tokens);
-    if (!validMusic(musicS, artist_mngr)) insertErrorFileMusics(musicS, output);
+    if (!validMusic(musicS, artist_mngr, album_mngr)) insertErrorFileMusics(musicS, output);
     else {
         Music* music = createMusic (tokens);
         insertMusicHash(music_mngr, getMusicID(music), music);

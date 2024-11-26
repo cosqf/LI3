@@ -1,6 +1,7 @@
 #include <parsingUtils.h>
 #include <cmd.h>
 #include <userManager.h>
+#include <artistManager.h>
 #include <users.h>
 
 #ifndef _QUERY1_H_

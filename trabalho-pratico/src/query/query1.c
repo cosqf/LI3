@@ -74,9 +74,9 @@ void artistinfo (CMD* cmd, Artist* artist, Output* file) {
 
     lines[2] = getArtistCountry(artist);
 
-    lines[3] = '2'; //num_albums_individual
+    lines[3] = "2"; //num_albums_individual
     
-    lines[4] = '3'; //total_recipe
+    lines[4] = "3"; //total_recipe
 
     setOutput(file, lines, 5);
 

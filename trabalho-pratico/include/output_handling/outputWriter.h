@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <parsingUtils.h>
+#include <cmd.h>
 
 #ifndef _OUTPUTWRITER_H_
 #define _OUTPUTWRITER_H_

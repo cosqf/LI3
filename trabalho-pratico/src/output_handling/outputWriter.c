@@ -52,7 +52,7 @@ void writeQuerys (Output* output, CMD* cmd) {
     int counter = output->lineCounter;
     for (int i = 0; i < counter; i++) {
         fprintf (file, "%s", output->line[i]);
-        if (i != counter - 1) fprintf (file, separator);
+        if (i != counter - 1) fprintf(file, "%c", separator);
     }
     fprintf (file, "\n");
 }
