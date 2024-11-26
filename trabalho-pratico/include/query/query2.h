@@ -7,11 +7,6 @@
 #ifndef _QUERY2_H_
 #define _QUERY2_H_
 
-typedef struct {
-    int key;
-    int duration;
-} Tuple;
-
 void query2(CMD *cmd, hashtableManager* mngr, int cmdCounter);
 
 void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr);
@@ -25,10 +20,6 @@ int durationInSeconds (Duration time);
 Duration secondsInDuration (int seconds);
 
 void feeder(gpointer value, gpointer user_data);
-
-int compareTuple(const void* a, const void* b);
-
-Tuple* sortHash (GHashTable* hash);
 
 void printResult (Artist* artist, Duration dur, Output* output);
 
