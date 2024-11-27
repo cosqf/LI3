@@ -24,7 +24,7 @@ ArtistManager* initializeHashArtist () {
     }
     a_mngr->artist = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteArtist);
     return a_mngr;
-}
+} //g_int instead of g_hash
 
 void freeHashArtist (ArtistManager* a_mngr) {
     g_hash_table_destroy (a_mngr->artist);

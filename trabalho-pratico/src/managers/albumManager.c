@@ -38,8 +38,8 @@ bool isAlbumInHash (AlbumManager *a_mngr, int id) {
     else return 1;
 }
 
-void getDataAlbum (char *path, AlbumManager* mngr) {
-    Output* output = openErrorOutputAlbums ();
+void getDataAlbum (char* path, AlbumManager* mngr) {
+    Output* output = openErrorOutputAlbum ();
 
     parseFile(path, callbackAlbum, mngr, output);
 
@@ -48,16 +48,16 @@ void getDataAlbum (char *path, AlbumManager* mngr) {
 
 // creates an albumString according to its tokens and validates them. 
 // if valid, its converted to an album and added to the hashtable
-void callbackAlbum(char **tokens, void *manager, Output *output) {
+void callbackAlbum(char** tokens, void* manager, Output* output) {
     hashtableManager* mngr = (hashtableManager*) manager;
     AlbumManager* al_mngr = getAlbumManager(mngr);
     ArtistManager* a_mngr = getArtistManager(mngr);
  
     AlbumString* albumS = createAlbumString(tokens);
-    if (!validAlbum(albumS, al_mngr, a_mngr)) insertErrorFileAlbums(albumS, output);
+    if (!validAlbum(albumS, a_mngr)) insertErrorFileAlbum(albumS, output);
     else {
         Album* album = createAlbum (tokens);
-        insertAlbumHash(al_mngr, getAlbumID(album), album);
+        insertAlbumHash(al_mngr, getAlbumId(album), album);
     }
     deleteAlbumString(albumS);
 

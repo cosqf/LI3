@@ -48,6 +48,6 @@ bool validHistory(HistoryString*);
 bool validPlatform(char*);
 
 //ALBUMS
-bool validAlbum(AlbumString* album, AlbumManager* al_mngr, ArtistManager* a_mngr);
+bool validAlbum(AlbumString* album, ArtistManager* a_mngr);
 
 #endif  

@@ -228,7 +228,7 @@ bool validPlatform(char* platform){
 //ALBUM
 
 // Validates the album as a whole
-bool validAlbum(AlbumString* album, AlbumManager* al_mngr, ArtistManager* a_mngr){
+bool validAlbum(AlbumString* album, ArtistManager* a_mngr){
     char* idsString = getAlbumArtistIdString(album);
     int* ids = parseIDs (idsString);
     int artistIDCount = getAlbumArtistIdCountString(album);

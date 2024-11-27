@@ -1,4 +1,6 @@
 #include <album.h>
+#include <output_handling/errorfiles.h>
+
 #ifndef _ALBUMMANAGER_H_
 #define _ALBUMMANAGER_H_
 
@@ -10,8 +12,7 @@ void freeHashAlbum (AlbumManager* a_mngr);
 
 bool isAlbumInHash (AlbumManager *a_mngr, int id);
 
-void getDataAlbum (char *path, AlbumManager* mngr);
+void getDataAlbum (char* path, AlbumManager* mngr);
 
-void callbackAlbum(char **tokens, void *manager, Output *output);
-
+void callbackAlbum(char** tokens, void* manager, Output* output);
 #endif

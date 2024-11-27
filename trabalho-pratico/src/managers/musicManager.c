@@ -9,6 +9,8 @@
 #include <output_handling/errorfiles.h>
 #include <validateDatatypes.h>
 
+//mudar nomes
+
 typedef struct musicManager {
     GHashTable *music;
 } MusicManager;
