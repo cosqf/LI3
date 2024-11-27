@@ -138,18 +138,6 @@ bool validDuration(Duration duration){
     return false;
 }
 
-// Validates the music's artist ID, ensuring they are all existent and valid artists
-bool validArtistId(int* id, int n, ArtistManager *a_mngr){    
-    int i;
-
-    for(i = 0; i < n && isArtistInHash (a_mngr, id[i]); i++);
-    
-
-    if (i == n) return true;
-
-    return false;
-}
-
 // Validates the music's album ID, ensuring it is an existent and valid album
 bool validAlbumID(int id, AlbumManager *al_mngr){
 
@@ -202,6 +190,18 @@ bool validList (char* idList) {
     return true;
 }
 
+// Validates the list's artist ID, ensuring they are all existent and valid artists
+bool validArtistId(int* id, int n, ArtistManager *a_mngr){    
+    int i;
+
+    for(i = 0; i < n && isArtistInHash (a_mngr, id[i]); i++);
+    
+
+    if (i == n) return true;
+
+    return false;
+}
+
 
 //HISTORY
 
@@ -222,4 +222,21 @@ bool validPlatform(char* platform){
     if(strcmp(trimString(platform), "mobile") == 0 || strcmp(trimString(platform), "desktop") == 0) return true;
 
     return false;
+}
+
+
+//ALBUM
+
+// Validates the album as a whole
+bool validAlbum(AlbumString* album, AlbumManager* al_mngr, ArtistManager* a_mngr){
+    char* idsString = getAlbumArtistIdString(album);
+    int* ids = parseIDs (idsString);
+    int artistIDCount = getAlbumArtistIdCountString(album);
+
+    bool valid = validArtistId(ids, artistIDCount, a_mngr) && validList(idsString);
+
+    free (idsString);
+    free (ids);
+    
+    return valid;
 }
