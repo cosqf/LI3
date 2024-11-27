@@ -116,7 +116,7 @@ bool validMusic(MusicString* music, ArtistManager *a_mngr, AlbumManager *al_mngr
 
     char* albumIDString = getMusicAlbumIDString(music);
     int albumID, temp;
-    if (convertToInt (trimString(albumIDString) + 1, &temp)) albumID = temp;
+    if (convertToInt (trimString(albumIDString) + 2, &temp)) albumID = temp;
     else exit (EXIT_FAILURE);
 
     bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr) && validAlbumID(albumID, al_mngr));

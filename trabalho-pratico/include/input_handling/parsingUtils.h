@@ -2,7 +2,7 @@
 #define _PARSINGUTILS_H_
 
 #define DEFAULT 2000
-typedef enum {Users = 1, Artists, Musics} DataType;
+typedef enum {Users = 1, Artists, Musics, Historys, Albums} DataType;
 
 typedef struct {
     int year;    //aaaa (<=2024)
