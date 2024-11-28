@@ -45,7 +45,16 @@ int principal (char* pathData, char* pathCmd) {
         case 3:
             query3 (cmd, getUserManager(mngr), getMusicManager(mngr), i+1);
             break;
+            
+        case 4:
+            break;
+        
+        case 5:
+            break;
 
+        case 6:
+            break;
+            
         default:
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);

@@ -52,10 +52,10 @@ int tests (char* pathData, char* pathCmd, char* pathOutput) {
 
 void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[1]: path to data, argv[2]: cmd, argv[3]: path to expected outputs
     struct timespec cmdstart, cmdend;
-    double q1total = 0, q2total = 0, q3total = 0;
+    double q1total = 0, q2total = 0, q3total = 0, q4total = 0, q5total = 0, q6total = 0;
 
-    int i = 1, q1c = 0, q2c = 0, q3c = 0; // i counts the total commands run, the others count the commands run for each query
-    int correctQ1 = 0, correctQ2 = 0, correctQ3 = 0; // counts the commands that execute correctly
+    int i = 1, q1c = 0, q2c = 0, q3c = 0, q4c = 0, q5c = 0, q6c = 0; // i counts the total commands run, the others count the commands run for each query
+    int correctQ1 = 0, correctQ2 = 0, correctQ3 = 0, correctQ4 = 0, correctQ5 = 0, correctQ6 = 0; // counts the commands that execute correctly
     hashtableManager* mngr = initializeHash ();
 
     getData (pathData, mngr);
@@ -115,6 +115,55 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
     
             if(compareFiles(output, expected, i) == true) correctQ3++;
             break;
+
+        case 4:
+            q4c++;
+            clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
+
+            //query4 ();
+
+            clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
+            q4total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
+
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
+            snprintf(expected, sizeof(expected), "%s/command%d_output.txt", pathOutput, i);
+    
+            if(compareFiles(output, expected, i) == true) correctQ4++;
+
+            break;
+
+        case 5:
+            q5c++;
+            clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
+
+            //query5 ();
+
+            clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
+            q5total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
+
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
+            snprintf(expected, sizeof(expected), "%s/command%d_output.txt", pathOutput, i);
+    
+            if(compareFiles(output, expected, i) == true) correctQ5++;
+
+            break;
+
+        case 6:
+            q6c++;
+            clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
+
+            //query6 ();
+
+            clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
+            q6total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
+
+            snprintf(output, sizeof(output), "resultados/command%d_output.txt", i);
+            snprintf(expected, sizeof(expected), "%s/command%d_output.txt", pathOutput, i);
+    
+            if(compareFiles(output, expected, i) == true) correctQ6++;
+
+            break;
+
         default:
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);
@@ -123,13 +172,19 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
 
     printf("Q1: %d de %d testes OK.\n", correctQ1, q1c);
     printf("Q2: %d de %d testes OK.\n", correctQ2, q2c);
-    printf("Q3: %d de %d testes OK.\n\n", correctQ3, q3c);
+    printf("Q3: %d de %d testes OK.\n", correctQ3, q3c);
+    printf("Q4: %d de %d testes OK.\n", correctQ4, q4c);
+    printf("Q5: %d de %d testes OK.\n", correctQ5, q5c);
+    printf("Q6: %d de %d testes OK.\n\n", correctQ6, q6c);
 
     double q1avg = q1total / q1c * 1e3;
     double q2avg = q2total / q2c * 1e3;
     double q3avg = q3total / q3c * 1e3;
+    double q4avg = q4total / q4c * 1e3;
+    double q5avg = q5total / q5c * 1e3;
+    double q6avg = q6total / q6c * 1e3;
 
-    printf("Tempos médios de execução:\n\tQ1: %.2f ms\n\tQ2: %.2f ms\n\tQ3: %.2f ms\n\n", q1avg, q2avg, q3avg);
+    printf("Tempos médios de execução:\n\tQ1: %.2f ms\n\tQ2: %.2f ms\n\tQ3: %.2f ms\n\tQ4: %.2f ms\n\tQ5: %.2f ms\n\tQ6: %.2f ms\n\n", q1avg, q2avg, q3avg, q4avg, q5avg, q6avg);
     
     freeCmdManager (cmdMngr);
     freeHash (mngr);
