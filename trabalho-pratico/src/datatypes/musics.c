@@ -37,7 +37,7 @@ Music* createMusic(char** tokens) {
 
     music->artist_id = parseIDs (trimStringWithoutBrackets(tokens[2]));
     music->artist_id_count = IdCounter (tokens[2]);
-    if (convertToInt (trimString((tokens[3])) + 1, &album_id)) music->album_id = album_id;
+    if (convertToInt (trimString((tokens[3])) + 2, &album_id)) music->album_id = album_id;
     else exit (EXIT_FAILURE);
     music->duration = parseDuration (trimString(tokens[4]));
     music->genre = getGenre (trimString(tokens[5]));

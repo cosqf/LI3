@@ -18,6 +18,13 @@ typedef struct {
     short int error; 
 } Duration;
 
+typedef struct timestamp {
+    Date date;
+    Duration hour;
+} Timestamp;
+
+Timestamp parseTimestamp (char* string);
+
 Date parseDate(char*);
 
 Duration parseDuration(char*);

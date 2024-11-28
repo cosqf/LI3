@@ -13,36 +13,36 @@ typedef struct albumManager {
 } AlbumManager;
 
 
-void insertAlbumHash (AlbumManager *a_mngr, int key, Album *album) {
-    g_hash_table_insert(a_mngr->album, GINT_TO_POINTER (key), album);
+void insertAlbumHash (AlbumManager *al_mngr, int key, Album *album) {
+    g_hash_table_insert(al_mngr->album, GINT_TO_POINTER (key), album);
 }
 
 AlbumManager* initializeHashAlbum () {
-    AlbumManager* a_mngr = malloc (sizeof (AlbumManager));
-    if (a_mngr == NULL) {
+    AlbumManager* al_mngr = malloc (sizeof (AlbumManager));
+    if (al_mngr == NULL) {
         perror("Failed to allocate memory for AlbumManager");
         exit(EXIT_FAILURE); 
     }
-    a_mngr->album = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteAlbum);
-    return a_mngr;
+    al_mngr->album = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteAlbum);
+    return al_mngr;
 }
 
-void freeHashAlbum (AlbumManager* a_mngr) {
-    g_hash_table_destroy (a_mngr->album);
-    free (a_mngr);
+void freeHashAlbum (AlbumManager* al_mngr) {
+    g_hash_table_destroy (al_mngr->album);
+    free (al_mngr);
 }
 
-bool isAlbumInHash (AlbumManager *a_mngr, int id) {
-    Album* album = g_hash_table_lookup (a_mngr->album, GINT_TO_POINTER(id));
+bool isAlbumInHash (AlbumManager *al_mngr, int id) {
+    Album* album = g_hash_table_lookup (al_mngr->album, GINT_TO_POINTER(id));
     if (album == NULL) return 0;
     else return 1;
 }
 
-void getDataAlbum (char* path, AlbumManager* mngr) {
+void getDataAlbum (char* path, hashtableManager* mngr) {
     Output* output = openErrorOutputAlbum ();
-
+    printf("Albums error file opened!\n"); //DEBUG
     parseFile(path, callbackAlbum, mngr, output);
-
+    printf("Albums file parsed!\n"); //DEBUG
     closeOutputFile (output); 
 }
 

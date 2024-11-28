@@ -25,7 +25,7 @@ Album* createAlbum(char** tokens) {
     if (mallocErrorCheck (album)) exit (EXIT_FAILURE);
 
     int id;
-    if (convertToInt (trimString((tokens[0])) + 1, &id)) album->id = id;
+    if (convertToInt (trimString((tokens[0])) + 2, &id)) album->id = id;
     else exit (EXIT_FAILURE);
 
     album->artist_id = parseIDs (trimStringWithoutBrackets(tokens[2]));
@@ -70,6 +70,7 @@ AlbumString* createAlbumString (char** tokens) {
     album->artist_id = strdup (trimStringWithoutBrackets(tokens[2]));
     album->artist_id_count = IdCounter (tokens[2]);
     album->year = strdup (trimString(tokens[3]));
+    album->producers = strdup(trimStringWithoutBrackets(tokens[4]));
     return album;
 }
 

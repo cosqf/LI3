@@ -8,7 +8,7 @@ typedef struct history {
     int id;                   //– identificador único do registo;
     int user_id;              //– identificador único do utilizador a que o registo se refere;
     int music_id;             //– identificador único da música a que o registo se refere;
-    Date timestamp;           //– data e hora em que a música foi ouvida pelo utilizador;
+    Timestamp timestamp;           //– data e hora em que a música foi ouvida pelo utilizador;
     Duration duration;        //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
 } History;
 
@@ -35,7 +35,7 @@ History* createHistory (char** tokens) {
     if (convertToInt (trimString((tokens[2])) + 1, &music_id)) history->music_id = music_id;
     else exit (EXIT_FAILURE);
 
-    history->timestamp = parseDate (trimString (tokens[3]));
+    history->timestamp = parseTimestamp (trimString (tokens[3]));
 
     history->duration = parseDuration (trimString (tokens[4]));
 
@@ -65,7 +65,7 @@ int getHistoryMusicId (History* history) {
 }
 
 // Getter for the timestamp field
-Date getHistoryTimestamp (History* history) {
+Timestamp getHistoryTimestamp (History* history) {
     return history->timestamp;
 }
 
