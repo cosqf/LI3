@@ -18,8 +18,6 @@ void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int 
 
 void updateDurationHash (int id, GHashTable* newtable, int duration) ;
 
-bool checkIfAlreadyInHashTable (int id, GHashTable* newtable);
-
 int durationInSeconds (Duration time);
 
 Duration secondsInDuration (int seconds);

@@ -15,6 +15,21 @@ void insertHistoryHash (HistoryManager *h_mngr, int key, History *history) {
     g_hash_table_insert(h_mngr->history, GINT_TO_POINTER (key), history);
 }
 
+HistoryManager* initializeHashHistory () {
+    HistoryManager* h_mngr = malloc (sizeof (HistoryManager));
+    if (h_mngr == NULL) {
+        perror("Failed to allocate memory for HistoryManager");
+        exit(EXIT_FAILURE); 
+    }
+    h_mngr->history = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistory);
+    return h_mngr;
+}
+
+void freeHashHistory (HistoryManager* h_mngr) {
+    g_hash_table_destroy (h_mngr->history);
+    free (h_mngr);
+}
+
 void getDataHistory (char *path, HistoryManager* mngr) {
     Output* output = openErrorOutputHistory ();
 
