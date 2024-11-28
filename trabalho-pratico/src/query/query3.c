@@ -55,7 +55,7 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
         lines[0] = arrayResults[j].genre;
         lines[1] = str;
         setOutput (output, lines, 2);
-        writeQuerys (output);
+        writeQuerys (output, cmd);
     }
 
     closeOutputFile (output);

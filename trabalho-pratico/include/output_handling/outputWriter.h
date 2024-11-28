@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <parsingUtils.h>
+#include <cmd.h>
 
 #ifndef _OUTPUTWRITER_H_
 #define _OUTPUTWRITER_H_
@@ -14,7 +15,7 @@ void closeOutputFile (Output* output);
 
 void setOutput (Output* output, char** lines, int counter);
 
-void writeQuerys (Output* output);
+void writeQuerys (Output* output, CMD* cmd);
 
 void writeErrorFile (Output* output);
 

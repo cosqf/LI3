@@ -38,4 +38,9 @@ void writeArtistsToErrorFile(GHashTable* );
 bool convertToInt(const char *str, int *out);
 
 int compareDate(Date dateA, Date dateB);
+
+int durationInSeconds (Duration time);
+
+Duration secondsInDuration (int seconds);
+
 #endif

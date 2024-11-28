@@ -1,3 +1,5 @@
+#include <parsingUtils.h>
+
 #ifndef _CMD_H_
 #define _CMD_H_
 
@@ -19,7 +21,15 @@ int getCMDAgeMin (CMD* cmd);
 
 int getCMDAgeMax (CMD* cmd);
 
+char getCMDSeparator (CMD* cmd);
 
-void printCMD(const CMD* cmd);
+Date getCMDdateMin (CMD* cmd);
 
+Date getCMDdateMax(CMD* cmd);
+
+int getCMDnoUsers(CMD* cmd);
+
+short int getCMDyear(CMD* cmd);
+
+short int getCMDnArtists(CMD* cmd);
 #endif

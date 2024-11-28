@@ -8,6 +8,7 @@
 #include <glib.h>
 #include <musicManager.h>
 #include <stdlib.h>
+#include <queryUtils.h>
 #include <output_handling/outputWriter.h>
 
 typedef struct {
@@ -29,7 +30,7 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     // will iterate the hashtable and get the artists discography
     iterateMusic(getMusicManager(mngr), feeder, &data); 
 
-    Tuple* hashArray = sortHash (hashDuration);
+    Tuple* hashArray = sortHash (hashDuration, compareTuple);
     if (hashArray == NULL) {
         perror("Sorting Hash error\n");
         deleteHash(hashDuration);
@@ -50,8 +51,8 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
-        Duration dur = secondsInDuration (hashArray[i].duration);
-        printResult (artist, dur, output);
+        Duration dur = secondsInDuration (hashArray[i].value);
+        printResult (cmd, artist, dur, output);
         deleteArtist (artist);
     }
     closeOutputFile (output);
@@ -95,33 +96,8 @@ void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int 
         updateHash (id[i], newtable, duration);
     }
 }
-// Transforms the hash table into a Tuple array and sorts it
-Tuple* sortHash (GHashTable* hash) {
-    GHashTableIter iter;
-    gpointer key, value;
-    int i = 0;
 
-    int lengthHash = g_hash_table_size (hash);
-    Tuple* hashArray = malloc (sizeof (Tuple) * lengthHash);
-    mallocErrorCheck (hashArray);
-
-    g_hash_table_iter_init(&iter, hash);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        Tuple data;
-        data.key = GPOINTER_TO_INT (key);
-        data.duration = GPOINTER_TO_INT (value);
-
-        hashArray[i] = data;
-        i++;
-    }
-
-    qsort (hashArray, lengthHash, sizeof(Tuple), compareTuple);
-
-    return hashArray;
-}
-
-void printResult (Artist* artist, Duration dur, Output* output) {
+void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output) {
     char* name = getArtistName (artist);
     bool type = getArtistType(artist);
     char* artist_country = getArtistCountry(artist); 
@@ -139,7 +115,7 @@ void printResult (Artist* artist, Duration dur, Output* output) {
     lines[3] = artist_country;
 
     setOutput (output, lines, 4);
-    writeQuerys (output);
+    writeQuerys (output, cmd);
 
     free (name);
     free(artist_country);

@@ -1,8 +1,4 @@
 #include <stdio.h>
-#include <musics.h>
-#include <users.h>
-#include <utils.h>
-#include <artists.h>
 #include <stdlib.h>
 #include <output_handling/errorfiles.h>
 #include <output_handling/outputWriter.h>
@@ -56,7 +52,6 @@ void insertErrorFileArtists(ArtistString *artist, Output* output) {
     for (int i = 0; i < 7; i++) free(lines[i]);
 }
 
-
 Output* openErrorOutputMusics (){
     Output* output = openOutputFile ("resultados/musics_errors.csv");
 
@@ -80,4 +75,53 @@ void insertErrorFileMusics(MusicString *music, Output* output) {
     writeErrorFile (output);
     
     for (int i = 0; i < 7; i++) free(lines[i]);
+}
+
+Output* openErrorOutputHistory () {
+    Output* output = openOutputFile ("resultados/history_errors.csv");
+
+    writeErrorFileHandle (output, Historys);
+    return output;
+}
+
+
+void insertErrorFileHistory(HistoryString *historyS, Output* output) {
+    char* lines [10] = {NULL};
+
+    lines[0] = getHistoryIdString(historyS);
+    lines[1] = getHistoryUserIdString (historyS);
+    lines[2] = getHistoryMusicIdString(historyS);
+    lines[3] = getHistoryTimestampString(historyS);
+    lines[4] = getHistoryDurationString(historyS);
+    lines[5] = getHistoryPlatformString(historyS);
+
+    setOutput (output, lines, 6);
+
+    writeErrorFile (output);
+    
+    for (int i = 0; i < 6; i++) free(lines[i]);
+}
+
+
+void insertErrorFileAlbum(AlbumString *albumS, Output* output) {
+    char* lines [10] = {NULL};
+
+    lines[0] = getAlbumIdString(albumS);
+    lines[1] = getAlbumTitleString (albumS);
+    lines[2] = getAlbumArtistIdString(albumS);
+    lines[3] = getAlbumYearString(albumS);
+    lines[4] = getAlbumProducerString(albumS);
+
+    setOutput (output, lines, 5);
+
+    writeErrorFile (output);
+    
+    for (int i = 0; i < 5; i++) free(lines[i]);
+}
+
+Output* openErrorOutputAlbum () {
+    Output* output = openOutputFile ("resultados/album_errors.csv");
+
+    writeErrorFileHandle (output, Albums);
+    return output;
 }

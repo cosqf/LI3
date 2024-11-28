@@ -6,6 +6,7 @@
 #include <users.h>
 #include <musics.h>
 #include <artists.h>
+#include <history.h>
 
 #include <validateDatatypes.h>
 #include <utils.h>
@@ -106,14 +107,19 @@ bool validLikes(const int* liked_musics_id, int liked_musics_count, MusicManager
 //MUSICS
 
 // Validates the music as a whole
-bool validMusic(MusicString* music, ArtistManager *a_mngr){
+bool validMusic(MusicString* music, ArtistManager *a_mngr, AlbumManager *al_mngr){
     char* durString = getMusicDurationString(music);
     Duration dur = parseDuration (durString);
     char* idsString = getMusicArtistIDString(music);
     int* ids = parseIDs (idsString);
     int artistIDCount = getMusicArtistIDCountString(music);
 
-    bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr));
+    char* albumIDString = getMusicAlbumIDString(music);
+    int albumID, temp;
+    if (convertToInt (trimString(albumIDString) + 2, &temp)) albumID = temp;
+    else exit (EXIT_FAILURE);
+
+    bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr) && validAlbumID(albumID, al_mngr));
 
     free (durString);
     free (idsString);
@@ -144,16 +150,23 @@ bool validArtistId(int* id, int n, ArtistManager *a_mngr){
     return false;
 }
 
+// Validates the music's album ID, ensuring it is an existent and valid album
+bool validAlbumID(int id, AlbumManager *al_mngr){
+
+    return isAlbumInHash(al_mngr, id);
+
+}
+
 
 //ARTISTS
 
 // Validates the artist as a whole
 bool validArtist(ArtistString* artist){
-    char* type = getArtistTypeString(artist);
+    char* type = lower(getArtistTypeString(artist)); 
     int constituentCounter = getArtistIDConstituentCounterString(artist);
     char* constituents = getArtistIDConstituentString(artist);
 
-    bool valid = (validList(constituents) && validIdConst(type, constituentCounter));
+    bool valid = (validList(constituents) && validIdConst(type, constituentCounter) && validType(type));
 
     free (type);
     free (constituents);
@@ -169,6 +182,14 @@ bool validIdConst(char* type, int constituents){
     return true;
 }
 
+//Validates the artist's type, "individual" or "group"
+bool validType(char* type){
+
+    if(strcmp(trimString(type), "individual") == 0 || strcmp(trimString(type), "group") == 0) return true;
+
+    return false;
+}
+
 
 //LISTS
 
@@ -179,4 +200,26 @@ bool validList (char* idList) {
     if(length < 2 || idList[0] != '[' || idList[length-1] != ']') return false;
 
     return true;
+}
+
+
+//HISTORY
+
+// Validates the history entry
+bool validHistory(HistoryString* history){
+    char* platform = lower(getHistoryPlatformString(history));
+
+    bool valid = validPlatform(platform);
+
+    free(platform);
+
+    return valid;
+}
+
+// Validates the history entry's platform, "mobile" or "desktop"
+bool validPlatform(char* platform){
+
+    if(strcmp(trimString(platform), "mobile") == 0 || strcmp(trimString(platform), "desktop") == 0) return true;
+
+    return false;
 }

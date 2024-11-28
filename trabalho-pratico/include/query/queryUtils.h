@@ -1,4 +1,3 @@
-#include <hashtableManager.h>
 #include <glib.h>
 
 #ifndef _QUERYUTILS_H_
@@ -7,12 +6,13 @@
 
 typedef struct {
     int key;
-    int duration;
+    int value;
 } Tuple;
-
 
 int compareTuple(const void* a, const void* b);
 
-Tuple* sortHash (GHashTable* hash);
+void updateHash(int id, GHashTable* newtable, int newValue);
+
+Tuple* sortHash (GHashTable* hash, int sorterFunc (const void*, const void*)) ;
 
 #endif

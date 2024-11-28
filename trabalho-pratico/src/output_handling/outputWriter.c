@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "output_handling/outputWriter.h"
+#include <cmd.h>
 
 #include <parsingUtils.h>
 
@@ -40,13 +42,17 @@ void setOutput(Output* output, char** lines, int counter) {
 }
 
 // generic function to write in the querys format
-void writeQuerys (Output* output) {
+void writeQuerys (Output* output, CMD* cmd) {
+    if (output == NULL || output->file == NULL || output->line == NULL) return;
+
     FILE* file = output->file;
+
+    const char separator = getCMDSeparator(cmd);
 
     int counter = output->lineCounter;
     for (int i = 0; i < counter; i++) {
         fprintf (file, "%s", output->line[i]);
-        if (i != counter - 1) fprintf (file, ";");
+        if (i != counter - 1) fprintf(file, "%c", separator);
     }
     fprintf (file, "\n");
 }
@@ -72,5 +78,7 @@ void writeErrorFileHandle (Output* output, DataType type) {
     if (type == Artists) fprintf (file, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
     else if (type == Users) fprintf (file, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");
     else if (type == Musics) fprintf (file, "\"id\";\"title\";\"artist_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
-
+    else if (type == Historys) fprintf (file, "\"id\";\"user_id\";\"music_id\";\"timestamp\";\"duration\";\"platform\"\n");
+    else if (type == Albums) fprintf (file, "\"id\";\"title\";\"artist_id\";\"year\";\"producers\"\n");
+    else perror ("Datatype error in error outputting\n");
 }
