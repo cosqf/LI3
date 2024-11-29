@@ -9,7 +9,7 @@
 #ifndef _PARSING_H_
 #define _PARSING_H_
 
-void getData (char *path, hashtableManager *mngr);
+int getData (char *path, hashtableManager *mngr);
 
 int parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output);
 

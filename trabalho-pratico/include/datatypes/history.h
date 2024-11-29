@@ -23,7 +23,7 @@ void deleteHistoryString (HistoryString* history);
 int getHistoryId (History* history);
 int getHistoryUserId (History* history);
 int getHistoryMusicId (History* history);
-Date getHistoryTimestamp (History* history);
+Timestamp getHistoryTimestamp (History* history);
 Duration getHistoryDuration (History* history);
 
 char* getHistoryIdString (HistoryString* history);

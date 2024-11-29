@@ -10,12 +10,7 @@
 #include <parsingUtils.h>
 #include <utils.h>
 
-
-void outputtingQuery4 (int id) { // .....
-    // char* filepath;
-    // Output* output = openOutputFile (filepath);
-}
-
+// days functions
 short int getWeekday (Date date) { // gotten from wikipedia, sunday == 0
     return ((date.day += date.month < 3 ? date.year-- : 
             date.year - 2, 23 * date.month/9 + date.day + 4 + date.year/4- date.year/100 + date.year/400)%7);
@@ -69,36 +64,56 @@ void adjustDateLimits(Date *dateMin, Date *dateMax) { // will subtract the days 
             dateMax->day = 1;
         }
 
-        weekdayMin = getWeekday(*dateMax);
+        weekdayMax = getWeekday(*dateMax);
     }
 }
+
 
 // function to process the top 10 artists for a week, will update history manager with the weekly array of artists
 void processWeeklyTop10(GHashTable* topArtistsWeek, HistoryManager* mngr, Date firstDayOfWeek) {
     int lengthWeekHash = g_hash_table_size(topArtistsWeek);
     int limit = (lengthWeekHash < 10) ? lengthWeekHash : 10;
+    if (limit == 0) return ;
 
     Tuple* artistsWeek = sortHash(topArtistsWeek, compareTuple);  // sorting artists by play duration
-    ArtistList* top10artistWeek = malloc(sizeof(ArtistList) * limit);
-    top10artistWeek->artistsIds = artistsWeek;
-    top10artistWeek->count = limit;
-    insertInHistoryWeeks (mngr, top10artistWeek, firstDayOfWeek);
+
+    ArtistList* top10artistWeek = malloc(sizeof(ArtistList));
+        if (mallocErrorCheck (top10artistWeek)) {
+            free (artistsWeek);
+            return;
+        }
+    Tuple* limitedArray = malloc (sizeof (Tuple) * limit);
+        if (mallocErrorCheck (limitedArray)) {
+            free (artistsWeek);
+            free (top10artistWeek);
+            return;
+        }
+
+    for (int i = 0; i< limit; i++) limitedArray[i] = artistsWeek [i];
     free(artistsWeek);
+
+    top10artistWeek->artistsIds = limitedArray;
+    top10artistWeek->count = limit;
+    insertInHistoryByWeeks (mngr, top10artistWeek, firstDayOfWeek);
 }
 
-
-void getHistoryByWeeks (hashtableManager* mngr) {
-    HistoryManager* historyManager = getHistoryManager (mngr);
-    History** array = sortHistory(historyManager);  // Sort history by timestamp
+// main function to create the tree
+void getHistoryByWeeks (HistoryManager* historyManager, MusicManager* musicManager) {
+    History** array = sortHistory(historyManager);  // sort history by timestamp
     int lengthArray = lengthHistory (historyManager);
-
+    if (lengthArray == 0) {
+        free(array);
+        return;
+    }
     GHashTable* topArtistsWeek = createHash();  // temporary hash table for weekly artist stats
-    bool isFirstSunday = 0; // check for the first time during the week that is sunday
-    Date firstDayOfWeek = getHistoryTimestamp (array[0]);
+
+    bool isFirstSunday = 1; // check for the first time during the week that is sunday
+    Date firstDayOfWeek = (getHistoryTimestamp (array[0])).date;
     short int weekday = getWeekday (firstDayOfWeek);
+
     for (int i = 0; i < lengthArray; i++) {
         History* history = array[i];
-        Date date = getHistoryTimestamp(history);
+        Date date = (getHistoryTimestamp(history)).date;
         weekday = getWeekday (date);
 
         // if its a new week process the previous weeks top 10 artists
@@ -112,7 +127,7 @@ void getHistoryByWeeks (hashtableManager* mngr) {
 
         // adds all artists in the weekly hash table 
         int musicId = getHistoryMusicId(history);
-        Music* music = lookupMusicHash(getMusicManager(mngr), musicId);
+        Music* music = lookupMusicHash (musicManager, musicId);
         const int* artistIds = getMusicArtistID(music);
         int artistCount = getMusicArtistIDCount(music);
 
@@ -123,8 +138,9 @@ void getHistoryByWeeks (hashtableManager* mngr) {
         deleteMusic(music); 
     }
 
-    // handling the last week in case it ends early
-    if (weekday != 0) processWeeklyTop10(topArtistsWeek, historyManager, firstDayOfWeek);
+    // handling the last week
+    processWeeklyTop10(topArtistsWeek, historyManager, firstDayOfWeek);
+    
     deleteHash(topArtistsWeek);
     free(array);
 }
@@ -136,9 +152,9 @@ typedef struct {
     bool isFilterOn;
 } feederHistory;
 
-gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFed) {
+gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed) { // key: date, value: artistlist
     Date* date = (Date*)key;
-    feederHistory* data = (feederHistory*) dataFed;
+    feederHistory* data = (feederHistory*) dataFeed;
 
     Date minDate = data->minDay;
     Date maxDate = data->maxDay;
@@ -146,7 +162,7 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFed) 
     bool filter = data->isFilterOn;
 
     if (filter) {
-        if (compareDate(maxDate, *date) < 0) return TRUE;  
+        if (compareDate(maxDate, *date) < 0) return TRUE; // stops search early  
 
         if (compareDate(minDate, *date) >= 0) {
             ArtistList* list = value;
@@ -170,13 +186,15 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFed) 
 
 
 
-void query4 (CMD* cmd, hashtableManager* mngr) {
-    HistoryManager* historyManager = getHistoryManager (mngr);
+void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManager, ArtistManager* artistManager, int cmdCounter) {
     Date minDay = getCMDdateMin (cmd);
     Date maxDay = getCMDdateMax (cmd);
     GHashTable* artistsTimeInTop = createHash(); // will store the artists with the number of times they were on the top 10
 
-    getHistoryByWeeks (mngr); 
+    if (!historyTreeIsInitialized (historyManager)) { // will get all the top artists in each week
+        initializeHistoryTree(historyManager);
+        getHistoryByWeeks (historyManager, musicManager); 
+    }
     bool isFilterOn = ! (minDay.year == 0);
     if (isFilterOn) adjustDateLimits (&minDay, &maxDay);
     feederHistory data = {.maxDay = maxDay, 
@@ -185,64 +203,33 @@ void query4 (CMD* cmd, hashtableManager* mngr) {
                           .isFilterOn = isFilterOn
                           };
 
-    traverseTreeInRange(historyManager, callbackHistoryQuery4, &data);
+    traverseTreeInRange(historyManager, callbackHistoryQuery4, &data); // traverse tree according to the dates, pass the nodes to the hash
 
     Tuple* array = sortHash (artistsTimeInTop, compareTuple);
-    outputtingQuery4 (array[0].key);
+    int artistId = array[0].key;
+    int artistCount = array[0].value;
+
+
+    // outputting
+    char filename[50];
+    snprintf (filename, sizeof(filename),"resultados/command%d_output.txt", cmdCounter);
+    Output* output = openOutputFile (filename);
+    bool type = getArtistTypeHash (artistId, artistManager);
+
+    char* lines [3] = {NULL};
+    char idString[15], typeString[15], artistCountString[15];
+    snprintf (idString, sizeof(idString), "A%07d", artistId);
+    if (type) strcpy (typeString, "group");
+    else strcpy (typeString, "individual");
+    snprintf (artistCountString, sizeof(artistCountString), "%d", artistCount);
+    
+    lines[0] = idString;
+    lines[1] = typeString;
+    lines[2] = artistCountString;
+
+    setOutput (output, lines, 3);
+    writeQuerys (output, cmd);
 
     free (array);
     deleteHash (artistsTimeInTop);
 }
-
-/*
-void query4 (CMD* cmd, hashtableManager* mngr) {
-    HistoryManager* historyManager = getHistoryManager (mngr);
-    Date minDay = getCMDdateMin (cmd);
-    Date maxDay = getCMDdateMax (cmd);
-    adjustDateLimits (&minDay, &maxDay);
-
-    // assuming array vvvv
-    History* array = historyManager->array;
-    int lengthArray = historyManager->length;
-    qsort (array, lengthArray, sizeof(History*), compareTimestamp);
-
-    GHashTable* topArtistsTotal = createHash(); // will store the artists with the number of times they were on the top 10
-    GHashTable* topArtistsWeek = createHash(); // temporary hash table, will store the artists of each week
-
-    bool isFirstSunday = 0; // check for the first time during the week that is sunday
-    for (int i = 0; i< lengthArray; i++) {
-        Date date = getHistoryTimestamp(array [i]);
-        if (compareDate (minDay, date) < 0 || compareDate (maxDay, date) > 0 ) continue; // filter
-
-        short int weekday  = getWeekday (date);
-        // when it becomes sunday itll add the top 10 from the week table to the total table and then reset the week hash table
-        if (weekday == 0 && isFirstSunday) {  
-            int lengthWeekHash =  g_hash_table_size (topArtistsWeek);
-            Tuple* artistsWeek = sortHash (topArtistsWeek);          // organized tuple array
-            for (int j = 0; j < 10 && j < lengthWeekHash ; j++) {
-                updateHash (artistsWeek[j].key, topArtistsTotal, 1);
-            }
-            g_hash_table_remove_all (topArtistsWeek);
-            isFirstSunday = 0;
-        }
-        else { // adds all artists in the weekly hash table 
-            int musicId = getHistoryMusicId (array[i]);
-            Music* music = lookupMusicHash (getMusicManager (mngr), musicId);
-            const int* artistsIds = getMusicArtistID (music);
-            int artistCount = getMusicArtistIDCount (music);
-
-            for (int j = 0; j < artistCount; j++) {
-                updateHash (artistsIds[j], topArtistsWeek, durationInSeconds (getHistoryDuration (array[i])));
-            }
-            deleteMusic (music);
-            isFirstSunday = 1;
-        }
-    }
-    deleteHash (topArtistsWeek);
-
-    Tuple* topArtists = sortHash (topArtistsTotal);
-
-    deleteHash (topArtistsTotal);
-    outputtingQuery4 (topArtists[0].key);
-}
-*/

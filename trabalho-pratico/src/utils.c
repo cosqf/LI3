@@ -180,13 +180,14 @@ bool convertToInt(const char *str, int *out) {
     return true;
 }
 
-int compareDate(Date dateA, Date dateB) { // if a > b returns -1, a < b returns 1, 0 otherwise
-    if (dateA.year > dateB.year) return -1; 
-    if (dateA.year < dateB.year) return 1;
-    if (dateA.month > dateB.month) return -1;
-    if (dateA.month < dateB.month) return 1;
-    if (dateA.day > dateB.day) return -1;
-    if (dateA.day < dateB.day) return 1;
+int compareDate(Date dateA, Date dateB) {  // if a > b returns 1, a < b returns -1
+    if (dateA.year > dateB.year) return 1; 
+    if (dateA.year < dateB.year) return -1;
+    if (dateA.month > dateB.month) return 1;
+    if (dateA.month < dateB.month) return -1;
+    if (dateA.day > dateB.day) return 1;
+    if (dateA.day < dateB.day) return -1;
 
     return 0;
 }
+

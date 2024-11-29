@@ -24,7 +24,7 @@ ArtistManager* initializeHashArtist () {
     }
     a_mngr->artist = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteArtist);
     return a_mngr;
-}
+} //g_int instead of g_hash
 
 void freeHashArtist (ArtistManager* a_mngr) {
     g_hash_table_destroy (a_mngr->artist);
@@ -47,6 +47,12 @@ bool isArtistInHash (ArtistManager *a_mngr, int id) {
     else return 1;
 }
 
+bool getArtistTypeHash (int id, ArtistManager* mngr) {
+    Artist* artist = g_hash_table_lookup (mngr->artist, GINT_TO_POINTER(id));
+    if (artist == NULL) return 0;
+    return getArtistType (artist);
+}
+
 int getDataArtist (char *path, ArtistManager* mngr) {
     Output* output = openErrorOutputArtists ();
 
@@ -54,8 +60,7 @@ int getDataArtist (char *path, ArtistManager* mngr) {
     
     closeOutputFile (output); 
 
-    if (error) return 1;
-    else return 0;
+    return error;
 }
 
 // creates an artistString according to its tokens and validates them. 

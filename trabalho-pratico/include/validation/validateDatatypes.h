@@ -28,8 +28,6 @@ bool validMusic(MusicString*, ArtistManager*, AlbumManager*);
 
 bool validDuration(Duration);
 
-bool validArtistId(int*, int, ArtistManager*);
-
 bool validAlbumID(int, AlbumManager*);
 
 //ARTISTS
@@ -42,9 +40,14 @@ bool validType(char*);
 //LISTS
 bool validList (char*);
 
+bool validArtistId(int*, int, ArtistManager*);
+
 //HISTORY
 bool validHistory(HistoryString*);
 
 bool validPlatform(char*);
+
+//ALBUMS
+bool validAlbum(AlbumString* album, ArtistManager* a_mngr);
 
 #endif  

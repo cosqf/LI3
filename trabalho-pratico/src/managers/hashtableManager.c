@@ -3,6 +3,8 @@
 #include <userManager.h>
 #include <artistManager.h>
 #include <musicManager.h>
+#include <albumManager.h>
+#include <historyManager.h>
 #include <stdbool.h>
 
 typedef struct hashtableManager {
@@ -18,6 +20,8 @@ hashtableManager* initializeHash () {
     mngr->artist = initializeHashArtist();
     mngr->user = initializeHashUser();
     mngr->music = initializeHashMusic();
+    mngr->album = initializeHashAlbum();
+    mngr->history = initializeHashHistory();
     return mngr;
 }
 
@@ -25,6 +29,10 @@ void freeHash (hashtableManager *mngr) {
     if (mngr->artist) freeHashArtist (mngr->artist);
     if (mngr->user) freeHashUser (mngr->user);
     if (mngr->music) freeHashMusic (mngr->music);
+    if (mngr->album) freeHashAlbum (mngr->album);
+    if (mngr->history) { freeHashHistory (mngr->history);
+                         freeHistoryWeeks (mngr->history);
+    }
     free (mngr);
 }
 
@@ -48,7 +56,3 @@ HistoryManager* getHistoryManager (hashtableManager *mngr) {
     return mngr->history;
 }
 
-bool checkIfAlreadyInHashTable (int key, GHashTable* table) {
-    if (g_hash_table_lookup (table, GINT_TO_POINTER(key)) == NULL) return false;
-    else return true;
-}

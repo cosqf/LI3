@@ -44,7 +44,8 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     if (lengthHash < topN) limit = lengthHash;
     else limit = topN;
     
-    char* filePath = getPathFileToQuery2 (cmdCounter);
+    char filePath[50];
+    snprintf (filePath, sizeof(filePath),"resultados/command%d_output.txt", cmdCounter);
     Output* output = openOutputFile (filePath);
     
     if (limit == 0) writeNewLine(output);
@@ -56,7 +57,6 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
         deleteArtist (artist);
     }
     closeOutputFile (output);
-    free (filePath);
     free (hashArray);
     free (country);
     deleteHash(hashDuration);
@@ -120,15 +120,4 @@ void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output) {
     free (name);
     free(artist_country);
     free(duration);
-}
-
-char* getPathFileToQuery2 (int i) {
-    int required_size = 31 + 2 + 1; // characters + number + terminator
-
-    char* fullpath = malloc(required_size);
-    if (mallocErrorCheck (fullpath)) exit(EXIT_FAILURE);
-
-    snprintf(fullpath, required_size, "resultados/command%d_output.txt", i);
-    
-    return fullpath;
 }

@@ -1,13 +1,15 @@
 #include <stdio.h>
-
 #include <principal.h>
 #include <parsingUtils.h>
 #include <parsing.h>
 #include <utils.h>
 #include <cmd.h>
+
 #include <query1.h>
 #include <query2.h>
 #include <query3.h>
+#include <query4.h>
+
 #include <hashtableManager.h>
 #include <cmdManager.h>
 
@@ -25,7 +27,7 @@ int main (int argc, char** argv){
 int principal (char* pathData, char* pathCmd) {
     hashtableManager* mngr = initializeHash ();
 
-    getData (pathData, mngr);
+    if (getData (pathData, mngr)) return 1;
 
     cmdManager* cmdMngr = createCmdManager ();
     int cmdNumber = parseCmdFile (pathCmd, cmdMngr);
@@ -34,7 +36,6 @@ int principal (char* pathData, char* pathCmd) {
         freeHash (mngr);
         return 1;
     }
-
     for (int i = 0; i< cmdNumber; i++) {
         CMD* cmd = getCommandFromMngr (cmdMngr, i);
         
@@ -50,7 +51,17 @@ int principal (char* pathData, char* pathCmd) {
         case 3:
             query3 (cmd, getUserManager(mngr), getMusicManager(mngr), i+1);
             break;
+            
+        case 4:
+            query4 (cmd, getHistoryManager (mngr), getMusicManager (mngr), getArtistManager (mngr), i+1);
+            break;
+        
+        case 5:
+            break;
 
+        case 6:
+            break;
+            
         default:
             perror ("CMD ERROR");
             exit (EXIT_FAILURE);

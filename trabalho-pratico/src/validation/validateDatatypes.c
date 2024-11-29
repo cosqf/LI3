@@ -117,10 +117,14 @@ bool validMusic(MusicString* music, ArtistManager *a_mngr, AlbumManager *al_mngr
     char* albumIDString = getMusicAlbumIDString(music);
     int albumID, temp;
     if (convertToInt (trimString(albumIDString) + 2, &temp)) albumID = temp;
-    else exit (EXIT_FAILURE);
+    else {
+        perror ("Error converting id in Valid Music\n");
+        return 1;
+    }
 
     bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr) && validAlbumID(albumID, al_mngr));
 
+    free (albumIDString);
     free (durString);
     free (idsString);
     free (ids);
@@ -138,18 +142,6 @@ bool validDuration(Duration duration){
     return false;
 }
 
-// Validates the music's artist ID, ensuring they are all existent and valid artists
-bool validArtistId(int* id, int n, ArtistManager *a_mngr){    
-    int i;
-
-    for(i = 0; i < n && isArtistInHash (a_mngr, id[i]); i++);
-    
-
-    if (i == n) return true;
-
-    return false;
-}
-
 // Validates the music's album ID, ensuring it is an existent and valid album
 bool validAlbumID(int id, AlbumManager *al_mngr){
 
@@ -162,7 +154,8 @@ bool validAlbumID(int id, AlbumManager *al_mngr){
 
 // Validates the artist as a whole
 bool validArtist(ArtistString* artist){
-    char* type = lower(getArtistTypeString(artist)); 
+    char* artistType = getArtistTypeString(artist);
+    char* type = lower(artistType); 
     int constituentCounter = getArtistIDConstituentCounterString(artist);
     char* constituents = getArtistIDConstituentString(artist);
 
@@ -170,6 +163,7 @@ bool validArtist(ArtistString* artist){
 
     free (type);
     free (constituents);
+    free (artistType);
 
     return valid;
 }
@@ -202,16 +196,30 @@ bool validList (char* idList) {
     return true;
 }
 
+// Validates the list's artist ID, ensuring they are all existent and valid artists
+bool validArtistId(int* id, int n, ArtistManager *a_mngr){    
+    int i;
+
+    for(i = 0; i < n && isArtistInHash (a_mngr, id[i]); i++);
+    
+
+    if (i == n) return true;
+
+    return false;
+}
+
 
 //HISTORY
 
 // Validates the history entry
 bool validHistory(HistoryString* history){
-    char* platform = lower(getHistoryPlatformString(history));
+    char* historyPlatform = getHistoryPlatformString(history);
+    char* platform = lower(historyPlatform);
 
     bool valid = validPlatform(platform);
 
     free(platform);
+    free (historyPlatform);
 
     return valid;
 }
@@ -222,4 +230,21 @@ bool validPlatform(char* platform){
     if(strcmp(trimString(platform), "mobile") == 0 || strcmp(trimString(platform), "desktop") == 0) return true;
 
     return false;
+}
+
+
+//ALBUM
+
+// Validates the album as a whole
+bool validAlbum(AlbumString* album, ArtistManager* a_mngr){
+    char* idsString = getAlbumArtistIdString(album);
+    int* ids = parseIDs (idsString);
+    int artistIDCount = getAlbumArtistIdCountString(album);
+
+    bool valid = validArtistId(ids, artistIDCount, a_mngr) && validList(idsString);
+
+    free (idsString);
+    free (ids);
+    
+    return valid;
 }

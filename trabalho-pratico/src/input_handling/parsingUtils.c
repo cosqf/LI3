@@ -4,17 +4,18 @@
 #include <stdlib.h>
 #include <utils.h>
 
+Timestamp parseTimestamp (char* string) {
+    char* date = strsep (&string, " ");
+    Timestamp timestamp;
+    timestamp.date = parseDate (date);
+    timestamp.hour = parseDuration (trimString (string));
+    return timestamp;
+}
 
 Date parseDate(char* dateStr) {
     Date date;
 
     if (sscanf(dateStr, "%d/%d/%d", &date.year, &date.month, &date.day) != 3) date.error = 1;
-    // else if (date.year > 2024) date.error = 1;
-    // else if (date.year == 2024){
-    //     if (date.month > 9) date.error = 1;
-    //     if (date.month == 9 && (date.day < 1 || date.day > 9)) date.error = 1;
-    // }
-    // else if (date.month < 1 || date.month > 12 || date.day < 1 || date.day > 31) date.error = 1;
     else date.error = 0;
 
     return date;

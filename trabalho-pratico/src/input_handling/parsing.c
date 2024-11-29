@@ -1,46 +1,43 @@
 #include <parsing.h>
 #include <utils.h>
 #include <output_handling/errorfiles.h>
-#include <userManager.h>
 #include <cmdManager.h>
 
-/* 1. Artists, because it doesn't mess with any other hashtable
-   2. Musics, because it needs the artists' hastable for validation
-   3. Users, because it needs the musics' hashtable for validation
+/* 1. Artists, because it doesn't mess with any other entity
+   2. Albums, because it needs the artists for validation
+   3. Musics, because it needs the albums for validation
+   4. Users, because it needs the musics for validation
+   5. History,
 */
 
-void getData (char *path, hashtableManager *mngr) {
+int getData (char *path, hashtableManager *mngr) {
+    bool error = 0;
     char *artistPath = changePath(path, Artists);
-    if (getDataArtist (artistPath, getArtistManager (mngr))) {
-        free (artistPath);
-        return;
-    }
-
+    char *albumPath = changePath(path, Albums);
     char *musicPath = changePath(path, Musics);
-    if (getDataMusic (musicPath, mngr)) {
-        free (artistPath);
-        free (musicPath);
-        freeHash (mngr);
-    }
-
     char *userPath = changePath(path, Users);
-    if (getDataUser (userPath, mngr)) {
-        free (artistPath);
-        free (musicPath);
-        free (userPath);
-        freeHash (mngr);
-    }
-    
+    char *historyPath = changePath(path, Historys);
+
+    if      (getDataArtist (artistPath, getArtistManager (mngr))) error = 1;
+    else if (getDataAlbum (albumPath, mngr)) error = 1;
+    else if (getDataMusic (musicPath, mngr)) error = 1;
+    else if (getDataUser (userPath, mngr)) error = 1;
+    else if (getDataHistory (historyPath, getHistoryManager(mngr))) error = 1;
+
+    if (error) freeHash (mngr);
+
     free(artistPath);
+    free(albumPath);
     free(musicPath);
     free(userPath);
+    free(historyPath);
+
+    return error;
 }
 
 // opens a file, gets its tokens and processes the line accordingly using a callback 
 int parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
     FILE* fileData = openFile (pathToFile);
-    if (!fileData) return 1;
-
     char str[DEFAULT];
     if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
             perror ("skipping artist header error");
@@ -124,6 +121,8 @@ char* changePath(char *path, DataType type) {
     if (type == Users) file = "/users.csv";
     else if (type == Musics) file = "/musics.csv";
     else if (type == Artists) file = "/artists.csv";
+    else if (type == Albums) file = "/albums.csv";
+    else if (type == Historys) file = "/history.csv";
     else {
         perror ("changePath datatype error");
         exit (EXIT_FAILURE);

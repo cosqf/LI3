@@ -12,42 +12,40 @@ typedef struct historyManager {
 } HistoryManager;
 
 
-void insertHistoryHash (HistoryManager *h_mngr, int key, History *history) {
-    g_hash_table_insert(h_mngr->history, GINT_TO_POINTER (key), history);
-}
-
-int lengthHistory (HistoryManager* mngr) {
-    return g_hash_table_size(mngr->history);
-}
-
 // tree
 
 gint compareDateGlib(const void* a, const void* b) {
     const Date* dateA = (const Date*)a;
     const Date* dateB = (const Date*)b;
 
-    if (dateA->year > dateB->year) return -1; 
-    if (dateA->year < dateB->year) return 1;
-    if (dateA->month > dateB->month) return -1;
-    if (dateA->month < dateB->month) return 1;
-    if (dateA->day > dateB->day) return -1;
-    if (dateA->day < dateB->day) return 1;
+    if (dateA->year > dateB->year) return 1; 
+    if (dateA->year < dateB->year) return -1;
+    if (dateA->month > dateB->month) return 1;
+    if (dateA->month < dateB->month) return -1;
+    if (dateA->day > dateB->day) return 1;
+    if (dateA->day < dateB->day) return -1;
 
     return 0;
 }
 
-GTree* initializeHistoryTree() {
-    return g_tree_new((GCompareFunc)compareDateGlib);
+void initializeHistoryTree(HistoryManager* mngr ) {
+    mngr->historyInWeeks = g_tree_new((GCompareFunc)compareDateGlib);
 }
 
-void insertInHistoryWeeks (HistoryManager* mngr, void* top10artistWeek, Date firstDayOfWeek) {
+bool historyTreeIsInitialized (HistoryManager* mngr) {
+    if (mngr->historyInWeeks) return 1;
+    else return 0;
+}
+
+void insertInHistoryByWeeks (HistoryManager* mngr, void* top10artistWeek, Date firstDayOfWeek) {
     Date* key = malloc(sizeof(Date));
+        if (mallocErrorCheck (key)) return;   
     *key = firstDayOfWeek; // a copy
 
     g_tree_insert (mngr->historyInWeeks, key, top10artistWeek);
 }
 
-void destroyHistoryWeeks(HistoryManager* mngr) {
+void freeHistoryWeeks(HistoryManager* mngr) {
     g_tree_destroy(mngr->historyInWeeks);
 }
 
@@ -56,13 +54,43 @@ void traverseTreeInRange(HistoryManager* mngr, gboolean callback(gpointer key, g
     g_tree_foreach(tree, callback, feeder);
 }
 
+// hash 
 
-void getDataHistory (char *path, HistoryManager* mngr) {
+HistoryManager* initializeHashHistory () {
+    HistoryManager* h_mngr = malloc (sizeof (HistoryManager));
+    if (h_mngr == NULL) {
+        perror("Failed to allocate memory for HistoryManager");
+        exit(EXIT_FAILURE); 
+    }
+    h_mngr->history = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistory);
+    h_mngr->historyInWeeks = NULL;
+    return h_mngr;
+}
+
+void freeHashHistory (HistoryManager* h_mngr) {
+    g_hash_table_destroy (h_mngr->history);
+    free (h_mngr);
+}
+
+void insertHistoryHash (HistoryManager *h_mngr, int key, History *history) {
+    g_hash_table_insert(h_mngr->history, GINT_TO_POINTER (key), history);
+}
+
+int lengthHistory (HistoryManager* mngr) {
+    return g_hash_table_size(mngr->history);
+}
+
+
+// get data
+
+int getDataHistory (char *path, HistoryManager* mngr) {
     Output* output = openErrorOutputHistory ();
 
-    parseFile(path, callbackHistory, mngr, output);
+    int error = parseFile(path, callbackHistory, mngr, output);
 
     closeOutputFile (output); 
+    
+    return error;
 }
 
 
@@ -75,20 +103,20 @@ void callbackHistory(char **tokens, void *manager, Output *output) {
     if (!validHistory(historyS)) insertErrorFileHistory(historyS, output);
     else {
         History* history = createHistory (tokens);
-        insertHistoryHash(historyManager, getHistoryUserId(history), history);
+        insertHistoryHash(historyManager, getHistoryId(history), history);
     }
     deleteHistoryString(historyS);
 }
 
 int compareTimestamp(const void* a, const void* b) {
-    History* historyA = (History*) a;
-    History* historyB = (History*) b;
+    History* historyA = *(History**)a; // need to dereference due to qsort
+    History* historyB = *(History**)b;
 
-    Date dateA = getHistoryTimestamp (historyA);
-    Date dateB = getHistoryTimestamp (historyB);
+    Date dateA = (getHistoryTimestamp (historyA)).date;
+    Date dateB = (getHistoryTimestamp (historyB)).date;
 
     int c = compareDate (dateA, dateB);
-
+    
     return c;
 }
  
@@ -101,7 +129,7 @@ History** sortHistory (HistoryManager* manager) {
 
     int lengthHash = g_hash_table_size (hash);
     History** hashArray = malloc (sizeof (History*) * lengthHash);
-    if (mallocErrorCheck (hashArray)) {
+    if (hashArray == NULL) {
         perror ("Malloc error in sortHistory\n");
         return NULL;
     }
@@ -113,7 +141,25 @@ History** sortHistory (HistoryManager* manager) {
         i++;
     }
 
-    qsort (hashArray, lengthHash, sizeof(Tuple), compareTimestamp);
+    qsort (hashArray, lengthHash, sizeof(History*), compareTimestamp);
 
     return hashArray;
+}
+
+// Callback function for g_hash_table_foreach
+void printKeyValue(gpointer key, gpointer value, gpointer user_data) {
+    int id = GPOINTER_TO_INT(key);      // Convert key back to int
+    int seconds = GPOINTER_TO_INT(value); // Convert value back to int
+
+    printf("ID: %d, Seconds: %d\n", id, seconds);
+}
+
+void printHash(GHashTable* hash) {
+    if (!hash) {
+        printf("Hash table is NULL.\n");
+        return;
+    }
+    printf("---- Hash Table Contents ----\n");
+    g_hash_table_foreach(hash, printKeyValue, NULL);  // Iterate and print each key-value pair
+    printf("-----------------------------\n");
 }

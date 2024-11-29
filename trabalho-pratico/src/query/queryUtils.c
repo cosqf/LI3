@@ -10,20 +10,21 @@ int compareTuple(const void* a, const void* b) {
 
     if (tupleA->value > tupleB->value) return -1;  // descending order
     if (tupleA->value < tupleB->value) return 1;
+
+    if (tupleA->key < tupleB->key) return -1;  // if the values are the same, compare the ids too
+    if (tupleB->key > tupleB->key) return 1;   // smaller id first
     return 0;
 }
 
-void updateHash(int id, GHashTable* newtable, int newValue) {
-    gpointer key, value;
-    
-    // the artist is already in the new table
-    if (g_hash_table_lookup_extended (newtable, GINT_TO_POINTER(id), &key, &value)) {
+void updateHash(int id, GHashTable* table, int newValue) {
+    gpointer value = g_hash_table_lookup(table, GINT_TO_POINTER(id));
+    if (value) {     // the artist is already in the new table
         int updatedValue = GPOINTER_TO_INT(value) + newValue;
-        // update newValue
-        g_hash_table_replace(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(updatedValue));
+        g_hash_table_replace(table, GINT_TO_POINTER(id), GINT_TO_POINTER(updatedValue));
     }
-    // it isnt, so we need to add it
-    else g_hash_table_insert(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(newValue));
+    else {// it isnt, so we need to add it
+        g_hash_table_insert(table, GINT_TO_POINTER(id), GINT_TO_POINTER(newValue));
+    }
 }
 
 // Transforms the hash table into a Tuple array and sorts it

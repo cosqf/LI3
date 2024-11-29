@@ -6,22 +6,32 @@
 #define _HISTORYMANAGER_H_
 
 typedef struct historyManager HistoryManager;
-void callbackHistory(char **tokens, void *manager, Output *output);
-void getDataHistory (char *path, HistoryManager* mngr);
+
+void insertHistoryHash (HistoryManager *h_mngr, int key, History *history);
+
+HistoryManager* initializeHashHistory ();
+
+void freeHashHistory (HistoryManager* h_mngr);
+
+int getDataHistory (char *path, HistoryManager* mngr);
 int lengthHistory (HistoryManager* mngr);
 History** sortHistory (HistoryManager* mngr);
 
 
+void printHash(GHashTable* hash);
+
 // trees
 
-GTree* initializeHistoryTree();
+void initializeHistoryTree(HistoryManager* mngr);
 
-void insertInHistoryWeeks (HistoryManager* mngr, void* top10artistWeek, Date firstDayOfWeek);
+void insertInHistoryByWeeks (HistoryManager* mngr, void* top10artistWeek, Date firstDayOfWeek);
 
-void freeKeyAndValue(gpointer key, gpointer value, gpointer user_data);
+bool historyTreeIsInitialized (HistoryManager* mngr);
 
-void destroyHistoryWeeks(HistoryManager* mngr);
+void freeHistoryWeeks(HistoryManager* mngr);
 
 void traverseTreeInRange(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder);
+
+void callbackHistory(char **tokens, void *manager, Output *output);
 
 #endif

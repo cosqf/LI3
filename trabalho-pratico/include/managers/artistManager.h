@@ -21,6 +21,8 @@ char* lookupArtistCountryHash (ArtistManager *a_mngr, int id);
 
 int getDataArtist (char *path, ArtistManager* mngr);
 
+bool getArtistTypeHash (int id, ArtistManager* mngr);
+
 void callbackArtist(char **tokens, void *manager, Output *output);
 
 #endif
