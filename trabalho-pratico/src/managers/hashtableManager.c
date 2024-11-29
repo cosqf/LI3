@@ -30,9 +30,7 @@ void freeHash (hashtableManager *mngr) {
     if (mngr->user) freeHashUser (mngr->user);
     if (mngr->music) freeHashMusic (mngr->music);
     if (mngr->album) freeHashAlbum (mngr->album);
-    if (mngr->history) { freeHashHistory (mngr->history);
-                         freeHistoryWeeks (mngr->history);
-    }
+    if (mngr->history) freeHistory (mngr->history);
     free (mngr);
 }
 

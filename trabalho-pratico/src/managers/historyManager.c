@@ -5,6 +5,7 @@
 #include <historyManager.h>
 #include <parsing.h>
 #include <utils.h>
+#include <query4.h>
 
 typedef struct historyManager {
     GHashTable *history;
@@ -14,7 +15,8 @@ typedef struct historyManager {
 
 // tree
 
-gint compareDateGlib(const void* a, const void* b) {
+gint compareDateGlib(const void* a, const void* b, gpointer user_data) {
+    (void) user_data;
     const Date* dateA = (const Date*)a;
     const Date* dateB = (const Date*)b;
 
@@ -29,7 +31,7 @@ gint compareDateGlib(const void* a, const void* b) {
 }
 
 void initializeHistoryTree(HistoryManager* mngr ) {
-    mngr->historyInWeeks = g_tree_new((GCompareFunc)compareDateGlib);
+    mngr->historyInWeeks = g_tree_new_full((GCompareDataFunc)compareDateGlib, NULL, (GDestroyNotify) free, (GDestroyNotify) freeArtistList);
 }
 
 bool historyTreeIsInitialized (HistoryManager* mngr) {
@@ -43,10 +45,6 @@ void insertInHistoryByWeeks (HistoryManager* mngr, void* top10artistWeek, Date f
     *key = firstDayOfWeek; // a copy
 
     g_tree_insert (mngr->historyInWeeks, key, top10artistWeek);
-}
-
-void freeHistoryWeeks(HistoryManager* mngr) {
-    g_tree_destroy(mngr->historyInWeeks);
 }
 
 void traverseTreeInRange(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder) {
@@ -67,8 +65,9 @@ HistoryManager* initializeHashHistory () {
     return h_mngr;
 }
 
-void freeHashHistory (HistoryManager* h_mngr) {
+void freeHistory (HistoryManager* h_mngr) {
     g_hash_table_destroy (h_mngr->history);
+    g_tree_destroy(h_mngr->historyInWeeks);
     free (h_mngr);
 }
 
@@ -148,6 +147,7 @@ History** sortHistory (HistoryManager* manager) {
 
 // Callback function for g_hash_table_foreach
 void printKeyValue(gpointer key, gpointer value, gpointer user_data) {
+    (void) user_data;
     int id = GPOINTER_TO_INT(key);      // Convert key back to int
     int seconds = GPOINTER_TO_INT(value); // Convert value back to int
 

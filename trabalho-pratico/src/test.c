@@ -75,7 +75,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
             q1c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
 
-            query1 (cmd, getUserManager(mngr), getArtistManager(mngr), i+1);
+            query1 (cmd, mngr, i);
 
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q1total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
@@ -121,7 +121,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
             q4c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
 
-            query4 (cmd, getHistoryManager (mngr), getMusicManager (mngr), getArtistManager (mngr), i+1);
+            query4 (cmd, getHistoryManager (mngr), getMusicManager (mngr), getArtistManager (mngr), i);
 
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q4total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;

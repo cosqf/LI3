@@ -67,7 +67,10 @@ void adjustDateLimits(Date *dateMin, Date *dateMax) { // will subtract the days 
         weekdayMax = getWeekday(*dateMax);
     }
 }
-
+void freeArtistList (ArtistList* list) {
+    free(list->artistsIds);
+    free (list);
+}
 
 // function to process the top 10 artists for a week, will update history manager with the weekly array of artists
 void processWeeklyTop10(GHashTable* topArtistsWeek, HistoryManager* mngr, Date firstDayOfWeek) {
@@ -159,23 +162,23 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
     Date minDate = data->minDay;
     Date maxDate = data->maxDay;
     GHashTable* artistsTimeInTop = data->table;
+    ArtistList* list = value;
     bool filter = data->isFilterOn;
 
     if (filter) {
-        if (compareDate(maxDate, *date) < 0) return TRUE; // stops search early  
+        if (compareDate(*date, maxDate) > 0) return TRUE; // stops search early  
 
-        if (compareDate(minDate, *date) >= 0) {
-            ArtistList* list = value;
-            
+        if (compareDate(*date, minDate) >= 0) {
             for (int i = 0; i < list->count; i++) {
                 int artistId = list->artistsIds[i].key;
                 updateHash (artistId, artistsTimeInTop, 1);
             }
+            //printf ("\n\nprinting list for date: %d/%d/%d\n", date->day,date->month,date->year);
+            //for (int i = 0; i< list->count; i++) printf ("artist %d with %d, ",list->artistsIds[i].key, list->artistsIds[i].value);
         }
+
     }
-    else {
-        ArtistList* list = value;
-            
+    else {      
             for (int i = 0; i < list->count; i++) {
                 int artistId = list->artistsIds[i].key;
                 updateHash (artistId, artistsTimeInTop, 1);
@@ -185,8 +188,8 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
 }
 
 
-
 void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManager, ArtistManager* artistManager, int cmdCounter) {
+    //printf ("\n\n\n\n\n\n\n\n\n\n\n\n q%d \n", cmdCounter);
     Date minDay = getCMDdateMin (cmd);
     Date maxDay = getCMDdateMax (cmd);
     GHashTable* artistsTimeInTop = createHash(); // will store the artists with the number of times they were on the top 10
@@ -229,6 +232,7 @@ void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManage
 
     setOutput (output, lines, 3);
     writeQuerys (output, cmd);
+    closeOutputFile (output);
 
     free (array);
     deleteHash (artistsTimeInTop);

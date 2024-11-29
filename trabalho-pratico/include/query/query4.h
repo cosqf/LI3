@@ -11,5 +11,5 @@ typedef struct {
     int count;
 } ArtistList;
 
-
+void freeArtistList (ArtistList* list) ;
 #endif

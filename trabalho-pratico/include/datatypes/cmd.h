@@ -11,6 +11,8 @@ void freeCmd (CMD *cmd);
 
 int getCMDquery (CMD* cmd);
 
+char getCMDentity (CMD* cmd);
+
 int getCMDId (CMD* cmd);
 
 int getCMDtopN (CMD* cmd);

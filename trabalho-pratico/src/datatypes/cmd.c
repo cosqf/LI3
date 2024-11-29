@@ -6,24 +6,26 @@
 #include <cmd.h>
 
 typedef struct cmd {
-    int query;     // 1, 2, or 3
-    int id;         // user ID
-    int topN;       // top N places
-    char *paises;   // (requires memory allocation)
-    int ageMin;     // minimum age
-    int ageMax;     // maximum age
-    Date dateMin;   // minimum date
-    Date dateMax;   // max date
-    int noUsers;    // number of users to compare with
-    short int year; // year
+    int query;          // 1, 2, 3, 4, 5, or 6
+    char entity;       // A or U (Q1)
+    int id;             // entity ID
+    int topN;           // top N places
+    char *paises;       // (requires memory allocation)
+    int ageMin;         // minimum age
+    int ageMax;         // maximum age
+    Date dateMin;       // minimum date
+    Date dateMax;       // max date
+    int noUsers;        // number of users to compare with
+    short int year;     // year
     short int nArtists; // number of artists
-    char separator; // separator for output (';' or '=')
+    char separator;     // separator for output (';' or '=')
 } CMD;
 
 CMD* createCMD (char** tokens, int counter) {
     CMD* cmd = malloc(sizeof(CMD));
     if (mallocErrorCheck (cmd)) exit (EXIT_FAILURE);
     cmd->query = -1;
+    cmd->entity = '\0';
     cmd->id = -1;
     cmd->topN = -1;
     cmd->paises = NULL;
@@ -51,6 +53,7 @@ CMD* createCMD (char** tokens, int counter) {
     }
     switch (cmd->query) {
     case 1:
+        cmd->entity = tokens[1][0];//strdup(tokens[1][0]);
         int id;
         if (tokens[1] && convertToInt (tokens[1]+1, &id)) cmd->id = id;
         break;
@@ -87,12 +90,19 @@ CMD* createCMD (char** tokens, int counter) {
 }
 
 void freeCmd (CMD *cmd) {
+    //if (cmd->entity) free (cmd->entity);
     if (cmd->paises) free (cmd->paises);
     free (cmd);
 }
 
 int getCMDquery (CMD* cmd) {
     return cmd->query;
+}
+
+char getCMDentity (CMD* cmd) {
+    //if (cmd->entity == NULL) return NULL;
+    //else return strdup (cmd->entity);
+    return cmd->entity;
 }
 
 int getCMDId (CMD* cmd) {
