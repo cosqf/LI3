@@ -7,7 +7,7 @@
 #include <output_handling/outputWriter.h>
 
 
-void query1(CMD* cmd, UserManager *u_mngr, ArtistManager *a_mngr, int counter) {
+void query1(CMD* cmd, hashtableManager* mngr, int counter) {
     char filename[50];  // buffer for the formatted file name
 
     // Format the filename with the counter value
@@ -15,22 +15,19 @@ void query1(CMD* cmd, UserManager *u_mngr, ArtistManager *a_mngr, int counter) {
 
     Output* output = openOutputFile (filename);
 
+    char entity = getCMDentity(cmd);
     int ID = getCMDId(cmd);
-    User* user = lookupUserHash(u_mngr, ID);
 
-    if (user) {
-        userinfo(cmd, user, output);
-    } else {
+    if (entity == 'A') {
+        ArtistManager* a_mngr = getArtistManager(mngr);
         Artist* artist = lookupArtistHash(a_mngr, ID);
-
-        if (artist) {
-            artistinfo(cmd, artist, output);
-        } else {
-            writeNewLine(output);
-            deleteArtist(artist);
-            deleteUser(user);
-        }
-
+        if (!artist) writeNewLine(output);
+        else artistinfo(cmd, mngr, artist, output);
+    } else if (entity == 'U') {
+        UserManager* u_mngr = getUserManager(mngr);
+        User* user = lookupUserHash(u_mngr, ID);
+        if (!user) writeNewLine(output);
+        else userinfo(cmd, user, output);
     }
 
     closeOutputFile(output);
@@ -64,7 +61,7 @@ void userinfo (CMD* cmd, User* user, Output* file) {
 }
 
 
-void artistinfo (CMD* cmd, Artist* artist, Output* file) {
+void artistinfo (CMD* cmd, hashtableManager* mngr, Artist* artist, Output* file) {
     char* lines[5] = {NULL};
 
     lines[0] = getArtistName(artist);
@@ -73,19 +70,34 @@ void artistinfo (CMD* cmd, Artist* artist, Output* file) {
     else lines[1] = "individual";
 
     lines[2] = getArtistCountry(artist);
-
-    lines[3] = "2"; //num_albums_individual
     
-    lines[4] = "3"; //total_recipe
+    static char indAlbums[5];
+    snprintf(indAlbums, sizeof(indAlbums), "%d", individualAlbums(mngr, artist));
+    lines[3] = indAlbums;
+
+    static char tRecipe [10];
+    snprintf(tRecipe, sizeof(tRecipe), "%.2f", totalRecipe(mngr, artist));
+    lines[4] = tRecipe;
 
     setOutput(file, lines, 5);
 
     writeQuerys(file, cmd);
 
     free(lines[0]);
-    free(lines[1]);
     free(lines[2]);
-    free(lines[4]);
 
     deleteArtist(artist);
+}
+
+
+int individualAlbums (hashtableManager* mngr, Artist* artist) {
+    AlbumManager* al_mngr = getAlbumManager(mngr);
+
+    return 2;
+}
+
+double totalRecipe (hashtableManager* mngr, Artist* artist) {
+    HistoryManager* h_mngr = getHistoryManager(mngr);
+
+    return 1.42;
 }

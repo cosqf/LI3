@@ -35,7 +35,7 @@ int principal (char* pathData, char* pathCmd) {
         
         switch (getCMDquery (cmd)) {
         case 1:
-            query1 (cmd, getUserManager(mngr), getArtistManager(mngr), i+1);
+            query1 (cmd, mngr, i+1);
             break;
 
         case 2:
