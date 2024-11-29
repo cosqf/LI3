@@ -40,9 +40,9 @@ bool isAlbumInHash (AlbumManager *al_mngr, int id) {
 
 void getDataAlbum (char* path, hashtableManager* mngr) {
     Output* output = openErrorOutputAlbum ();
-    printf("Albums error file opened!\n"); //DEBUG
+
     parseFile(path, callbackAlbum, mngr, output);
-    printf("Albums file parsed!\n"); //DEBUG
+
     closeOutputFile (output); 
 }
 

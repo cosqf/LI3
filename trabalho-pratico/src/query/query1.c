@@ -31,7 +31,6 @@ void query1(CMD* cmd, hashtableManager* mngr, int counter) {
     }
 
     closeOutputFile(output);
-    //free (entity);
 }
 
 
@@ -86,7 +85,6 @@ void artistinfo (CMD* cmd, hashtableManager* mngr, Artist* artist, Output* file)
 
     free(lines[0]);
     free(lines[2]);
-    //free(lines[4]);
 
     deleteArtist(artist);
 }

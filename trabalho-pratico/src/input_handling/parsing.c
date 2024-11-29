@@ -18,15 +18,10 @@ void getData (char *path, hashtableManager *mngr) {
     char *historyPath = changePath(path, Historys);
 
     getDataArtist (artistPath, getArtistManager (mngr));
-    printf("Artists done!\n"); //DEBUG
     getDataAlbum (albumPath, mngr);
-    printf("Albums done!\n"); //DEBUG
     getDataMusic (musicPath, mngr);
-    printf("Musics done!\n"); //DEBUG
     getDataUser (userPath, mngr);
-    printf("Users done!\n"); //DEBUG
     getDataHistory (historyPath, getHistoryManager(mngr));
-    printf("History done!\n"); //DEBUG
     
     free(artistPath);
     free(albumPath);
@@ -38,20 +33,17 @@ void getData (char *path, hashtableManager *mngr) {
 // opens a file, gets its tokens and processes the line accordingly using a callback 
 void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
     FILE* fileData = openFile (pathToFile);
-    printf("File opened!\n");
     char str[DEFAULT];
     if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
             perror ("skipping file header error");
             exit(EXIT_FAILURE);
         }
-    printf("Going strong!\n"); //DEBUG
     while (fgets (str, sizeof (str), fileData) != NULL) {
         char* tokens[8];
         parseLine(str, tokens, ";");
         processLine (tokens, manager, output);
     }
     fclose (fileData);
-    printf("File closed!\n"); //DEBUG
 }
 
 // divides a line in tokens
@@ -63,10 +55,9 @@ int parseLine(char* line, char* tokens[], const char* separator) {
   while ((token = strsep(&line, separator)) != NULL) {
     if (*token == '\0') continue;
     tokens[tokenCount] = token;
-    //printf("Token[%d]: %s\n", tokenCount, token); //DEBUG
     tokenCount++;
   }
-  //printf("\n"); //DEBUG 
+
   return tokenCount;
 }
 
