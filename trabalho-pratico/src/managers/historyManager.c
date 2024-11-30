@@ -67,7 +67,7 @@ HistoryManager* initializeHashHistory () {
 
 void freeHistory (HistoryManager* h_mngr) {
     g_hash_table_destroy (h_mngr->history);
-    g_tree_destroy(h_mngr->historyInWeeks);
+    if (h_mngr->historyInWeeks) g_tree_destroy(h_mngr->historyInWeeks);
     free (h_mngr);
 }
 
