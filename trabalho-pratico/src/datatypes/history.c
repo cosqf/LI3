@@ -8,7 +8,7 @@ typedef struct history {
     int id;                   //– identificador único do registo;
     int user_id;              //– identificador único do utilizador a que o registo se refere;
     int music_id;             //– identificador único da música a que o registo se refere;
-    Timestamp timestamp;           //– data e hora em que a música foi ouvida pelo utilizador;
+    Timestamp timestamp;      //– data e hora em que a música foi ouvida pelo utilizador;
     Duration duration;        //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
     History* next;
 } History;
@@ -55,43 +55,6 @@ void deleteHistory(History* history) {
     }
 }
 
-// Clones a History node
-History* cloneHistoryNode(const History* node) {
-    if (!node) return NULL;
-
-    History* newNode = malloc(sizeof(History));
-    if (!newNode) {
-        perror("Failed to allocate memory for History node");
-        exit(EXIT_FAILURE);
-    }
-
-    newNode->id = node->id;
-    newNode->user_id = node->user_id;
-    newNode->music_id = node->music_id;
-    newNode->timestamp = node->timestamp;
-    newNode->duration = node->duration;
-
-    newNode->next = NULL;
-
-    return newNode;
-}
-
-// Clones a linked list
-History* cloneHistoryList(const History* head) {
-    if (!head) return NULL;
-
-    History* newHead = cloneHistoryNode(head);
-    History* current = newHead;
-    const History* iter = head->next;
-
-    while (iter) {
-        current->next = cloneHistoryNode(iter);
-        current = current->next;
-        iter = iter->next;
-    }
-
-    return newHead;
-}
 
 // GETTERs
 
@@ -129,10 +92,11 @@ History* getNextHistory (History* history) {
 
 // Setter for the next field
 History* setNextHistory (History* newNext, History* history) {
-    history->next = newNext;
+    History* tail = history;
+    while (tail->next != NULL) tail = tail->next;
+    tail->next = newNext;
     return history;
 }
-
 
 // String format 
 HistoryString* createHistoryString (char** tokens) {

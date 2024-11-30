@@ -13,10 +13,6 @@ History* createHistory (char** tokens);
 
 void deleteHistory (History* history);
 
-History* cloneHistoryNode(const History* node);
-
-History* cloneHistoryList(const History* head);
-
 HistoryString* createHistoryString (char** tokens);
 
 void deleteHistoryString (HistoryString* history);
