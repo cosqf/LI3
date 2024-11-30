@@ -69,7 +69,6 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
 
         char output[100];
         char expected[100];
-
         switch (getCMDquery (cmd)) {
         case 1:
             q1c++;

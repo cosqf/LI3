@@ -65,14 +65,18 @@ HistoryManager* initializeHashHistory () {
     return h_mngr;
 }
 
+void insertHistoryHash(HistoryManager *h_mngr, int key, History *history) {
+    History* existentHistory = g_hash_table_lookup(h_mngr->history, GINT_TO_POINTER(key));
+
+    if (existentHistory) setNextHistory(history, existentHistory);
+    else g_hash_table_insert(h_mngr->history, GINT_TO_POINTER(key), history);
+}
+
 void freeHistory (HistoryManager* h_mngr) {
+    if(!h_mngr) return;
     g_hash_table_destroy (h_mngr->history);
     if (h_mngr->historyInWeeks) g_tree_destroy(h_mngr->historyInWeeks);
     free (h_mngr);
-}
-
-void insertHistoryHash (HistoryManager *h_mngr, int key, History *history) {
-    g_hash_table_insert(h_mngr->history, GINT_TO_POINTER (key), history);
 }
 
 int lengthHistory (HistoryManager* mngr) {
@@ -102,7 +106,7 @@ void callbackHistory(char **tokens, void *manager, Output *output) {
     if (!validHistory(historyS)) insertErrorFileHistory(historyS, output);
     else {
         History* history = createHistory (tokens);
-        insertHistoryHash(historyManager, getHistoryId(history), history);
+        insertHistoryHash(historyManager, getHistoryUserId(history), history);
     }
     deleteHistoryString(historyS);
 }
@@ -136,11 +140,20 @@ History** sortHistory (HistoryManager* manager) {
     g_hash_table_iter_init(&iter, hash);
 
     while (g_hash_table_iter_next(&iter, &key, &value)) {
-        hashArray[i] = (History*) value;
-        i++;
+        History* hist = (History*) value;
+        while (hist) {
+            if (i >= lengthHash) {
+                lengthHash *= 2;
+                History** temp = realloc (hashArray, sizeof(History*) * lengthHash);
+                if (mallocErrorCheck (temp)) return NULL;
+                hashArray = temp;
+            }
+            hashArray[i++] = hist;
+            hist = getNextHistory (hist);
+        }
     }
 
-    qsort (hashArray, lengthHash, sizeof(History*), compareTimestamp);
+    qsort (hashArray, i, sizeof(History*), compareTimestamp);
 
     return hashArray;
 }
