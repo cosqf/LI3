@@ -31,6 +31,8 @@ CMD* createCMD (char** tokens, int counter) {
     cmd->paises = NULL;
     cmd->ageMin = -1;
     cmd->ageMax = -1;
+    cmd->dateMin = (Date) { .year = 0, .month = 0, .day = 0 };
+    cmd->dateMax = (Date) { .year = 0, .month = 0, .day = 0 };
     cmd->noUsers = 0;
     cmd->year = 0;
     cmd->nArtists = 0;

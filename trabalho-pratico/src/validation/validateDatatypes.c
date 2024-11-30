@@ -117,10 +117,14 @@ bool validMusic(MusicString* music, ArtistManager *a_mngr, AlbumManager *al_mngr
     char* albumIDString = getMusicAlbumIDString(music);
     int albumID, temp;
     if (convertToInt (trimString(albumIDString) + 2, &temp)) albumID = temp;
-    else exit (EXIT_FAILURE);
+    else {
+        perror ("Error converting id in Valid Music\n");
+        return 1;
+    }
 
     bool valid = (validDuration(dur) && validList(idsString) && validArtistId(ids, artistIDCount, a_mngr) && validAlbumID(albumID, al_mngr));
 
+    free (albumIDString);
     free (durString);
     free (idsString);
     free (ids);
@@ -150,7 +154,8 @@ bool validAlbumID(int id, AlbumManager *al_mngr){
 
 // Validates the artist as a whole
 bool validArtist(ArtistString* artist){
-    char* type = lower(getArtistTypeString(artist)); 
+    char* artistType = getArtistTypeString(artist);
+    char* type = lower(artistType); 
     int constituentCounter = getArtistIDConstituentCounterString(artist);
     char* constituents = getArtistIDConstituentString(artist);
 
@@ -158,6 +163,7 @@ bool validArtist(ArtistString* artist){
 
     free (type);
     free (constituents);
+    free (artistType);
 
     return valid;
 }
@@ -207,11 +213,13 @@ bool validArtistId(int* id, int n, ArtistManager *a_mngr){
 
 // Validates the history entry
 bool validHistory(HistoryString* history){
-    char* platform = lower(getHistoryPlatformString(history));
+    char* historyPlatform = getHistoryPlatformString(history);
+    char* platform = lower(historyPlatform);
 
     bool valid = validPlatform(platform);
 
     free(platform);
+    free (historyPlatform);
 
     return valid;
 }

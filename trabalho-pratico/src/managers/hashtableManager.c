@@ -26,11 +26,11 @@ hashtableManager* initializeHash () {
 }
 
 void freeHash (hashtableManager *mngr) {
-    freeHashArtist (mngr->artist);
-    freeHashUser (mngr->user);
-    freeHashMusic (mngr->music);
-    freeHashAlbum (mngr->album);
-    freeHashHistory (mngr->history);
+    if (mngr->artist) freeHashArtist (mngr->artist);
+    if (mngr->user) freeHashUser (mngr->user);
+    if (mngr->music) freeHashMusic (mngr->music);
+    if (mngr->album) freeHashAlbum (mngr->album);
+    if (mngr->history) freeHistory (mngr->history);
     free (mngr);
 }
 

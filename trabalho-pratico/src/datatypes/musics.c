@@ -78,8 +78,8 @@ void deleteMusicString (MusicString* music) {
     free(music->id);
     free(music->title);
     free(music->artist_id);
-    free(music->duration);
     free(music->album_id);
+    free(music->duration);
     free(music->genre);
     free(music->year);
     free(music->lyrics);
@@ -100,23 +100,39 @@ Genre getGenre(const char *genre) {
     return -1; // Invalid genre
 }
 
-Music* copyMusic (Music* musicOg) {   // needs work
-    Music* music = malloc (sizeof (Music));
+Music* copyMusic(Music* musicOg) {
+    if (!musicOg) return NULL;
+    Music* music = malloc(sizeof(Music));
     if (!music) {
-        perror ("Error copying user");
+        perror("Error allocating memory for music copy");
         return NULL;
     }
+
     music->id = musicOg->id;
-    //music->title = strdup (musicOg->title);
-    music->artist_id = musicOg->artist_id;
     music->artist_id_count = musicOg->artist_id_count;
     music->album_id = musicOg->album_id;
     music->duration = musicOg-> duration;
     music->genre = musicOg-> genre;
-    //music->year = musicOg->year;
+
+    // copy for the int array
+    int arrayCount = musicOg->artist_id_count;
+    if (musicOg->artist_id != NULL &&  arrayCount > 0) {
+        
+        music->artist_id = malloc(arrayCount * sizeof(int));
+        if (music->artist_id == NULL) {
+            perror("Error allocating memory for liked_musics_id");
+            free(music);
+            return NULL;
+        }
+        // Copy the contents of the original liked_musics_id array
+        memcpy(music->artist_id, musicOg->artist_id, arrayCount * sizeof(int));
+
+    } else music->artist_id = NULL;
+
 
     return music;
 }
+
 
 // GETTERs
 

@@ -12,6 +12,7 @@
 #include <query1.h>
 #include <query2.h>
 #include <query3.h>
+#include <query4.h>
 #include <hashtableManager.h>
 #include <cmdManager.h>
 
@@ -120,7 +121,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
             q4c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
 
-            //query4 ();
+            query4 (cmd, getHistoryManager (mngr), getMusicManager (mngr), getArtistManager (mngr), i);
 
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q4total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;

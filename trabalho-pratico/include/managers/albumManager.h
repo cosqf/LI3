@@ -16,7 +16,7 @@ void freeHashAlbum (AlbumManager* a_mngr);
 
 bool isAlbumInHash (AlbumManager *a_mngr, int id);
 
-void getDataAlbum (char* path, hashtableManager* mngr);
+int getDataAlbum (char* path, hashtableManager* mngr);
 
 void callbackAlbum(char** tokens, void* manager, Output* output);
 #endif

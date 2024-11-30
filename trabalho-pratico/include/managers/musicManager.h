@@ -17,11 +17,13 @@ void freeHashMusic (MusicManager* a_mngr);
 
 bool isMusicInHash (MusicManager *m_mngr, int id);
 
+Music* lookupMusicHash (MusicManager *m_mngr, int id);
+
 Genre lookupMusicGenreHash (MusicManager *m_mngr, int id);
 
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data);
 
-void getDataMusic (char *path, hashtableManager* mngr);
+int getDataMusic (char *path, hashtableManager* mngr);
 
 void callbackMusic (char** tokens, void* manager, Output* output);
 
