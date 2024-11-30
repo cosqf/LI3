@@ -75,7 +75,7 @@ void insertHistoryHash(HistoryManager *h_mngr, int key, History *history) {
 void freeHistory (HistoryManager* h_mngr) {
     if(!h_mngr) return;
     g_hash_table_destroy (h_mngr->history);
-    g_tree_destroy(h_mngr->historyInWeeks);
+    if (h_mngr->historyInWeeks) g_tree_destroy(h_mngr->historyInWeeks);
     free (h_mngr);
 }
 
