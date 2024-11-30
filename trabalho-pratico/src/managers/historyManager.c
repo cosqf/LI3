@@ -11,9 +11,17 @@ typedef struct historyManager {
 } HistoryManager;
 
 
-void insertHistoryHash (HistoryManager *h_mngr, int key, History *history) {
-    g_hash_table_insert(h_mngr->history, GINT_TO_POINTER (key), history);
+void insertHistoryHash(HistoryManager *h_mngr, int key, History *history) {
+    History* existentHistory = g_hash_table_lookup(h_mngr->history, GINT_TO_POINTER(key));
+
+    if (existentHistory) {
+        existentHistory = cloneHistoryList(existentHistory);
+    }
+
+    history = setNextHistory(existentHistory, history);
+    g_hash_table_insert(h_mngr->history, GINT_TO_POINTER(key), history);
 }
+
 
 HistoryManager* initializeHashHistory () {
     HistoryManager* h_mngr = malloc (sizeof (HistoryManager));
@@ -26,6 +34,7 @@ HistoryManager* initializeHashHistory () {
 }
 
 void freeHashHistory (HistoryManager* h_mngr) {
+    if(!h_mngr) return;
     g_hash_table_destroy (h_mngr->history);
     free (h_mngr);
 }

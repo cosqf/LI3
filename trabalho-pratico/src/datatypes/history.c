@@ -10,6 +10,7 @@ typedef struct history {
     int music_id;             //– identificador único da música a que o registo se refere;
     Timestamp timestamp;           //– data e hora em que a música foi ouvida pelo utilizador;
     Duration duration;        //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
+    History* next;
 } History;
 
 typedef struct historyString {
@@ -39,12 +40,57 @@ History* createHistory (char** tokens) {
 
     history->duration = parseDuration (trimString (tokens[4]));
 
+    history->next = NULL;
+
     return history;
 }
 
-void deleteHistory (History* history) {
-    if (history == NULL) return;
-    free (history);
+void deleteHistory(History* history) {
+    History* temp;
+
+    while (history != NULL) {
+        temp = history->next;
+        free(history);
+        history = temp;
+    }
+}
+
+// Clones a History node
+History* cloneHistoryNode(const History* node) {
+    if (!node) return NULL;
+
+    History* newNode = malloc(sizeof(History));
+    if (!newNode) {
+        perror("Failed to allocate memory for History node");
+        exit(EXIT_FAILURE);
+    }
+
+    newNode->id = node->id;
+    newNode->user_id = node->user_id;
+    newNode->music_id = node->music_id;
+    newNode->timestamp = node->timestamp;
+    newNode->duration = node->duration;
+
+    newNode->next = NULL;
+
+    return newNode;
+}
+
+// Clones a linked list
+History* cloneHistoryList(const History* head) {
+    if (!head) return NULL;
+
+    History* newHead = cloneHistoryNode(head);
+    History* current = newHead;
+    const History* iter = head->next;
+
+    while (iter) {
+        current->next = cloneHistoryNode(iter);
+        current = current->next;
+        iter = iter->next;
+    }
+
+    return newHead;
 }
 
 // GETTERs
@@ -72,6 +118,19 @@ Timestamp getHistoryTimestamp (History* history) {
 // Getter for the duration field
 Duration getHistoryDuration (History* history) {
     return history->duration;
+}
+
+// Getter for the next field
+History* getNextHistory (History* history) {
+    return history->next;
+}
+
+// SETTERs
+
+// Setter for the next field
+History* setNextHistory (History* newNext, History* history) {
+    history->next = newNext;
+    return history;
 }
 
 
