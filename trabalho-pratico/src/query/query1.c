@@ -89,11 +89,14 @@ void artistinfo (CMD* cmd, hashtableManager* mngr, Artist* artist, Output* file)
     deleteArtist(artist);
 }
 
-
-int individualAlbums (hashtableManager* mngr, Artist* artist) {
+int individualAlbums(hashtableManager* mngr, Artist* artist) {
     AlbumManager* al_mngr = getAlbumManager(mngr);
+    int artistID = getArtistID(artist);
+    int count = 0;
 
-    return 2;
+    iterateAlbum(artistID, al_mngr, &count);
+
+    return count;
 }
 
 double totalRecipe (hashtableManager* mngr, Artist* artist) {

@@ -38,6 +38,20 @@ bool isAlbumInHash (AlbumManager *al_mngr, int id) {
     else return 1;
 }
 
+void iterateAlbum(int artistID, AlbumManager* al_mngr, int* count) {
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, al_mngr->album);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        if (getAlbumArtistIdCount(value) != 1) continue;
+        if (getAlbumArtistId(value)[0] != artistID) continue;
+
+        (*count)++;
+    }
+}
+
 void getDataAlbum (char* path, hashtableManager* mngr) {
     Output* output = openErrorOutputAlbum ();
 
