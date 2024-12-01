@@ -52,12 +52,11 @@ void iterateAlbum(int artistID, AlbumManager* al_mngr, int* count) {
     }
 }
 
-void getDataAlbum (char* path, hashtableManager* mngr) {
+int getDataAlbum (char* path, hashtableManager* mngr) {
     Output* output = openErrorOutputAlbum ();
-
-    parseFile(path, callbackAlbum, mngr, output);
-
+    int error = parseFile(path, callbackAlbum, mngr, output);
     closeOutputFile (output); 
+    return error;
 }
 
 // creates an albumString according to its tokens and validates them. 

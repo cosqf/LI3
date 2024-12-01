@@ -45,6 +45,12 @@ Genre lookupMusicGenreHash (MusicManager *m_mngr, int id) {
     return getMusicGenre (music);
 }
 
+Music* lookupMusicHash (MusicManager *m_mngr, int id) {
+    Music* music = g_hash_table_lookup (m_mngr->music, GINT_TO_POINTER(id));
+    if (music == NULL) return NULL;
+    return copyMusic (music);
+}
+
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data) {
     GHashTableIter iter;
     gpointer key, value;
@@ -57,12 +63,14 @@ void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, g
 }
 
 
-void getDataMusic (char *path, hashtableManager* mngr) {
+int getDataMusic (char *path, hashtableManager* mngr) {
     Output* output = openErrorOutputMusics ();
 
-    parseFile(path, callbackMusic, mngr, output);
+    int error = parseFile(path, callbackMusic, mngr, output);
 
     closeOutputFile (output);
+    if (error) return 1;
+    else return 0;
 }
 
 // creates a musicString according to its tokens and validates them. 

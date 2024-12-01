@@ -8,6 +8,7 @@
 #include <glib.h>
 #include <musicManager.h>
 #include <stdlib.h>
+#include <queryUtils.h>
 #include <output_handling/outputWriter.h>
 
 typedef struct {
@@ -29,7 +30,7 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     // will iterate the hashtable and get the artists discography
     iterateMusic(getMusicManager(mngr), feeder, &data); 
 
-    Tuple* hashArray = sortHash (hashDuration);
+    Tuple* hashArray = sortHash (hashDuration, compareTuple);
     if (hashArray == NULL) {
         perror("Sorting Hash error\n");
         deleteHash(hashDuration);
@@ -43,19 +44,19 @@ void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
     if (lengthHash < topN) limit = lengthHash;
     else limit = topN;
     
-    char* filePath = getPathFileToQuery2 (cmdCounter);
+    char filePath[50];
+    snprintf (filePath, sizeof(filePath),"resultados/command%d_output.txt", cmdCounter);
     Output* output = openOutputFile (filePath);
     
     if (limit == 0) writeNewLine(output);
     for (int i = 0; i < limit; i++) {
         ArtistManager* a_mngr = getArtistManager (mngr);
         Artist* artist = lookupArtistHash (a_mngr, hashArray[i].key);
-        Duration dur = secondsInDuration (hashArray[i].duration);
+        Duration dur = secondsInDuration (hashArray[i].value);
         printResult (cmd, artist, dur, output);
         deleteArtist (artist);
     }
     closeOutputFile (output);
-    free (filePath);
     free (hashArray);
     free (country);
     deleteHash(hashDuration);
@@ -92,56 +93,8 @@ void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int 
             }
             free (countryArtist);
         }
-        updateDurationHash (id[i], newtable, duration);
+        updateHash (newtable, id[i], duration);
     }
-}
-// Transforms the hash table into a Tuple array and sorts it
-Tuple* sortHash (GHashTable* hash) {
-    GHashTableIter iter;
-    gpointer key, value;
-    int i = 0;
-
-    int lengthHash = g_hash_table_size (hash);
-    Tuple* hashArray = malloc (sizeof (Tuple) * lengthHash);
-    mallocErrorCheck (hashArray);
-
-    g_hash_table_iter_init(&iter, hash);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        Tuple data;
-        data.key = GPOINTER_TO_INT (key);
-        data.duration = GPOINTER_TO_INT (value);
-
-        hashArray[i] = data;
-        i++;
-    }
-
-    qsort (hashArray, lengthHash, sizeof(Tuple), compareTuple);
-
-    return hashArray;
-}
-
-int compareTuple(const void* a, const void* b) {
-    const Tuple* tupleA = (const Tuple*)a;
-    const Tuple* tupleB = (const Tuple*)b;
-
-    if (tupleA->duration > tupleB->duration) return -1;  // descending order
-    if (tupleA->duration < tupleB->duration) return 1;
-    return 0;
-}
-
-
-void updateDurationHash(int id, GHashTable* newtable, int duration) {
-    gpointer key, value;
-    
-    // the artist is already in the new table
-    if (g_hash_table_lookup_extended (newtable, GINT_TO_POINTER(id), &key, &value)) {
-        int newValue = GPOINTER_TO_INT(value) + duration;
-        // update duration
-        g_hash_table_replace(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(newValue));
-    }
-    // it isnt, so we need to add it
-    else g_hash_table_insert(newtable, GINT_TO_POINTER(id), GINT_TO_POINTER(duration));
 }
 
 void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output) {
@@ -167,15 +120,4 @@ void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output) {
     free (name);
     free(artist_country);
     free(duration);
-}
-
-char* getPathFileToQuery2 (int i) {
-    int required_size = 31 + 2 + 1; // characters + number + terminator
-
-    char* fullpath = malloc(required_size);
-    if (mallocErrorCheck (fullpath)) exit(EXIT_FAILURE);
-
-    snprintf(fullpath, required_size, "resultados/command%d_output.txt", i);
-    
-    return fullpath;
 }

@@ -8,8 +8,9 @@ typedef struct history {
     int id;                   //– identificador único do registo;
     int user_id;              //– identificador único do utilizador a que o registo se refere;
     int music_id;             //– identificador único da música a que o registo se refere;
-    Timestamp timestamp;           //– data e hora em que a música foi ouvida pelo utilizador;
+    Timestamp timestamp;      //– data e hora em que a música foi ouvida pelo utilizador;
     Duration duration;        //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
+    History* next;
 } History;
 
 typedef struct historyString {
@@ -39,13 +40,21 @@ History* createHistory (char** tokens) {
 
     history->duration = parseDuration (trimString (tokens[4]));
 
+    history->next = NULL;
+
     return history;
 }
 
-void deleteHistory (History* history) {
-    if (history == NULL) return;
-    free (history);
+void deleteHistory(History* history) {
+    History* temp;
+
+    while (history != NULL) {
+        temp = history->next;
+        free(history);
+        history = temp;
+    }
 }
+
 
 // GETTERs
 
@@ -74,6 +83,20 @@ Duration getHistoryDuration (History* history) {
     return history->duration;
 }
 
+// Getter for the next field
+History* getNextHistory (History* history) {
+    return history->next;
+}
+
+// SETTERs
+
+// Setter for the next field
+History* setNextHistory (History* newNext, History* history) {
+    History* tail = history;
+    while (tail->next != NULL) tail = tail->next;
+    tail->next = newNext;
+    return history;
+}
 
 // String format 
 HistoryString* createHistoryString (char** tokens) {

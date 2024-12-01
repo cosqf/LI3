@@ -43,11 +43,15 @@ GHashTable* getUserTable (UserManager *u_mngr) {
 }
 
 
-void getDataUser (char* path, hashtableManager* mngr) {
+int getDataUser (char* path, hashtableManager* mngr) {
     Output* output = openErrorOutputUser ();
-    parseFile(path, callbackUser, mngr, output);
+    
+    int error = parseFile(path, callbackUser, mngr, output);
 
     closeOutputFile (output);
+
+    if (error) return 1;
+    else return 0;
 }
 
 // creates an userString according to its tokens and validates them. 

@@ -47,12 +47,20 @@ bool isArtistInHash (ArtistManager *a_mngr, int id) {
     else return 1;
 }
 
-void getDataArtist (char *path, ArtistManager* mngr) {
+bool getArtistTypeHash (int id, ArtistManager* mngr) {
+    Artist* artist = g_hash_table_lookup (mngr->artist, GINT_TO_POINTER(id));
+    if (artist == NULL) return 0;
+    return getArtistType (artist);
+}
+
+int getDataArtist (char *path, ArtistManager* mngr) {
     Output* output = openErrorOutputArtists ();
 
-    parseFile(path, callbackArtist, mngr, output);
-
+    int error = parseFile(path, callbackArtist, mngr, output);
+    
     closeOutputFile (output); 
+
+    return error;
 }
 
 // creates an artistString according to its tokens and validates them. 

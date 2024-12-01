@@ -19,7 +19,7 @@ User* lookupUserHash (UserManager *u_mngr, int id);
 
 GHashTable* getUserTable (UserManager *u_mngr);
 
-void getDataUser (char* path, hashtableManager* mngr);
+int getDataUser (char* path, hashtableManager* mngr);
 
 void callbackUser(char **tokens, void *manager, Output *output);
 

@@ -103,14 +103,25 @@ Artist* copyArtist(Artist* artistOG) {
     artistCopy->recipe_per_stream = artistOG->recipe_per_stream;
     artistCopy->type = artistOG->type;
 
-    // copy for string fields
-    artistCopy->name = artistOG->name ? strdup(artistOG->name) : NULL;
-    artistCopy->country = artistOG->country ? strdup(artistOG->country) : NULL;
+    // copy the string fields
+    artistCopy->name = strdup(artistOG->name);
+    if (!artistCopy->name) {
+        perror ("Error copying artist name");
+        free (artistCopy);
+        return NULL;
+    }
+    artistCopy->country = strdup(artistOG->country);
+    if (!artistCopy->country) {
+        perror ("Error copying artist country");
+        free (artistCopy->name);
+        free (artistCopy);
+        return NULL;
 
-    // copy for the int array
+    }
+
+    // copy the int array
     int arrayCount = artistOG->id_constituent_counter;
-    if (artistOG->id_constituent != NULL &&  arrayCount > 0) {
-        
+    if (artistOG->id_constituent && arrayCount > 0) {
         artistCopy->id_constituent = malloc(arrayCount * sizeof(int));
         if (artistCopy->id_constituent == NULL) {
             perror("Error allocating memory for id_constituent");

@@ -18,7 +18,7 @@ bool isAlbumInHash (AlbumManager *a_mngr, int id);
 
 void iterateAlbum(int artistID, AlbumManager* al_mngr, int* count);
 
-void getDataAlbum (char* path, hashtableManager* mngr);
+int getDataAlbum (char* path, hashtableManager* mngr);
 
 void callbackAlbum(char** tokens, void* manager, Output* output);
 #endif

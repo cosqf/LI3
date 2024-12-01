@@ -22,7 +22,7 @@ FILE* openFile (char * argv) {
     FILE* fp = fopen (argv, "r");
         if (!fp) {
             perror("Error: File didn't open");
-            exit (EXIT_FAILURE);
+            return NULL;
         }
     return fp;
 }
@@ -119,6 +119,7 @@ Duration secondsInDuration (int seconds) {
     return dur;
 }
 
+
 GHashTable* createHash () {
     return g_hash_table_new(g_direct_hash, g_direct_equal);
 }
@@ -177,4 +178,54 @@ bool convertToInt(const char *str, int *out) {
 
     *out = (int)val;
     return true;
+}
+
+int compareDate(Date dateA, Date dateB) {  // if a > b returns 1, a < b returns -1
+    if (dateA.year > dateB.year) return 1; 
+    if (dateA.year < dateB.year) return -1;
+    if (dateA.month > dateB.month) return 1;
+    if (dateA.month < dateB.month) return -1;
+    if (dateA.day > dateB.day) return 1;
+    if (dateA.day < dateB.day) return -1;
+
+    return 0;
+}
+
+// days functions
+short int getWeekday (Date date) { // gotten from wikipedia, sunday == 0
+    return ((date.day += date.month < 3 ? date.year-- : 
+            date.year - 2, 23 * date.month/9 + date.day + 4 + date.year/4- date.year/100 + date.year/400)%7);
+}
+
+int getDaysInMonth(int month, int year) {
+    switch (month) {
+        case 4: case 6: case 9: case 11: return 30; // april, june, september, november
+        case 2: // february
+            if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) return 29; // leap year
+            return 28;
+        default: return 31; // january, march, may, july, august, october, december
+    }
+}
+
+// function to calculate total days since year 0 for a given date (epinoch)
+int calculateDays(Date date) {
+    int days = date.day;
+
+    for (int month = 1; month < date.month; month++) {
+        days += getDaysInMonth(month, date.year);
+    }
+
+    for (int year = 0; year < date.year; year++) {
+        days += (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) ? 366 : 365;
+    }
+
+    return days;
+}
+
+int daysDiff(Date dateA, Date dateB) { // assuming dateA is more recent
+
+    int daysA = calculateDays(dateA);
+    int daysB = calculateDays(dateB);
+
+    return daysA - daysB;
 }

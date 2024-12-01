@@ -10,33 +10,38 @@
    5. History,
 */
 
-void getData (char *path, hashtableManager *mngr) {
+int getData (char *path, hashtableManager *mngr) {
+    bool error = 0;
     char *artistPath = changePath(path, Artists);
     char *albumPath = changePath(path, Albums);
     char *musicPath = changePath(path, Musics);
     char *userPath = changePath(path, Users);
     char *historyPath = changePath(path, Historys);
 
-    getDataArtist (artistPath, getArtistManager (mngr));
-    getDataAlbum (albumPath, mngr);
-    getDataMusic (musicPath, mngr);
-    getDataUser (userPath, mngr);
-    getDataHistory (historyPath, getHistoryManager(mngr));
-    
+    if      (getDataArtist (artistPath, getArtistManager (mngr))) error = 1;
+    else if (getDataAlbum (albumPath, mngr)) error = 1;
+    else if (getDataMusic (musicPath, mngr)) error = 1;
+    else if (getDataUser (userPath, mngr)) error = 1;
+    else if (getDataHistory (historyPath, getHistoryManager(mngr))) error = 1;
+
+    if (error) freeHash (mngr);
+
     free(artistPath);
     free(albumPath);
     free(musicPath);
     free(userPath);
     free(historyPath);
+
+    return error;
 }
 
 // opens a file, gets its tokens and processes the line accordingly using a callback 
-void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
+int parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
     FILE* fileData = openFile (pathToFile);
     char str[DEFAULT];
     if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
-            perror ("skipping file header error");
-            exit(EXIT_FAILURE);
+            perror ("skipping artist header error");
+            return 1;
         }
     while (fgets (str, sizeof (str), fileData) != NULL) {
         char* tokens[8];
@@ -44,6 +49,7 @@ void parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), vo
         processLine (tokens, manager, output);
     }
     fclose (fileData);
+    return 0;
 }
 
 // divides a line in tokens
@@ -57,13 +63,14 @@ int parseLine(char* line, char* tokens[], const char* separator) {
     tokens[tokenCount] = token;
     tokenCount++;
   }
-
   return tokenCount;
 }
 
 // opens the cmd file, gets its tokens and creates the cmd, line by line
 int parseCmdFile (char* pathToFile, void* manager) {
     FILE* fileData = openFile (pathToFile);
+    if (!fileData) return -1;
+
     char str[DEFAULT];
     int i;
     for (i = 0; fgets (str, sizeof (str), fileData) != NULL; i++) {
