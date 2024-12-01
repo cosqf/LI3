@@ -11,7 +11,7 @@ typedef struct {
 
 int compareTuple(const void* a, const void* b);
 
-void updateHash(int id, GHashTable* newtable, int newValue);
+void updateHash(GHashTable* newtable, int id, int newValue);
 
 Tuple* sortHash (GHashTable* hash, int sorterFunc (const void*, const void*)) ;
 

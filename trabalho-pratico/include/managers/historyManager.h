@@ -15,18 +15,25 @@ void freeHistory (HistoryManager* h_mngr);
 
 int getDataHistory (char *path, HistoryManager* mngr);
 int lengthHistory (HistoryManager* mngr);
-History** sortHistory (HistoryManager* mngr);
+int sortHistory (HistoryManager* manager, History*** hashArray);
 void printHash(GHashTable* hash);
 
 // trees
 
 void initializeHistoryTree(HistoryManager* mngr);
 
-void insertInHistoryByWeeks (HistoryManager* mngr, void* top10artistWeek, Date firstDayOfWeek);
+gint compareDateGlib(const void* a, const void* b, gpointer user_data);
+
+void insertInHistoryByWeeks2 (GTree* tree, Date firstDayOfWeek, GHashTable* artist);
+
+void filterToTree (HistoryManager* mngr, GHashTable* tree);
+
+
+void insertInHistoryByWeeks (HistoryManager* mngr, Date firstDayOfWeek, void* top10artistWeek);
 
 bool historyTreeIsInitialized (HistoryManager* mngr);
 
-void traverseTreeInRange(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder);
+void traverseTree(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder);
 
 void callbackHistory(char **tokens, void *manager, Output *output);
 
