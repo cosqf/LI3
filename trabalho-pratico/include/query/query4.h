@@ -7,7 +7,7 @@
 void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManager, ArtistManager* artistManager, int cmdCounter);
 
 typedef struct {
-    Tuple* artistsIds;
+    int* artistsIds;
     int count;
 } ArtistList;
 

@@ -6,6 +6,7 @@
 #include <parsing.h>
 #include <utils.h>
 #include <query4.h>
+#include <time.h>
 
 typedef struct historyManager {
     GHashTable *history;
@@ -31,7 +32,7 @@ gint compareDateGlib(const void* a, const void* b, gpointer user_data) {
 }
 
 void initializeHistoryTree(HistoryManager* mngr ) {
-    mngr->historyInWeeks = g_tree_new_full((GCompareDataFunc)compareDateGlib, NULL, (GDestroyNotify) free, (GDestroyNotify) freeArtistList);
+    mngr->historyInWeeks = g_tree_new_full (compareDateGlib, NULL, (GDestroyNotify) free, (GDestroyNotify) freeArtistList);
 }
 
 bool historyTreeIsInitialized (HistoryManager* mngr) {
@@ -39,7 +40,7 @@ bool historyTreeIsInitialized (HistoryManager* mngr) {
     else return 0;
 }
 
-void insertInHistoryByWeeks (HistoryManager* mngr, void* top10artistWeek, Date firstDayOfWeek) {
+void insertInHistoryByWeeks (HistoryManager* mngr, Date firstDayOfWeek, void* top10artistWeek) {
     Date* key = malloc(sizeof(Date));
         if (mallocErrorCheck (key)) return;   
     *key = firstDayOfWeek; // a copy
@@ -47,7 +48,7 @@ void insertInHistoryByWeeks (HistoryManager* mngr, void* top10artistWeek, Date f
     g_tree_insert (mngr->historyInWeeks, key, top10artistWeek);
 }
 
-void traverseTreeInRange(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder) {
+void traverseTree(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder) {
     GTree* tree = mngr->historyInWeeks;
     g_tree_foreach(tree, callback, feeder);
 }
@@ -122,21 +123,16 @@ int compareTimestamp(const void* a, const void* b) {
     
     return c;
 }
- 
+
 // Transforms the hash table into a History array and sorts it
-History** sortHistory (HistoryManager* manager) {
+int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: pointer to an array of History*
     GHashTable* hash = manager->history;
     GHashTableIter iter;
     gpointer key, value;
     int i = 0;
 
     int lengthHash = g_hash_table_size (hash);
-    History** hashArray = malloc (sizeof (History*) * lengthHash);
-    if (hashArray == NULL) {
-        perror ("Malloc error in sortHistory\n");
-        return NULL;
-    }
-
+    
     g_hash_table_iter_init(&iter, hash);
 
     while (g_hash_table_iter_next(&iter, &key, &value)) {
@@ -144,18 +140,69 @@ History** sortHistory (HistoryManager* manager) {
         while (hist) {
             if (i >= lengthHash) {
                 lengthHash *= 2;
-                History** temp = realloc (hashArray, sizeof(History*) * lengthHash);
-                if (mallocErrorCheck (temp)) return NULL;
-                hashArray = temp;
+                History** temp = realloc (*hashArray, sizeof(History*) * lengthHash);
+                if (mallocErrorCheck (temp)) {
+                    free (*hashArray);
+                    return -1;
+                }
+                *hashArray = temp;
             }
-            hashArray[i++] = hist;
+            (*hashArray)[i++] = hist;
             hist = getNextHistory (hist);
         }
     }
 
-    qsort (hashArray, i, sizeof(History*), compareTimestamp);
+    qsort (*hashArray, i, sizeof(History*), compareTimestamp);
+    return i;
+}
 
-    return hashArray;
+void insertInHistoryByWeeks2 (GTree* tree, Date firstDayOfWeek, GHashTable* artist) {
+    Date* key = malloc(sizeof(Date));
+        if (mallocErrorCheck (key)) return;   
+    *key = firstDayOfWeek; // a copy
+
+    g_tree_insert (tree, key, artist);
+}
+
+void filterToTree (HistoryManager* mngr, GHashTable* hash) {
+    initializeHistoryTree (mngr);
+    GHashTableIter iter;
+    gpointer key, value;
+    printf ("size of hash: %d\n", g_hash_table_size (hash));
+    g_hash_table_iter_init(&iter, hash);
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        GHashTable* table = (GHashTable*) value;
+        int tupleCount = g_hash_table_size (table);
+        Tuple* artistsWeek = sortHash (table, compareTuple);
+
+        ArtistList* top10artistWeek = malloc(sizeof(ArtistList));
+            if (mallocErrorCheck (top10artistWeek)) {
+                free (artistsWeek);
+                return;
+            }
+        int* limitedArray = malloc (sizeof (Tuple) * tupleCount);
+            if (mallocErrorCheck (limitedArray)) {
+                free (artistsWeek);
+                free (top10artistWeek);
+                return;
+            }
+        // get only the top 10 artists
+        int limit = (tupleCount < 10) ? tupleCount : 10;
+        for (int i = 0; i< limit; i++) limitedArray[i] = artistsWeek [i].key;
+        free(artistsWeek);
+
+        top10artistWeek->artistsIds = limitedArray;
+        top10artistWeek->count = limit;
+
+        Date* dateKey = (Date*) key;
+        Date* dateKeyCopy = malloc(sizeof(Date));
+        if (mallocErrorCheck (dateKeyCopy)) {
+                free (top10artistWeek);
+                return;
+            }
+        *dateKeyCopy = *dateKey;
+        g_tree_insert (mngr->historyInWeeks, dateKeyCopy, top10artistWeek);
+    }
 }
 
 // Callback function for g_hash_table_foreach

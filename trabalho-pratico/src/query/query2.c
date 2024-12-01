@@ -93,7 +93,7 @@ void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int 
             }
             free (countryArtist);
         }
-        updateHash (id[i], newtable, duration);
+        updateHash (newtable, id[i], duration);
     }
 }
 

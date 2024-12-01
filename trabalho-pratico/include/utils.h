@@ -43,4 +43,12 @@ int durationInSeconds (Duration time);
 
 Duration secondsInDuration (int seconds);
 
+int daysDiff(Date dateA, Date dateB);
+
+short int getWeekday (Date date); // gotten from wikipedia, sunday == 0
+
+int getDaysInMonth(int month, int year);
+
+int calculateDays(Date date);
+
 #endif

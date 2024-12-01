@@ -16,12 +16,11 @@ int compareTuple(const void* a, const void* b) {
     return 0;
 }
 
-void updateHash(int id, GHashTable* table, int newValue) {
+void updateHash(GHashTable* table, int id, int newValue) {
     gpointer value = g_hash_table_lookup(table, GINT_TO_POINTER(id));
     if (value) {     // the artist is already in the new table
         int updatedValue = GPOINTER_TO_INT(value) + newValue;
-        g_hash_table_replace(table, GINT_TO_POINTER(id), GINT_TO_POINTER(updatedValue));
-    }
+        g_hash_table_insert(table, GINT_TO_POINTER(id), GINT_TO_POINTER(updatedValue));    }
     else {// it isnt, so we need to add it
         g_hash_table_insert(table, GINT_TO_POINTER(id), GINT_TO_POINTER(newValue));
     }

@@ -10,61 +10,46 @@
 #include <parsingUtils.h>
 #include <utils.h>
 
-// days functions
-short int getWeekday (Date date) { // gotten from wikipedia, sunday == 0
-    return ((date.day += date.month < 3 ? date.year-- : 
-            date.year - 2, 23 * date.month/9 + date.day + 4 + date.year/4- date.year/100 + date.year/400)%7);
-}
-
-int getDaysInMonth(int month, int year) {
-    switch (month) {
-        case 4: case 6: case 9: case 11: return 30; // april, june, september, november
-        case 2: // february
-            if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) return 29; // leap year
-            return 28;
-        default: return 31; // january, march, may, july, august, october, december
-    }
-}
 
 
-void adjustDateLimits(Date *dateMin, Date *dateMax) { // will subtract the days till the beggining of the week and add till the end of the week
-    if (!dateMin || !dateMax) {
+void adjustDateLimits(Date *date, bool flag) { // will subtract the days till the beggining of the week and add till the end of the week depending on flag
+    if (!date) {
         perror ("Error adjusting the date limits");
         return;
     }
+    short int weekday = getWeekday (*date);
+    if (flag == 0) {
+        while (weekday != 0) { // subtract till sunday
+            date->day--;
 
-    short int weekdayMin = getWeekday(*dateMin);
-
-    while (weekdayMin != 0) { // subtract till sunday
-        dateMin->day--;
-
-        if (dateMin->day < 1) {
-            dateMin->month--;
-            if (dateMin->month < 1) {
-                dateMin->month = 12;
-                dateMin->year--;
+            if (date->day < 1) {
+                date->month--;
+                if (date->month < 1) {
+                    date->month = 12;
+                    date->year--;
+                }
+                date->day = getDaysInMonth(date->month, date->year);
             }
-            dateMin->day = getDaysInMonth(dateMin->month, dateMin->year);
+
+            weekday = getWeekday(*date);
         }
 
-        weekdayMin = getWeekday(*dateMin);
     }
+    else {
+        while (weekday != 6) { // add till saturday
+            date->day++;
 
-    short int weekdayMax = getWeekday(*dateMax);
-
-    while (weekdayMax != 6) { // add till saturday
-        dateMax->day++;
-
-        if (dateMax->day > getDaysInMonth (dateMax->month, dateMax->year)) {
-            dateMax->month++;
-            if (dateMax->month > 12) {
-                dateMax->month = 1;
-                dateMax->year++;
+            if (date->day > getDaysInMonth (date->month, date->year)) {
+                date->month++;
+                if (date->month > 12) {
+                    date->month = 1;
+                    date->year++;
+                }
+                date->day = 1;
             }
-            dateMax->day = 1;
-        }
 
-        weekdayMax = getWeekday(*dateMax);
+            weekday = getWeekday(*date);
+        }
     }
 }
 void freeArtistList (ArtistList* list) {
@@ -72,11 +57,12 @@ void freeArtistList (ArtistList* list) {
     free (list);
 }
 
+
 // function to process the top 10 artists for a week, will update history manager with the weekly array of artists
 void processWeeklyTop10(GHashTable* topArtistsWeek, HistoryManager* mngr, Date firstDayOfWeek) {
     int lengthWeekHash = g_hash_table_size(topArtistsWeek);
     int limit = (lengthWeekHash < 10) ? lengthWeekHash : 10;
-    if (limit == 0) return ;
+    if (limit == 0) return;
 
     Tuple* artistsWeek = sortHash(topArtistsWeek, compareTuple);  // sorting artists by play duration
 
@@ -85,34 +71,39 @@ void processWeeklyTop10(GHashTable* topArtistsWeek, HistoryManager* mngr, Date f
             free (artistsWeek);
             return;
         }
-    Tuple* limitedArray = malloc (sizeof (Tuple) * limit);
+    int* limitedArray = malloc (sizeof (int) * limit);
         if (mallocErrorCheck (limitedArray)) {
             free (artistsWeek);
             free (top10artistWeek);
             return;
         }
 
-    for (int i = 0; i< limit; i++) limitedArray[i] = artistsWeek [i];
+    for (int i = 0; i< limit; i++) limitedArray[i] = artistsWeek [i].key;
     free(artistsWeek);
 
     top10artistWeek->artistsIds = limitedArray;
     top10artistWeek->count = limit;
-    insertInHistoryByWeeks (mngr, top10artistWeek, firstDayOfWeek);
+    insertInHistoryByWeeks (mngr, firstDayOfWeek, top10artistWeek);
 }
 
 // main function to create the tree
 void getHistoryByWeeks (HistoryManager* historyManager, MusicManager* musicManager) {
-    History** array = sortHistory(historyManager);  // sort history by timestamp
-    int lengthArray = lengthHistory (historyManager);
+    // setting up array
+    int lengthHash = lengthHistory (historyManager);
+    History** array = malloc (sizeof (History*) * lengthHash);
+    if (mallocErrorCheck (array)) return;
+
+    int lengthArray = sortHistory(historyManager, &array);  // sort history by timestamp
+    
     if (lengthArray == 0) {
         free(array);
         return;
     }
     GHashTable* topArtistsWeek = createHash();  // temporary hash table for weekly artist stats
 
-    bool isFirstSunday = 1; // check for the first time during the week that is sunday
     Date firstDayOfWeek = (getHistoryTimestamp (array[0])).date;
     short int weekday = getWeekday (firstDayOfWeek);
+    if (weekday != 0) adjustDateLimits (&firstDayOfWeek, 0); // subtract until last sunday
 
     for (int i = 0; i < lengthArray; i++) {
         History* history = array[i];
@@ -120,14 +111,11 @@ void getHistoryByWeeks (HistoryManager* historyManager, MusicManager* musicManag
         weekday = getWeekday (date);
 
         // if its a new week process the previous weeks top 10 artists
-        if (weekday == 0 && isFirstSunday) {
+        if (weekday == 0 && (daysDiff (date, firstDayOfWeek) >= 7)) {
             processWeeklyTop10(topArtistsWeek, historyManager, firstDayOfWeek);
             g_hash_table_remove_all(topArtistsWeek);  // clean the hash table for reuse
             firstDayOfWeek = date;
-            isFirstSunday = 0;
         }
-        if (weekday != 0) isFirstSunday = 1;
-
         // adds all artists in the weekly hash table 
         int musicId = getHistoryMusicId(history);
         Music* music = lookupMusicHash (musicManager, musicId);
@@ -135,7 +123,7 @@ void getHistoryByWeeks (HistoryManager* historyManager, MusicManager* musicManag
         int artistCount = getMusicArtistIDCount(music);
 
         for (int j = 0; j < artistCount; j++) {
-            updateHash(artistIds[j], topArtistsWeek, durationInSeconds (getHistoryDuration(history)));
+            updateHash(topArtistsWeek, artistIds[j], durationInSeconds (getHistoryDuration(history)));
         }
 
         deleteMusic(music); 
@@ -147,6 +135,7 @@ void getHistoryByWeeks (HistoryManager* historyManager, MusicManager* musicManag
     deleteHash(topArtistsWeek);
     free(array);
 }
+
 
 typedef struct {
     Date minDay;
@@ -170,8 +159,8 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
 
         if (compareDate(*date, minDate) >= 0) {
             for (int i = 0; i < list->count; i++) {
-                int artistId = list->artistsIds[i].key;
-                updateHash (artistId, artistsTimeInTop, 1);
+                int artistId = list->artistsIds[i];
+                updateHash (artistsTimeInTop, artistId, 1);
             }
             //printf ("\n\nprinting list for date: %d/%d/%d\n", date->day,date->month,date->year);
             //for (int i = 0; i< list->count; i++) printf ("artist %d with %d, ",list->artistsIds[i].key, list->artistsIds[i].value);
@@ -180,8 +169,8 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
     }
     else {      
             for (int i = 0; i < list->count; i++) {
-                int artistId = list->artistsIds[i].key;
-                updateHash (artistId, artistsTimeInTop, 1);
+                int artistId = list->artistsIds[i];
+                updateHash (artistsTimeInTop, artistId, 1);
             }
     }
     return FALSE; 
@@ -189,29 +178,30 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
 
 
 void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManager, ArtistManager* artistManager, int cmdCounter) {
-    //printf ("\n\n\n\n\n\n\n\n\n\n\n\n q%d \n", cmdCounter);
     Date minDay = getCMDdateMin (cmd);
     Date maxDay = getCMDdateMax (cmd);
     GHashTable* artistsTimeInTop = createHash(); // will store the artists with the number of times they were on the top 10
-
     if (!historyTreeIsInitialized (historyManager)) { // will get all the top artists in each week
         initializeHistoryTree(historyManager);
         getHistoryByWeeks (historyManager, musicManager); 
     }
+
     bool isFilterOn = ! (minDay.year == 0);
-    if (isFilterOn) adjustDateLimits (&minDay, &maxDay);
+    if (isFilterOn) {
+        adjustDateLimits (&minDay, 0);
+        adjustDateLimits (&maxDay, 1);
+    }
     feederHistory data = {.maxDay = maxDay, 
                           .minDay = minDay,
                           .table = artistsTimeInTop,
                           .isFilterOn = isFilterOn
                           };
 
-    traverseTreeInRange(historyManager, callbackHistoryQuery4, &data); // traverse tree according to the dates, pass the nodes to the hash
+    traverseTree(historyManager, callbackHistoryQuery4, &data); // traverse tree according to the dates, pass the nodes to the hash
 
     Tuple* array = sortHash (artistsTimeInTop, compareTuple);
     int artistId = array[0].key;
     int artistCount = array[0].value;
-
 
     // outputting
     char filename[50];
