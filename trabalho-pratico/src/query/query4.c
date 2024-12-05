@@ -94,8 +94,6 @@ void getHistoryByWeeks2 (HistoryManager* historyManager, MusicManager* musicMana
         perror ("Empty history\n");
         return;
     }
-    clock_t start = clock() ;
-
     GHashTable* hashWithWeeks = g_hash_table_new_full(dateHashFunc, dateEqualFunc, (GDestroyNotify) free, (GDestroyNotify) deleteHash);
 
     for (int i = 0; i < lengthArray; i++) {
@@ -115,16 +113,10 @@ void getHistoryByWeeks2 (HistoryManager* historyManager, MusicManager* musicMana
         free (music);
     }
     free (array);
-    clock_t end = clock() ;
-    double elapsed_time = (end-start)/(double)CLOCKS_PER_SEC ;
-    printf ("time to make hash %.5f\n", elapsed_time);
     // will create a tree in historyManager with the data from treeWithHashes
     filterToTree (historyManager, hashWithWeeks);
 
     g_hash_table_destroy (hashWithWeeks);
-    clock_t end2 = clock() ;
-    double elapsed_time2 = (end2-end)/(double)CLOCKS_PER_SEC ;
-    printf ("time to filter %.5f\n", elapsed_time2);
 }
 
 
