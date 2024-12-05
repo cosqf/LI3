@@ -7,11 +7,13 @@
 
 typedef struct historyManager HistoryManager;
 
-void insertHistoryHash (HistoryManager *h_mngr, int key, History *history);
+void insertHistoryHash(GHashTable *hashtable, int key, History *history);
 
 HistoryManager* initializeHashHistory ();
 
 void freeHistory (HistoryManager* h_mngr);
+
+GHashTable* reorganizeHTableByMusicID(HistoryManager* h_mngr);
 
 int getDataHistory (char *path, HistoryManager* mngr);
 int lengthHistory (HistoryManager* mngr);
