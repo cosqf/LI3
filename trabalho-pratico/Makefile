@@ -2,7 +2,6 @@ CC =gcc
 
 EXEC := programa-principal
 EXEC_TEST :=  programa-testes
-EXEC_INTERACTIVE :=  programa-interativo
 
 INCLUDE_DIRS := $(shell find include/ -type d)
 
@@ -16,10 +15,9 @@ SRC_INTERACTIVE := $(shell find src/ -name "*.c" -not -name "interactive.c")
 
 OBJ_PRINCIPAL := $(patsubst src/%.c,build/%.o,$(SRC_PRINCIPAL))
 OBJ_TESTS := $(patsubst src/%.c,build/%.o,$(SRC_TESTS))
-OBJ_INTERACTIVE := $(patsubst src/%.c,build/%.o,$(SRC_INTERACTIVE))
 
 .PHONY: all
-all: $(EXEC) $(EXEC_TEST) $(EXEC_INTERACTIVE)
+all: $(EXEC) $(EXEC_TEST)
 
 .PHONY: principal
 principal: $(EXEC)
@@ -27,18 +25,11 @@ principal: $(EXEC)
 .PHONY: test
 test: $(EXEC_TEST)
 
-.PHONY: interactive
-test: $(EXEC_INTERACTIVE)
-
-
 $(EXEC): $(OBJ_PRINCIPAL)
 	@$(CC) $(OBJ_PRINCIPAL) $(LDFLAGS) -o $@
 
 $(EXEC_TEST): $(OBJ_TESTS)
 	@$(CC) $(OBJ_TESTS) $(LDFLAGS) -o $@
-
-$(EXEC_INTERACTIVE): $(OBJ_INTERACTIVE)
-	@$(CC) $(OBJ_TESTS) $(LDFLAGS) -lncurses lpanel -lmenu -o $@
 
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)

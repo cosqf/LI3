@@ -152,7 +152,7 @@ int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: 
         }
     }
 
-    qsort (*hashArray, i, sizeof(History*), compareTimestamp);
+    //qsort (*hashArray, i, sizeof(History*), compareTimestamp);
     return i;
 }
 
@@ -168,7 +168,7 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
     initializeHistoryTree (mngr);
     GHashTableIter iter;
     gpointer key, value;
-    printf ("size of hash: %d\n", g_hash_table_size (hash));
+    
     g_hash_table_iter_init(&iter, hash);
     while (g_hash_table_iter_next(&iter, &key, &value)) {
         GHashTable* table = (GHashTable*) value;
