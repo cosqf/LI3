@@ -129,6 +129,8 @@ double singleArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mn
             int reproductions = getHistoryListLengthByMusic(value);
             total += artistRecipe(reproductions, recipe_per_stream);
         }
+
+        deleteMusic(currentMusic);
     }
 
     return total;
@@ -138,7 +140,12 @@ bool artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, i
     for(int i = 0; i < length; i++) {
         if (ids[i] == artistID) return true;
         Artist* currentID = lookupArtistHash(a_mngr, ids[i]);
-        if (getArtistType(currentID)) return isArtistInList(getArtistIDConstituent(currentID), artistID, length);
+        if (getArtistType(currentID)) {
+            bool valid = isArtistInList(getArtistIDConstituent(currentID), artistID, length);
+            deleteArtist(currentID);
+            return valid;
+        }
+        deleteArtist(currentID);
     }
     return false;
 }
@@ -166,6 +173,8 @@ double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager
             int reproductions = getHistoryListLengthByMusic(value);
             total += artistRecipe(reproductions, recipe_per_stream);
         }
+
+        deleteMusic(currentMusic);
     }
 
     return total;
