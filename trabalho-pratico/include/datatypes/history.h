@@ -25,7 +25,10 @@ int getHistoryUserId (History* history);
 int getHistoryMusicId (History* history);
 Timestamp getHistoryTimestamp (History* history);
 Duration getHistoryDuration (History* history);
-History* getNextHistory (History* history);
+History* getNextHistoryByUser (History* history);
+History* getNextHistoryByMusic (History* history);
+int getHistoryListLengthByUser(History* history);
+int getHistoryListLengthByMusic(History* history);
 
 char* getHistoryIdString (HistoryString* history);
 char* getHistoryUserIdString (HistoryString* history);
@@ -37,6 +40,7 @@ char* getHistoryPlatformString (HistoryString* history);
 
 // SETTERs
 
-History* setNextHistory (History* newNext, History* history);
+History* setNextHistoryByUser (History* newNext, History* history);
+History* setNextHistoryByMusic (History* newNext, History* history);
 
 #endif

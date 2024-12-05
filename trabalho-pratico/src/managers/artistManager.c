@@ -47,6 +47,13 @@ bool isArtistInHash (ArtistManager *a_mngr, int id) {
     else return 1;
 }
 
+bool isArtistInList (const int* ids, int artistID, int length) {
+    for(int i = 0; i < length; i++) {
+        if (ids[i] == artistID) return true;
+    }
+    return false;
+}
+
 bool getArtistTypeHash (int id, ArtistManager* mngr) {
     Artist* artist = g_hash_table_lookup (mngr->artist, GINT_TO_POINTER(id));
     if (artist == NULL) return 0;

@@ -7,6 +7,7 @@
 #include <validateDatatypes.h>
 #include <outputWriter.h>
 #include <parsing.h>
+#include <query1.h>
 
 typedef struct albumManager {
     GHashTable *album;
@@ -36,6 +37,20 @@ bool isAlbumInHash (AlbumManager *al_mngr, int id) {
     Album* album = g_hash_table_lookup (al_mngr->album, GINT_TO_POINTER(id));
     if (album == NULL) return 0;
     else return 1;
+}
+
+void albumCountArtist(int artistID, AlbumManager* al_mngr, int* count) {
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, al_mngr->album);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        int artistCount = getAlbumArtistIdCount(value);
+        int* artistIDList = getAlbumArtistId(value);
+
+        if (isArtistInList(artistIDList, artistID, artistCount)) (*count)++;
+    }
 }
 
 int getDataAlbum (char* path, hashtableManager* mngr) {

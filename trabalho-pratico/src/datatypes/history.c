@@ -10,7 +10,8 @@ typedef struct history {
     int music_id;             //– identificador único da música a que o registo se refere;
     Timestamp timestamp;      //– data e hora em que a música foi ouvida pelo utilizador;
     Duration duration;        //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
-    History* next;
+    History* nextByUser;      // points to a History* w the same user_id
+    History* nextByMusic;     // points to a History* w the same music_id
 } History;
 
 typedef struct historyString {
@@ -40,7 +41,9 @@ History* createHistory (char** tokens) {
 
     history->duration = parseDuration (trimString (tokens[4]));
 
-    history->next = NULL;
+    history->nextByUser = NULL;
+
+    history->nextByMusic = NULL;
 
     return history;
 }
@@ -49,7 +52,7 @@ void deleteHistory(History* history) {
     History* temp;
 
     while (history != NULL) {
-        temp = history->next;
+        temp = history->nextByUser;
         free(history);
         history = temp;
     }
@@ -84,17 +87,48 @@ Duration getHistoryDuration (History* history) {
 }
 
 // Getter for the next field
-History* getNextHistory (History* history) {
-    return history->next;
+History* getNextHistoryByUser (History* history) {
+    return history->nextByUser;
 }
+
+History* getNextHistoryByMusic (History* history) {
+    return history->nextByMusic;
+}
+
+// Getter to determine how many nodes are in a linked list
+int getHistoryListLengthByUser(History* history) {
+    int length = 0;
+    while (history) {
+        length++;
+        history = getNextHistoryByUser(history);
+    }
+    return length;
+}
+
+int getHistoryListLengthByMusic(History* history) {
+    int length = 0;
+    while (history) {
+        length++;
+        history = getNextHistoryByMusic(history);
+    }
+    return length;
+}
+
 
 // SETTERs
 
-// Setter for the next field
-History* setNextHistory (History* newNext, History* history) {
+//Setter for the next field
+History* setNextHistoryByUser (History* newNext, History* history) {
     History* tail = history;
-    while (tail->next != NULL) tail = tail->next;
-    tail->next = newNext;
+    while (tail->nextByUser != NULL) tail = tail->nextByUser;
+    tail->nextByUser = newNext;
+    return history;
+}
+
+History* setNextHistoryByMusic (History* newNext, History* history) {
+    History* tail = history;
+    while (tail->nextByMusic != NULL) tail = tail->nextByMusic;
+    tail->nextByMusic = newNext;
     return history;
 }
 

@@ -2,7 +2,10 @@
 #include <query1.h>
 #include <parsing.h>
 #include <userManager.h>
+#include <musicManager.h>
+#include <artistManager.h>
 #include <users.h>
+#include <utils.h>
 #include <stdio.h>
 #include <output_handling/outputWriter.h>
 
@@ -89,15 +92,89 @@ void artistinfo (CMD* cmd, hashtableManager* mngr, Artist* artist, Output* file)
     deleteArtist(artist);
 }
 
-
-int individualAlbums (hashtableManager* mngr, Artist* artist) {
+int individualAlbums(hashtableManager* mngr, Artist* artist) {
     AlbumManager* al_mngr = getAlbumManager(mngr);
+    int artistID = getArtistID(artist);
+    int count = 0;
 
-    return 2;
+    albumCountArtist(artistID, al_mngr, &count);
+
+    return count;
 }
 
-double totalRecipe (hashtableManager* mngr, Artist* artist) {
-    HistoryManager* h_mngr = getHistoryManager(mngr);
+double singleArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr) {
+    MusicManager* m_mngr = getMusicManager(mngr);
+    ArtistManager* a_mngr = getArtistManager(mngr);
 
-    return 1.42;
+    GHashTableIter iter;
+    gpointer key, value;
+
+    double total = 0;
+    int artistID = getArtistID(artist);
+    double recipe_per_stream = getArtistRecipePerStream(artist);
+
+    g_hash_table_iter_init(&iter, hashtable);
+    
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+
+        Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
+        const int* artistList = getMusicArtistID(currentMusic);
+        int constcounter = getMusicArtistIDCount(currentMusic);
+
+        if ((constcounter == 1 && artistList[0] == artistID) || isArtistInList(artistList, artistID, constcounter)) {
+            int reproductions = getHistoryListLengthByMusic(value);
+            total += artistRecipe(reproductions, recipe_per_stream);
+
+        } else if (artistParticipation(a_mngr, artistList, artistID, constcounter)) {
+            int reproductions = getHistoryListLengthByMusic(value);
+            total += artistRecipe(reproductions, recipe_per_stream);
+        }
+    }
+
+    return total;
+}
+
+bool artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, int length) {
+    for(int i = 0; i < length; i++) {
+        if (ids[i] == artistID) return true;
+        Artist* currentID = lookupArtistHash(a_mngr, ids[i]);
+        if (getArtistType(currentID)) return isArtistInList(getArtistIDConstituent(currentID), artistID, length);
+    }
+    return false;
+}
+
+
+
+double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr) {
+    MusicManager* m_mngr = getMusicManager(mngr);
+
+    GHashTableIter iter;
+    gpointer key, value;
+    double total = 0;
+    int artistID = getArtistID(artist);
+    
+    double recipe_per_stream = getArtistRecipePerStream(artist);
+
+    g_hash_table_iter_init(&iter, hashtable);
+    
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+
+        Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
+        const int* currentArtist = getMusicArtistID(currentMusic);
+
+        if (*currentArtist && currentArtist[0] == artistID) {
+            int reproductions = getHistoryListLengthByMusic(value);
+            total += artistRecipe(reproductions, recipe_per_stream);
+        }
+    }
+
+    return total;
+}
+
+double artistRecipe (int reproductions, double recipe_per_stream) {
+    return reproductions * recipe_per_stream;
+}
+
+double participationRecipe (int reproductions, double recipe_per_stream, int constituents) {
+    return (reproductions * recipe_per_stream) / constituents;
 }

@@ -17,6 +17,8 @@ Artist* lookupArtistHash (ArtistManager *a_mngr, int id);
 
 bool isArtistInHash (ArtistManager *a_mngr, int id);
 
+bool isArtistInList (const int* ids, int artistID, int length);
+
 char* lookupArtistCountryHash (ArtistManager *a_mngr, int id);
 
 int getDataArtist (char *path, ArtistManager* mngr);

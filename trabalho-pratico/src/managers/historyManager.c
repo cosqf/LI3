@@ -6,10 +6,13 @@
 #include <parsing.h>
 #include <utils.h>
 #include <query4.h>
+#include <query1.h>
+
 #include <time.h>
 
 typedef struct historyManager {
-    GHashTable *history;
+    GHashTable *historyByUser;
+    GHashTable *historyByMusic;
     GTree* historyInWeeks; // will only have the top 10 artists of each week, key: first day of the week, value: array with artists and duration
 } HistoryManager;
 
@@ -61,27 +64,54 @@ HistoryManager* initializeHashHistory () {
         perror("Failed to allocate memory for HistoryManager");
         exit(EXIT_FAILURE); 
     }
-    h_mngr->history = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistory);
+    h_mngr->historyByUser = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistory);
+    h_mngr->historyByMusic = g_hash_table_new(g_direct_hash, g_direct_equal);
     h_mngr->historyInWeeks = NULL;
     return h_mngr;
 }
 
-void insertHistoryHash(HistoryManager *h_mngr, int key, History *history) {
-    History* existentHistory = g_hash_table_lookup(h_mngr->history, GINT_TO_POINTER(key));
+void insertHistoryHashByUser(GHashTable *hashtable, int userID, History *history) {
+    History* existentHistory = g_hash_table_lookup(hashtable, GINT_TO_POINTER(userID));
 
-    if (existentHistory) setNextHistory(history, existentHistory);
-    else g_hash_table_insert(h_mngr->history, GINT_TO_POINTER(key), history);
+    if (existentHistory) setNextHistoryByUser(history, existentHistory);
+    
+    else g_hash_table_insert(hashtable, GINT_TO_POINTER(userID), history);
 }
+
+void insertHistoryHashByMusic(GHashTable *hashtable, int musicID, History *history) {
+    History* existentHistory = g_hash_table_lookup(hashtable, GINT_TO_POINTER(musicID));
+
+    if (existentHistory) setNextHistoryByMusic(history, existentHistory);
+    
+    else g_hash_table_insert(hashtable, GINT_TO_POINTER(musicID), history);
+}
+
 
 void freeHistory (HistoryManager* h_mngr) {
     if(!h_mngr) return;
-    g_hash_table_destroy (h_mngr->history);
+
+    g_hash_table_steal_all (h_mngr->historyByMusic);
+    g_hash_table_destroy (h_mngr->historyByMusic);
+    g_hash_table_destroy (h_mngr->historyByUser);
+
     if (h_mngr->historyInWeeks) g_tree_destroy(h_mngr->historyInWeeks);
     free (h_mngr);
 }
 
 int lengthHistory (HistoryManager* mngr) {
-    return g_hash_table_size(mngr->history);
+    return g_hash_table_size(mngr->historyByUser);
+}
+
+double totalRecipe (hashtableManager* mngr, Artist* artist) {
+    HistoryManager* h_mngr = getHistoryManager(mngr);
+
+    double total = 0;
+    int constituentsNumber = getArtistIDConstituentCounter(artist);
+
+    if(constituentsNumber == 0) total = singleArtist(h_mngr->historyByMusic, artist, mngr);
+    else total = collectiveArtist(h_mngr->historyByMusic, artist, mngr);
+
+    return total;
 }
 
 
@@ -107,7 +137,8 @@ void callbackHistory(char **tokens, void *manager, Output *output) {
     if (!validHistory(historyS)) insertErrorFileHistory(historyS, output);
     else {
         History* history = createHistory (tokens);
-        insertHistoryHash(historyManager, getHistoryUserId(history), history);
+        insertHistoryHashByUser(historyManager->historyByUser, getHistoryUserId(history), history);
+        insertHistoryHashByMusic(historyManager->historyByMusic, getHistoryMusicId(history), history);
     }
     deleteHistoryString(historyS);
 }
@@ -126,7 +157,7 @@ int compareTimestamp(const void* a, const void* b) {
 
 // Transforms the hash table into a History array and sorts it
 int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: pointer to an array of History*
-    GHashTable* hash = manager->history;
+    GHashTable* hash = manager->historyByUser;
     GHashTableIter iter;
     gpointer key, value;
     int i = 0;
@@ -148,7 +179,7 @@ int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: 
                 *hashArray = temp;
             }
             (*hashArray)[i++] = hist;
-            hist = getNextHistory (hist);
+            hist = getNextHistoryByUser (hist);
         }
     }
 
@@ -205,21 +236,3 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
     }
 }
 
-// Callback function for g_hash_table_foreach
-void printKeyValue(gpointer key, gpointer value, gpointer user_data) {
-    (void) user_data;
-    int id = GPOINTER_TO_INT(key);      // Convert key back to int
-    int seconds = GPOINTER_TO_INT(value); // Convert value back to int
-
-    printf("ID: %d, Seconds: %d\n", id, seconds);
-}
-
-void printHash(GHashTable* hash) {
-    if (!hash) {
-        printf("Hash table is NULL.\n");
-        return;
-    }
-    printf("---- Hash Table Contents ----\n");
-    g_hash_table_foreach(hash, printKeyValue, NULL);  // Iterate and print each key-value pair
-    printf("-----------------------------\n");
-}

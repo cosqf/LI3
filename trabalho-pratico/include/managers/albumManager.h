@@ -16,6 +16,8 @@ void freeHashAlbum (AlbumManager* a_mngr);
 
 bool isAlbumInHash (AlbumManager *a_mngr, int id);
 
+void albumCountArtist(int artistID, AlbumManager* al_mngr, int* count);
+
 int getDataAlbum (char* path, hashtableManager* mngr);
 
 void callbackAlbum(char** tokens, void* manager, Output* output);

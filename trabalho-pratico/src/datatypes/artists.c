@@ -6,7 +6,7 @@
 typedef struct artist {
     int id;                       //– identificador único do artista;
     char* name;                     //– nome do artista;
-    float recipe_per_stream;        //– dinheiro auferido de cada vez que uma das músicas do artista é reproduzida;
+    double recipe_per_stream;        //– dinheiro auferido de cada vez que uma das músicas do artista é reproduzida;
     int* id_constituent;            //– lista de identificadores únicos dos seus constituintes, no caso de se tratar de um artista coletivo. Este campo pode ser uma lista vazia.
     unsigned int id_constituent_counter;
     char* country;                  //– nacionalidade do artista.
@@ -153,7 +153,7 @@ char* getArtistName(Artist* artist) {
 }
 
 /* Getter for recipe_per_stream */
-float getArtistRecipePerStream(Artist* artist) {
+double getArtistRecipePerStream(Artist* artist) {
     return artist->recipe_per_stream;
 }
 

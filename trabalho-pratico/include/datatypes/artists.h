@@ -28,7 +28,7 @@ Artist* copyArtist(Artist* artistOG);
 /* Getters */
 int getArtistID(Artist* artist);
 char* getArtistName(Artist* artist);
-float getArtistRecipePerStream(Artist* artist);
+double getArtistRecipePerStream(Artist* artist);
 const int* getArtistIDConstituent(Artist* artist);
 unsigned int getArtistIDConstituentCounter(Artist* artist);
 char* getArtistCountry(Artist* artist);
