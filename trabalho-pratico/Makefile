@@ -11,6 +11,7 @@ LDFLAGS := `pkg-config --libs glib-2.0` -lm
 
 SRC_PRINCIPAL := $(shell find src/ -name "*.c" -not -name "test.c")
 SRC_TESTS := $(shell find src/ -name "*.c" -not -name "principal.c")
+SRC_INTERACTIVE := $(shell find src/ -name "*.c" -not -name "interactive.c")
 
 OBJ_PRINCIPAL := $(patsubst src/%.c,build/%.o,$(SRC_PRINCIPAL))
 OBJ_TESTS := $(patsubst src/%.c,build/%.o,$(SRC_TESTS))

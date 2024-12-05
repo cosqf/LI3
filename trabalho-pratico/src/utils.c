@@ -17,6 +17,7 @@
 #include <musicManager.h>
 #include <errno.h>
 #include <limits.h>
+#include <time.h>
 
 FILE* openFile (char * argv) { 
     FILE* fp = fopen (argv, "r");
@@ -193,8 +194,14 @@ int compareDate(Date dateA, Date dateB) {  // if a > b returns 1, a < b returns 
 
 // days functions
 short int getWeekday (Date date) { // gotten from wikipedia, sunday == 0
-    return ((date.day += date.month < 3 ? date.year-- : 
-            date.year - 2, 23 * date.month/9 + date.day + 4 + date.year/4- date.year/100 + date.year/400)%7);
+    int d = date.day;
+    int m = date.month;
+    int y = date.year;
+    if (m < 3) {
+        m += 12;
+        y -= 1;
+    }
+    return (d + (13 * (m + 1)) / 5 + y + (y / 4) - (y / 100) + (y / 400)) % 7;
 }
 
 int getDaysInMonth(int month, int year) {

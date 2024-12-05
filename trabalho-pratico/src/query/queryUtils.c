@@ -11,8 +11,8 @@ int compareTuple(const void* a, const void* b) {
     if (tupleA->value > tupleB->value) return -1;  // descending order
     if (tupleA->value < tupleB->value) return 1;
 
-    if (tupleA->key < tupleB->key) return -1;  // if the values are the same, compare the ids too
-    if (tupleB->key > tupleB->key) return 1;   // smaller id first
+    if (tupleA->key > tupleB->key) return 1;  // if the values are the same, compare the ids too
+    if (tupleA->key < tupleB->key) return -1;   // smaller id first
     return 0;
 }
 
@@ -33,6 +33,8 @@ Tuple* sortHash (GHashTable* hash, int sorterFunc (const void*, const void*)) {
     int i = 0;
 
     int lengthHash = g_hash_table_size (hash);
+    if (lengthHash <= 0) return NULL;
+
     Tuple* hashArray = malloc (sizeof (Tuple) * lengthHash);
     if (mallocErrorCheck (hashArray)) {
         perror ("Malloc error in sortHash\n");
