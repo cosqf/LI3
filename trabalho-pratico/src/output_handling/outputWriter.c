@@ -77,7 +77,7 @@ void writeErrorFileHandle (Output* output, DataType type) {
     FILE* file = output->file;
     if (type == Artists) fprintf (file, "\"id\";\"name\";\"description\";\"recipe_per_stream\";\"id_constituent\";\"country\";\"type\"\n");
     else if (type == Users) fprintf (file, "\"username\";\"email\";\"first_name\";\"last_name\";\"birth_date\";\"country\";\"subscription_type\";\"liked_songs_id\"\n");
-    else if (type == Musics) fprintf (file, "\"id\";\"title\";\"artist_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
+    else if (type == Musics) fprintf (file, "\"id\";\"title\";\"artist_id\";\"album_id\";\"duration\";\"genre\";\"year\";\"lyrics\"\n");
     else if (type == Historys) fprintf (file, "\"id\";\"user_id\";\"music_id\";\"timestamp\";\"duration\";\"platform\"\n");
     else if (type == Albums) fprintf (file, "\"id\";\"title\";\"artist_id\";\"year\";\"producers\"\n");
     else perror ("Datatype error in error outputting\n");
