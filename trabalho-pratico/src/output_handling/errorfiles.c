@@ -65,16 +65,17 @@ void insertErrorFileMusics(MusicString *music, Output* output) {
     lines[0] = getMusicIDString(music);
     lines[1] = getMusicTitleString(music);
     lines[2] = getMusicArtistIDString(music);
-    lines[3] = getMusicDurationString(music);
-    lines[4] = getMusicGenreString(music);
-    lines[5] = getMusicYearString(music);
-    lines[6] = getMusicLyricsString(music);
+    lines[3] = getMusicAlbumIDString(music);
+    lines[4] = getMusicDurationString(music);
+    lines[5] = getMusicGenreString(music);
+    lines[6] = getMusicYearString(music);
+    lines[7] = getMusicLyricsString(music);
 
-    setOutput (output, lines, 7);
+    setOutput (output, lines, 8);
 
     writeErrorFile (output);
     
-    for (int i = 0; i < 7; i++) free(lines[i]);
+    for (int i = 0; i < 8; i++) free(lines[i]);
 }
 
 Output* openErrorOutputHistory () {

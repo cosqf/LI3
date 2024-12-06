@@ -62,7 +62,7 @@ MusicString* createMusicString (char** tokens) {
     music->title = strdup (trimString(tokens[1]));
     music->artist_id = strdup (trimStringWithoutBrackets(tokens[2]));
     music->artist_id_count = IdCounter (tokens[2]);
-    music->album_id = strdup(trimString(tokens[3]));
+    music->album_id = strdup(trimStringWithoutBrackets(tokens[3]));
     music->duration = strdup (trimString(tokens[4]));
     music->genre = strdup (trimString(tokens[5]));
     music->year = strdup (trimString(tokens[6]));
