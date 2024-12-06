@@ -102,15 +102,14 @@ void getHistoryByWeeks2 (HistoryManager* historyManager, MusicManager* musicMana
         adjustDateLimits (&date, 0); // get last sunday
         
         int musicId = getHistoryMusicId(hist);
-        Music* music = lookupMusicHash (musicManager, musicId);
-        const int* artistIds = getMusicArtistID(music);
-        int artistCount = getMusicArtistIDCount(music);
+        int* artistIds;
+        int artistCount = lookupMusicArtistIDsHash (musicManager, musicId, &artistIds);
         
         for (int j = 0; j < artistCount; j++) {
             Tuple tuple = {.key = artistIds[j], .value = durationInSeconds (getHistoryDuration(hist))};
             updateHashWithWeeks (hashWithWeeks, date, tuple);
         }
-        free (music);
+        free (artistIds);
     }
     free (array);
     // will create a tree in historyManager with the data from treeWithHashes

@@ -50,6 +50,16 @@ Music* lookupMusicHash (MusicManager *m_mngr, int id) {
     if (music == NULL) return NULL;
     return copyMusic (music);
 }
+// receives a pointer to an array, copies the artist ids to it and returns the counter
+int lookupMusicArtistIDsHash (MusicManager* mngr, int id, int** artistIds) {
+    Music* music = g_hash_table_lookup (mngr->music, GINT_TO_POINTER(id));
+    if (music == NULL) return -1;
+    int idCounter = getMusicArtistIDCount (music);
+    const int* ids = getMusicArtistID (music);
+    *artistIds = malloc (sizeof (int) * idCounter);
+    memcpy (*artistIds, ids, idCounter * (sizeof (int)));
+    return idCounter;
+}
 
 void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data) {
     GHashTableIter iter;
