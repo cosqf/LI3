@@ -102,7 +102,7 @@ int individualAlbums(hashtableManager* mngr, Artist* artist) {
     return count;
 }
 
-double singleArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr) {
+double singleArtist (GHashTable*  hashtable, Artist* artist, hashtableManager* mngr) {
     MusicManager* m_mngr = getMusicManager(mngr);
     ArtistManager* a_mngr = getArtistManager(mngr);
 
@@ -120,37 +120,36 @@ double singleArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mn
         Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
         const int* artistList = getMusicArtistID(currentMusic);
         int constcounter = getMusicArtistIDCount(currentMusic);
+        int* groupsize = calloc(constcounter, sizeof(int));
 
-        if ((constcounter == 1 && artistList[0] == artistID) || isArtistInList(artistList, artistID, constcounter)) {
-            int reproductions = getHistoryListLengthByMusic(value);
-            total += artistRecipe(reproductions, recipe_per_stream);
+        artistParticipation(a_mngr, artistList, artistID, constcounter, groupsize);
+        int reproductions = getHistoryListLengthByMusic(value);
 
-        } else if (artistParticipation(a_mngr, artistList, artistID, constcounter)) {
-            int reproductions = getHistoryListLengthByMusic(value);
-            total += artistRecipe(reproductions, recipe_per_stream);
+        for(int i = 0; i < constcounter && groupsize[i] != 0; i++){
+            total += (reproductions * recipe_per_stream) / groupsize[i];
         }
 
         deleteMusic(currentMusic);
+        free(groupsize);
     }
 
     return total;
 }
 
-bool artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, int length) {
-    for(int i = 0; i < length; i++) {
-        if (ids[i] == artistID) return true;
-        Artist* currentID = lookupArtistHash(a_mngr, ids[i]);
-        if (getArtistType(currentID)) {
-            bool valid = isArtistInList(getArtistIDConstituent(currentID), artistID, length);
-            deleteArtist(currentID);
-            return valid;
+void artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, int length, int* constituents) {
+    for(int i = 0, j = 0; i < length; i++) {
+        Artist* currentArtist = lookupArtistHash(a_mngr, ids[i]);
+        if (getArtistType(currentArtist)){
+            int currentArtistSize = getArtistIDConstituentCounter(currentArtist); 
+            if (isArtistInList(getArtistIDConstituent(currentArtist), artistID, currentArtistSize)) {
+                constituents[j++] = currentArtistSize;
+            }
+        } else if (getArtistID(currentArtist) == artistID) {
+            constituents[j++] = 1;
         }
-        deleteArtist(currentID);
+        deleteArtist(currentArtist);
     }
-    return false;
 }
-
-
 
 double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr) {
     MusicManager* m_mngr = getMusicManager(mngr);
@@ -167,23 +166,16 @@ double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager
     while (g_hash_table_iter_next(&iter, &key, &value)) {
 
         Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
-        const int* currentArtist = getMusicArtistID(currentMusic);
+        const int* artistList = getMusicArtistID(currentMusic);
+        int constcounter = getMusicArtistIDCount(currentMusic);
 
-        if (*currentArtist && currentArtist[0] == artistID) {
+        if (isArtistInList(artistList, artistID, constcounter)) {
             int reproductions = getHistoryListLengthByMusic(value);
-            total += artistRecipe(reproductions, recipe_per_stream);
+            total += reproductions * recipe_per_stream;
         }
 
         deleteMusic(currentMusic);
     }
 
     return total;
-}
-
-double artistRecipe (int reproductions, double recipe_per_stream) {
-    return reproductions * recipe_per_stream;
-}
-
-double participationRecipe (int reproductions, double recipe_per_stream, int constituents) {
-    return (reproductions * recipe_per_stream) / constituents;
 }

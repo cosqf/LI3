@@ -104,14 +104,12 @@ int lengthHistory (HistoryManager* mngr) {
 
 double totalRecipe (hashtableManager* mngr, Artist* artist) {
     HistoryManager* h_mngr = getHistoryManager(mngr);
-
-    double total = 0;
     int constituentsNumber = getArtistIDConstituentCounter(artist);
 
-    if(constituentsNumber == 0) total = singleArtist(h_mngr->historyByMusic, artist, mngr);
-    else total = collectiveArtist(h_mngr->historyByMusic, artist, mngr);
+    if(constituentsNumber == 0) return singleArtist(h_mngr->historyByMusic, artist, mngr);
+    else return collectiveArtist(h_mngr->historyByMusic, artist, mngr);
 
-    return total;
+    return 0;
 }
 
 
