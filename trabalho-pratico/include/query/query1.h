@@ -20,12 +20,8 @@ double totalRecipe (hashtableManager* mngr, Artist* artist);
 
 double singleArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr);
 
-bool artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, int length);
+void artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, int length, int *constituents);
 
 double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr);
-
-double artistRecipe (int reproductions, double recipe_per_stream);
-
-double participationRecipe (int reproductions, double recipe_per_stream, int constituents);
 
 #endif  
