@@ -23,7 +23,7 @@ Genre lookupMusicGenreHash (MusicManager *m_mngr, int id);
 
 int lookupMusicArtistIDsHash (MusicManager* mngr, int id, int** artistIds);
 
-void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data);
+void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer key, gpointer value, gpointer music_data), gpointer music_data);
 
 int getDataMusic (char *path, hashtableManager* mngr);
 

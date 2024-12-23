@@ -180,8 +180,6 @@ int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: 
             hist = getNextHistoryByUser (hist);
         }
     }
-
-    //qsort (*hashArray, i, sizeof(History*), compareTimestamp);
     return i;
 }
 
@@ -193,6 +191,7 @@ void insertInHistoryByWeeks2 (GTree* tree, Date firstDayOfWeek, GHashTable* arti
     g_tree_insert (tree, key, artist);
 }
 
+// will create a tree in historyManager with the data from treeWithHashes
 void filterToTree (HistoryManager* mngr, GHashTable* hash) {
     initializeHistoryTree (mngr);
     GHashTableIter iter;
@@ -223,13 +222,12 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
         top10artistWeek->artistsIds = limitedArray;
         top10artistWeek->count = limit;
 
-        Date* dateKey = (Date*) key;
         Date* dateKeyCopy = malloc(sizeof(Date));
         if (mallocErrorCheck (dateKeyCopy)) {
-                free (top10artistWeek);
-                return;
-            }
-        *dateKeyCopy = *dateKey;
+            free (top10artistWeek);
+            return;
+        }
+        *dateKeyCopy = *(Date*) key;
         g_tree_insert (mngr->historyInWeeks, dateKeyCopy, top10artistWeek);
     }
 }
