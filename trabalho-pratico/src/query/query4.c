@@ -57,7 +57,7 @@ void freeArtistList (ArtistList* list) {
 
 guint dateHashFunc(gconstpointer key) {
     const Date* date = (const Date*) key;
-    return (guint)(date->year * 10000 + date->month * 100 + date->day);
+    return (guint)(date->year * 366 + date->month * 31 + date->day);
 }
 
 gboolean dateEqualFunc(gconstpointer a, gconstpointer b) {
@@ -84,7 +84,7 @@ void updateHashWithWeeks (GHashTable* bigTable, Date date, Tuple tuple) {
 }
 
 
-void getHistoryByWeeks2 (HistoryManager* historyManager, MusicManager* musicManager) {
+void getHistoryByWeeks (HistoryManager* historyManager, MusicManager* musicManager) {
     // setting up array
     int lengthHash = lengthHistory (historyManager);
     History** array = malloc (sizeof (History*) * lengthHash);
@@ -94,7 +94,8 @@ void getHistoryByWeeks2 (HistoryManager* historyManager, MusicManager* musicMana
         perror ("Empty history\n");
         return;
     }
-    GHashTable* hashWithWeeks = g_hash_table_new_full(dateHashFunc, dateEqualFunc, (GDestroyNotify) free, (GDestroyNotify) deleteHash);
+    //hashtable of hashtables, organized by date
+    GHashTable* hashWithWeeks = g_hash_table_new_full(dateHashFunc, dateEqualFunc, (GDestroyNotify) free, (GDestroyNotify) g_hash_table_destroy);
 
     for (int i = 0; i < lengthArray; i++) {
         History* hist = array[i];
@@ -164,8 +165,7 @@ void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManage
     Date maxDay = getCMDdateMax (cmd);
     GHashTable* artistsTimeInTop = createHash(); // will store the artists with the number of times they were on the top 10
     if (!historyTreeIsInitialized (historyManager)) { // will get all the top artists in each week
-        //initializeHistoryTree(historyManager);
-        getHistoryByWeeks2 (historyManager, musicManager); 
+        getHistoryByWeeks (historyManager, musicManager); 
     }
 
     bool isFilterOn = ! (minDay.year == 0);

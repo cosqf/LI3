@@ -9,13 +9,13 @@
 
 void query2(CMD *cmd, hashtableManager* mngr, int cmdCounter);
 
-void getArtistsDiscography (const int* id, int count, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr);
+void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted);
 
 int durationInSeconds (Duration time);
 
 Duration secondsInDuration (int seconds);
 
-void feeder(gpointer value, gpointer user_data);
+void feeder(gpointer key, gpointer value, gpointer user_data);
 
 void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output);
 

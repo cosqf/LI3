@@ -61,15 +61,8 @@ int lookupMusicArtistIDsHash (MusicManager* mngr, int id, int** artistIds) {
     return idCounter;
 }
 
-void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer value, gpointer music_data), gpointer music_data) {
-    GHashTableIter iter;
-    gpointer key, value;
-
-    g_hash_table_iter_init(&iter, m_mngr->music);
-
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
-        MusicProcessor(value, music_data);
-    }
+void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer, gpointer, gpointer), gpointer music_data) {
+    g_hash_table_foreach(m_mngr->music, (GHFunc) MusicProcessor, music_data);
 }
 
 
