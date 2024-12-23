@@ -111,7 +111,6 @@ double singleArtist (GHashTable*  hashtable, Artist* artist, hashtableManager* m
 
     double total = 0;
     int artistID = getArtistID(artist);
-    double recipe_per_stream = getArtistRecipePerStream(artist);
 
     g_hash_table_iter_init(&iter, hashtable);
     
@@ -120,35 +119,34 @@ double singleArtist (GHashTable*  hashtable, Artist* artist, hashtableManager* m
         Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
         const int* artistList = getMusicArtistID(currentMusic);
         int constcounter = getMusicArtistIDCount(currentMusic);
-        int* groupsize = calloc(constcounter, sizeof(int));
 
-        artistParticipation(a_mngr, artistList, artistID, constcounter, groupsize);
-        int reproductions = getHistoryListLengthByMusic(value);
+        for(int i = 0; i < constcounter; i++) {
+            Artist* currentArtist = lookupArtistHash(a_mngr, artistList[i]);
+            
+            if (getArtistType(currentArtist)){
+                int currentArtistSize = getArtistIDConstituentCounter(currentArtist);
 
-        for(int i = 0; i < constcounter && groupsize[i] != 0; i++){
-            total += (reproductions * recipe_per_stream) / groupsize[i];
+                if (isArtistInList(getArtistIDConstituent(currentArtist), artistID, currentArtistSize)) {
+                    double currentArtistRecipe = getArtistRecipePerStream(currentArtist);
+                    int reproductions = getHistoryListLengthByMusic(value);
+
+                    total += (reproductions * currentArtistRecipe) / currentArtistSize;
+                }
+
+            } else if (getArtistID(currentArtist) == artistID) {
+                double currentArtistRecipe = getArtistRecipePerStream(currentArtist);
+                int reproductions = getHistoryListLengthByMusic(value);
+
+                    total += (reproductions * currentArtistRecipe);
+            }
+
+            deleteArtist(currentArtist);
         }
 
         deleteMusic(currentMusic);
-        free(groupsize);
     }
 
     return total;
-}
-
-void artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, int length, int* constituents) {
-    for(int i = 0, j = 0; i < length; i++) {
-        Artist* currentArtist = lookupArtistHash(a_mngr, ids[i]);
-        if (getArtistType(currentArtist)){
-            int currentArtistSize = getArtistIDConstituentCounter(currentArtist); 
-            if (isArtistInList(getArtistIDConstituent(currentArtist), artistID, currentArtistSize)) {
-                constituents[j++] = currentArtistSize;
-            }
-        } else if (getArtistID(currentArtist) == artistID) {
-            constituents[j++] = 1;
-        }
-        deleteArtist(currentArtist);
-    }
 }
 
 double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr) {
