@@ -82,7 +82,7 @@ void feeder(gpointer key, gpointer value, gpointer music_data) {
 void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted) {
     int duration = GPOINTER_TO_INT (g_hash_table_lookup(table, GINT_TO_POINTER(id)));
 
-    for (int i = 9; i < 0; i--) {
+    for (int i = 0; i < 10; i++) {
         if (top10Sorted[i].key == id) {     // check if the id already exists and update
             top10Sorted[i].value = duration;
             
@@ -96,7 +96,8 @@ void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted) {
             }
             return;
         }
-
+    }
+    for (int i = 0; i<10; i++){
         // check if the duration is bigger
         if (top10Sorted[i].value < duration || 
             (top10Sorted[i].value == duration && top10Sorted[i].key > id)) {
@@ -121,7 +122,6 @@ void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* co
     }
     updateHash (newtable, id, duration);
     updateSortedArray (newtable, id, top10Sorted);
-
 }
 
 void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output) {
