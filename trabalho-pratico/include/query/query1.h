@@ -20,8 +20,6 @@ double totalRecipe (hashtableManager* mngr, Artist* artist);
 
 double singleArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr);
 
-void artistParticipation (ArtistManager* a_mngr, const int* ids, int artistID, int length, int *constituents);
-
 double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr);
 
 #endif  
