@@ -69,18 +69,19 @@ void feeder(gpointer key, gpointer value, gpointer music_data) {
     GHashTable* hashDuration = data->hashDuration;
     ArtistManager* a_mngr = data->artistManager;
     Tuple* top10Sorted = data->top10Sorted;
-
+    int minDuration = 0;
     // Extracting data from value
     int duration = durationInSeconds (getMusicDuration (music));
     const int* ids = getMusicArtistID (music);
     int idsCounter = getMusicArtistIDCount (music);
     for (int i = 0; i<idsCounter; i++) {
-        getArtistsDiscography(ids[i], hashDuration, duration, countryFilter, a_mngr, top10Sorted);
+        getArtistsDiscography(ids[i], hashDuration, duration, countryFilter, a_mngr, top10Sorted, &minDuration);
     }
 }
 
-void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted) {
+void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted, int* minDuration) {
     int duration = GPOINTER_TO_INT (g_hash_table_lookup(table, GINT_TO_POINTER(id)));
+    if (duration < *minDuration) return; //early exit
 
     for (int i = 0; i < 10; i++) {
         if (top10Sorted[i].key == id) {     // check if the id already exists and update
@@ -94,6 +95,7 @@ void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted) {
                 top10Sorted[j] = top10Sorted[j-1];
                 top10Sorted[j-1] = temp;
             }
+            *minDuration = top10Sorted[9].value;
             return;
         }
     }
@@ -104,6 +106,7 @@ void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted) {
             for (int j = 9; j > i; j--) top10Sorted[j] = top10Sorted[j-1]; // shift elements
             top10Sorted[i].key = id;
             top10Sorted[i].value = duration;
+            *minDuration = top10Sorted[9].value;
             return;
         }
     }
@@ -111,7 +114,7 @@ void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted) {
 
 
 // Inserts the duration of an artist's discography in the new hashtable, using the id as key
-void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted) {
+void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int* minDuration) {
     if (country != NULL) {  // country filter is active
         char* countryArtist = lookupArtistCountryHash (a_mngr, id);
         if (strcmp (country, countryArtist) != 0) {
@@ -121,7 +124,7 @@ void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* co
         free (countryArtist);
     }
     updateHash (newtable, id, duration);
-    updateSortedArray (newtable, id, top10Sorted);
+    updateSortedArray (newtable, id, top10Sorted, minDuration);
 }
 
 void printResult (CMD* cmd, Artist* artist, Duration dur, Output* output) {
