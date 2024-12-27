@@ -26,7 +26,6 @@ char** readOutputFiles() {
         fclose(file);
         return NULL;
     }
-
     int i = 0;
     char buffer[100]; 
 
@@ -146,14 +145,27 @@ int loadQ2 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr) {
     int widthS, heightS, widthW1, heightW1;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(inWin, heightW1, widthW1);
-
-    mvprintw (heightS/5, widthS /2 - 14, "Input the number of artists"); 
-    refresh();
+    int num;
     char string[10];
-    int num = getNumberFromInput (inWin, (int)(heightW1 / 2), (int)(widthW1 / 8), string, 9, 0, 9999999, 0);
-    if (num == -1) return -1;
+    while (true){
+        mvprintw ((int) heightS/5, (int) (widthS /2) - 21, "Input the number of artists; the max is 10"); 
+        refresh();
+        num = getNumberFromInput (inWin, (int)(heightW1 / 2), (int)(widthW1 / 8), string, 9, 0, 9999999, 0);
+        if (num == -1) return -1;
+        if (num >10) {
+            mvprintw ((int) (heightS/5) + 1, (int) (widthS /2) - 13, "The number must be smaller than 10");
+            refresh();
+        }
+        else break;
+    }
 
-    clrtoeol();
+    // clearing the messages
+    move ((int) heightS/5, (int) (widthS /2) - 21);
+    clrtoeol ();
+    move ((int) (heightS/5) + 1, (int) (widthS /2) - 12);
+    clrtoeol ();
+
+    
     mvprintw ((int) (heightS/5), (int) (widthS /2) - 14, "Input the country filter"); 
     mvprintw ((int) (heightS/5) +1, (int) (widthS/2) -18, "To have no filter, just hit \"Enter\"");
     refresh();

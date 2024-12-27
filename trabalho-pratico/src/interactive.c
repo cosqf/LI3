@@ -44,7 +44,7 @@ int gettingData (WINDOW* win, hashtableManager* mngr) {
     int widthS, heightS, widthW, heightW;;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(win, heightW, widthW);
-
+    echo();
     mvprintw((int) heightS/6, (int) widthS/2 -16, "Insert the path to the dataset");
     mvprintw (heightS-1, 1, "Type \"exit\" to leave");
     refresh();
@@ -80,6 +80,7 @@ int gettingData (WINDOW* win, hashtableManager* mngr) {
             break;
         }
     }
+    noecho();
     return 0;
 }
 
@@ -122,7 +123,7 @@ int gettingQuery (WINDOW* win) {
 
 int main () {
     initscr();
-    echo(); cbreak(); keypad(stdscr, TRUE); curs_set(0);
+    noecho(); cbreak(); keypad(stdscr, TRUE); curs_set(0);
     int widthS, heightS;
     getmaxyx(stdscr, heightS, widthS);
     if (widthS < 60 || heightS < 14) {
@@ -151,7 +152,7 @@ int main () {
         return 0;
     }
     delwin (win1);
-    while (true) { // do queries loop
+    while (true) { // queries loop
         WINDOW* win2 = newWindowWithBorder ((int) (heightS/1.5), (int) (widthS/1.5), (int) (heightS/6)+2, (int) (widthS/6));
         wrefresh (win2);
         mvprintw (heightS-1, 1, "Hit \"Esc\" to leave");
@@ -167,8 +168,9 @@ int main () {
         delwin (win2);
 
         WINDOW* inWin  = newWindowWithBorder((int) (heightS / 8), (int) (widthS / 1.3), (int) (heightS / 4), (int) (widthS * 0.3/(1.3*2)));
-        WINDOW* outWin = newWindowWithBorder((int) (heightS / 1.6), (int) (widthS / 1.3), (int) (heightS /4 + heightS /8), (int) (widthS * 0.3/(1.3*2)));
+        WINDOW* outWin = newWindowWithBorder((int) (heightS / 1.6)-1, (int) (widthS / 1.3), (int) (heightS /4 + heightS /8), (int) (widthS * 0.3/(1.3*2)));
 
+        echo();
         int repeat = 0;
         switch (query){
         case 1:
