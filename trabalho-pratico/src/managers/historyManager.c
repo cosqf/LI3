@@ -112,6 +112,10 @@ double totalRecipe (hashtableManager* mngr, Artist* artist) {
     return 0;
 }
 
+void traverseHistorybyUser(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data) {
+    GHashTable* historyByUser = mngr->historyByUser;
+    g_hash_table_foreach(historyByUser, callback, data);
+}
 
 // get data
 
