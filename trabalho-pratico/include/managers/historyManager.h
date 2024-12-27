@@ -7,8 +7,6 @@
 
 typedef struct historyManager HistoryManager;
 
-void insertHistoryHash(GHashTable *hashtable, int key, History *history);
-
 HistoryManager* initializeHashHistory ();
 
 void freeHistory (HistoryManager* h_mngr);
@@ -17,7 +15,7 @@ GHashTable* reorganizeHTableByMusicID(HistoryManager* h_mngr);
 
 int getDataHistory (char *path, HistoryManager* mngr);
 int lengthHistory (HistoryManager* mngr);
-int sortHistory (HistoryManager* manager, History*** hashArray);
+int transformHistory (HistoryManager* manager, History*** hashArray);
 void printHash(GHashTable* hash);
 
 // trees

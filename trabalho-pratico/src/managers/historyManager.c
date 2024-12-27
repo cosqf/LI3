@@ -155,8 +155,8 @@ int compareTimestamp(const void* a, const void* b) {
     return c;
 }
 
-// Transforms the hash table into a History array and sorts it
-int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: pointer to an array of History*
+// Transforms the hash table into a History array 
+int transformHistory (HistoryManager* manager, History*** hashArray) { // hashArray: pointer to an array of History*
     GHashTable* hash = manager->historyByUser;
     GHashTableIter iter;
     gpointer key, value;

@@ -89,7 +89,7 @@ void getHistoryByWeeks (HistoryManager* historyManager, MusicManager* musicManag
     int lengthHash = lengthHistory (historyManager);
     History** array = malloc (sizeof (History*) * lengthHash);
     if (mallocErrorCheck (array)) return;
-    int lengthArray = sortHistory(historyManager, &array);
+    int lengthArray = transformHistory (historyManager, &array);
     if (lengthArray <= 0) {
         perror ("Empty history\n");
         return;
