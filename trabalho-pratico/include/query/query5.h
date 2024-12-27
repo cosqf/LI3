@@ -4,7 +4,7 @@
 #ifndef _QUERY5_H_
 #define _QUERY5_H_
 
-void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int counter);
+void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, UserManager* u_mngr, int counter);
 
 void updateMatrix (gpointer key, gpointer value, gpointer feeder);
 

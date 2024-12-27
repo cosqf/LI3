@@ -41,7 +41,7 @@ typedef struct {
     char** user_array;
 } Q5Feeder;
 
-void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int counter){
+void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, UserManager* u_mngr, int counter){
     //printf("#1 start q5\n"); //DEBUG
     char filename[50];  // buffer for the formatted file name
 
@@ -51,6 +51,14 @@ void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int counter
     Output* output = openOutputFile (filename);
 
     int id = getCMDId(cmd);
+    User* targetUser = lookupUserHash(u_mngr, id);
+    if(!targetUser){
+        writeNewLine(output);
+        closeOutputFile(output);
+        deleteUser(targetUser);
+        return;
+    }
+    deleteUser(targetUser);
     char* targetID = formatUserID(id); //idUtilizadorAlvo
 
     int noUsers = getCMDnoUsers(cmd); //numRecomendacoes
@@ -84,7 +92,7 @@ void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int counter
     user_array = feeder.user_array;
 
      //printf("matrix_lines: %d / users_read: %d\n", feeder.matrix_lines, feeder.users_read); //DEBUG
-     printMatrix(matrix_lines, 10, matrix);
+     //printMatrix(matrix_lines, 10, matrix);
 
 
     // if (lines_used < matrix_lines) {
@@ -94,7 +102,7 @@ void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int counter
     //matrix_lines = lines_used;
     //printf("#3 trims done\n"); //DEBUG
     //printf("matrix_lines: %d / users_read: %d\n", feeder.matrix_lines, feeder.users_read); //DEBUG
-    printMatrix(matrix_lines, 10, matrix);
+    //printMatrix(matrix_lines, 10, matrix);
 
     char** recUsers = recomendaUtilizadores(targetID, matrix, user_array, genre_array, lines_used, 10, noUsers);
     //printf("\n#4 recs obtained\n"); //DEBUG
