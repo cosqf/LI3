@@ -9,6 +9,7 @@
 #include <interactive_queries.h>
 #include <interactive_utils.h>
 #include <validateDatatypes.h>
+#include <almightyManager.h>
 
 #include <query1.h>
 #include <query2.h>
@@ -16,7 +17,7 @@
 #include <query4.h>
 #include <query5.h>
 
-int loadQ1 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr) {
+int loadQ1 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr) {
     int widthS, heightS, widthW1, heightW1;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(inWin, heightW1, widthW1);
@@ -41,7 +42,7 @@ int loadQ1 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr) {
 }
 
 
-int loadQ2 (WINDOW* inWin, hashtableManager* mngr) {
+int loadQ2 (WINDOW* inWin, AlmightyManager* mngr) {
     int widthS, heightS, widthW1, heightW1;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(inWin, heightW1, widthW1);
@@ -85,7 +86,7 @@ int loadQ2 (WINDOW* inWin, hashtableManager* mngr) {
     return 0;
 }
 
-int loadQ3 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr) {
+int loadQ3 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr) {
     int widthS, heightS, widthW1, heightW1;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(inWin, heightW1, widthW1);
@@ -128,7 +129,7 @@ int loadQ3 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr) {
     return 0;
 }
 
-int loadQ4 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr) {
+int loadQ4 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr) {
     int widthS, heightS, widthW1, heightW1;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(inWin, heightW1, widthW1);
@@ -198,7 +199,7 @@ int loadQ4 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr) {
     return 0;
 }
 
-int loadQ5 (WINDOW* inWin, hashtableManager* mngr) {
+int loadQ5 (WINDOW* inWin, AlmightyManager* mngr) {
     int widthS, heightS, widthW1, heightW1;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(inWin, heightW1, widthW1);

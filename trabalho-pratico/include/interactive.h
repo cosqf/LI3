@@ -2,6 +2,7 @@
 #include <panel.h>
 #include <utils.h>
 #include <parsing.h>
+#include <almightyManager.h>
 
 #ifndef _INTERACTIVE_H_
 #define _INTERACTIVE_H_
@@ -30,7 +31,7 @@ int loadMainPage ();
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-int gettingData (WINDOW* win, hashtableManager* mngr);
+int gettingData (WINDOW* win, AlmightyManager* mngr);
 
 /**
  * @brief Allows the user to choose a query in a menu.

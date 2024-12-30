@@ -18,17 +18,19 @@ typedef struct cmd CMD;
  */
 CMD* createCMD(char** tokens, int count);
 
-<<<<<<< HEAD
 /**
  * @brief Deletes a command struct and frees its memory.
  *
  * @param cmd A pointer to the command struct to be freed.
  */
-=======
-CMD* createEmptyCMD ();
-
->>>>>>> afd13d6a98a35d3449a46ec3fee26ebadc8aa408
 void freeCmd (CMD *cmd);
+
+/**
+ * @brief Creates an empty command struct
+ * 
+ * @return A poitner to a command struct.
+ */
+CMD* createEmptyCMD ();
 
 /* Getters */
 /**
@@ -148,8 +150,9 @@ short int getCMDyear(CMD* cmd);
  */
 short int getCMDnArtists(CMD* cmd);
 
-<<<<<<< HEAD
-=======
+
+/* Setters */
+
 void setCMDQuery(CMD* cmd, int query);
 
 void setCMDEntity(CMD* cmd, char entity);
@@ -173,5 +176,5 @@ void setCMDNoUsers(CMD* cmd, int noUsers);
 void setCMDYear(CMD* cmd, short int year);
 
 void setCMDNArtists(CMD* cmd, short int nArtists);
->>>>>>> afd13d6a98a35d3449a46ec3fee26ebadc8aa408
+
 #endif

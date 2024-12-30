@@ -18,7 +18,7 @@
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-int loadQ1 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr);
+int loadQ1 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr);
 
 /**
  * @brief Displays the second query in an interface.
@@ -33,7 +33,7 @@ int loadQ1 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr);
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-int loadQ2 (WINDOW* inWin, hashtableManager* mngr);
+int loadQ2 (WINDOW* inWin, AlmightyManager* mngr);
 
 /**
  * @brief Displays the third query in an interface.
@@ -49,7 +49,7 @@ int loadQ2 (WINDOW* inWin, hashtableManager* mngr);
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-int loadQ3 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr);
+int loadQ3 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr);
 
 /**
  * @brief Displays the fourth query in an interface.
@@ -66,7 +66,7 @@ int loadQ3 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr);
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-int loadQ4 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr);
+int loadQ4 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr);
 
 /**
  * @brief Displays the fifth query in an interface.
@@ -81,5 +81,5 @@ int loadQ4 (WINDOW* inWin, WINDOW* outWin, hashtableManager* mngr);
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-int loadQ5 (WINDOW* inWin, hashtableManager* mngr);
+int loadQ5 (WINDOW* inWin, AlmightyManager* mngr);
 #endif

@@ -20,7 +20,23 @@
  */
 void query2(CMD *cmd, AlmightyManager* mngr, int cmdCounter);
 
-<<<<<<< HEAD
+
+/**
+ * @brief Stores the artist's discography data.
+ * This function processes an artist's discography, being able to apply an optional country filter,  
+ * and updates the hash table and sorted array with the information about the artist's total song's durations.  
+ * 
+ * @param id The ID of the artist being processed.
+ * @param newtable A hash table to store the artist's data.
+ * @param duration The total duration (in seconds) of the artist's discography or relevant tracks.
+ * @param country Optional country filter. Only artists from this country are processed if specified.
+ * @param a_mngr A pointer to the ArtistManager structure for artist lookup.
+ * @param top10Sorted An array to store the top N artists sorted by the duration length.
+ * @param topN The maximum number of artists to keep in the top N ranking.
+ * @param minDuration A pointer to the current minimum duration value in the top N ranking.
+ */
+void getArtistsDiscography(int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int topN, int* minDuration);
+
 /**
  * @brief For each artist ID given, checks if they belong to a certain country (if any is given) and updates a hash table with a duration given.
  * 
@@ -30,19 +46,7 @@ void query2(CMD *cmd, AlmightyManager* mngr, int cmdCounter);
  * @param country A string representing a country, used to filter the artists. If no filter is active, it will be NULL.
  * @param a_mngr A pointer to the artist manager, used to look up the artist's country.
  */
-void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int* minDuration);
-=======
-void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int topN, int* minDuration);
-
 void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted, int topN, int* minDuration);
->>>>>>> afd13d6a98a35d3449a46ec3fee26ebadc8aa408
-
-
-
-int durationInSeconds (Duration time);
-
-Duration secondsInDuration (int seconds);
-
 
 
 /**
