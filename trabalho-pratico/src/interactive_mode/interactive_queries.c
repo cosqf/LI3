@@ -9,6 +9,7 @@
 #include <interactive_queries.h>
 #include <interactive_utils.h>
 #include <validateDatatypes.h>
+#include <almightyManager.h>
 
 #include <query1.h>
 #include <query2.h>

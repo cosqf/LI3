@@ -2,6 +2,7 @@
 #include <panel.h>
 #include <utils.h>
 #include <parsing.h>
+#include <almightyManager.h>
 
 #ifndef _INTERACTIVE_H_
 #define _INTERACTIVE_H_

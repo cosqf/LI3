@@ -25,6 +25,13 @@ CMD* createCMD(char** tokens, int count);
  */
 void freeCmd (CMD *cmd);
 
+/**
+ * @brief Creates an empty command struct
+ * 
+ * @return A poitner to a command struct.
+ */
+CMD* createEmptyCMD ();
+
 /* Getters */
 /**
  * @brief A getter function that returns the number of the query of the command.
@@ -142,6 +149,9 @@ short int getCMDyear(CMD* cmd);
  * @return Number of artists specified in the given command.
  */
 short int getCMDnArtists(CMD* cmd);
+
+
+/* Setters */
 
 void setCMDQuery(CMD* cmd, int query);
 
