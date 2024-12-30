@@ -43,13 +43,6 @@ bool historyTreeIsInitialized (HistoryManager* mngr) {
     else return 0;
 }
 
-void insertInHistoryByWeeks (HistoryManager* mngr, Date firstDayOfWeek, void* top10artistWeek) {
-    Date* key = malloc(sizeof(Date));
-        if (mallocErrorCheck (key)) return;   
-    *key = firstDayOfWeek; // a copy
-
-    g_tree_insert (mngr->historyInWeeks, key, top10artistWeek);
-}
 
 void traverseTree(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder) {
     GTree* tree = mngr->historyInWeeks;
@@ -157,8 +150,8 @@ int compareTimestamp(const void* a, const void* b) {
     return c;
 }
 
-// Transforms the hash table into a History array and sorts it
-int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: pointer to an array of History*
+// Transforms the hash table into a History array 
+int transformHistory (HistoryManager* manager, History*** hashArray) { // hashArray: pointer to an array of History*
     GHashTable* hash = manager->historyByUser;
     GHashTableIter iter;
     gpointer key, value;
@@ -187,12 +180,25 @@ int sortHistory (HistoryManager* manager, History*** hashArray) { // hashArray: 
     return i;
 }
 
-void insertInHistoryByWeeks2 (GTree* tree, Date firstDayOfWeek, GHashTable* artist) {
-    Date* key = malloc(sizeof(Date));
-        if (mallocErrorCheck (key)) return;   
-    *key = firstDayOfWeek; // a copy
+void createAndSortTree (HistoryManager* manager, void (processHistory) (History*, MusicManager*, GHashTable*), MusicManager* m_mngr) {
+    GHashTable* hashWithWeeks = g_hash_table_new_full(dateHashFunc, dateEqualFunc, (GDestroyNotify) free, (GDestroyNotify) deleteHash);
+    //iterate through history
+    GHashTable* hash = manager->historyByUser;
+    GHashTableIter iter;
+    gpointer key, value;
 
-    g_tree_insert (tree, key, artist);
+    g_hash_table_iter_init(&iter, hash);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        History* hist = (History*) value;
+        while (hist) {
+            processHistory (hist, m_mngr, hashWithWeeks);
+            hist = getNextHistoryByUser (hist);
+        }
+    }
+
+    filterToTree (manager, hashWithWeeks);
+    g_hash_table_destroy (hashWithWeeks);
 }
 
 // will create a tree in historyManager with the data from treeWithHashes

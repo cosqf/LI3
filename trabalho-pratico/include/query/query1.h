@@ -47,14 +47,15 @@ void artistinfo (CMD* cmd, AlmightyManager* mngr, Artist* artist, Output* file);
  */
 int individualAlbums (AlmightyManager* mngr, Artist* artist);
 
-
-
-
+/**
+ * @brief Calculates the total recipe an artist gains.
+ * 
+ * @param mngr A pointer to the history manager.
+ * @param artist A pointer to the artist.
+ * 
+ * @return The total recipe of the artist.
+ */
 double totalRecipe (AlmightyManager* mngr, Artist* artist);
-
-
-
-
 
 /**
  * @brief Calculates the total recipe an individual artist gains.

@@ -1,5 +1,6 @@
 #include <history.h>
 #include <queryUtils.h>
+#include <musicManager.h>
 #include "output_handling/outputWriter.h"
 
 #ifndef _HISTORYMANAGER_H_
@@ -9,8 +10,6 @@
  * @brief Structure representing a history manager.
  */
 typedef struct historyManager HistoryManager;
-
-//VER SE É NECESSARIA void insertHistoryHash(GHashTable *hashtable, int key, History *history);
 
 
 // Hash
@@ -29,14 +28,14 @@ HistoryManager* initializeHashHistory ();
  */
 void freeHistory (HistoryManager* h_mngr);
 
-
-
-
-
+/**
+ * @brief Traverses the history by user and applies a callback function to each element.
+ *
+ * @param mngr Pointer to the history manager.
+ * @param callback A callback function to be executed for each element.
+ * @param feeder Additional data to pass to the callback function.
+ */
 void traverseHistorybyUser(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data);
-
-
-
 
 
 /**
@@ -48,9 +47,23 @@ void traverseHistorybyUser(HistoryManager* mngr, void (callback)(gpointer key, g
  * @return Returns 1 for error, 0 for success.
  */
 int getDataHistory (char *path, HistoryManager* mngr);
+
+/**
+ * @brief Returns the size of the history hashtable
+ * 
+ * @param mngr Pointer to the history manager.
+ * 
+ * @return How many elements the history hashtable has.
+ */
 int lengthHistory (HistoryManager* mngr);
-int sortHistory (HistoryManager* manager, History*** hashArray);
-//VER SE É NECESSARIA void printHash(GHashTable* hash);
+
+/**
+ * @brief Transforms the History hashtable into an History array.
+ * 
+ * @param mngr Pointer to the history manager.
+ * @param hash
+ */
+int transformHistory (HistoryManager* manager, History*** hashArray);
 
 // trees
 
@@ -72,7 +85,19 @@ void initializeHistoryTree(HistoryManager* mngr);
  */
 gint compareDateGlib(const void* a, const void* b, gpointer user_data);
 
-void insertInHistoryByWeeks2 (GTree* tree, Date firstDayOfWeek, GHashTable* artist);
+/**
+ * @brief Creates and sorts a tree with historys.
+ *
+ * Iterates through the history records stored in the history manager, processes each record using a provided 
+ * callback function. It then calls #filterToTree and the hash table is filtered and transformed into a tree 
+ * structure stored in the history manager.
+ *
+ * @param manager Pointer to the HistoryManager, which stores the history data and the tree.
+ * @param processHistory Callback function used to process each history record. 
+ * @param m_mngr Pointer to the MusicManager to feed the callback function.
+ */
+void createAndSortTree (HistoryManager* manager, void (processHistory) (History*, MusicManager*, GHashTable*), MusicManager* m_mngr);
+
 
 /**
  * @brief Filters a hash table to a tree stored in HistoryManager. This function is only used in Q4.
@@ -84,14 +109,6 @@ void insertInHistoryByWeeks2 (GTree* tree, Date firstDayOfWeek, GHashTable* arti
  * @param hash Pointer to the big hash table, that will get iterated.
  */
 void filterToTree (HistoryManager* mngr, GHashTable* tree);
-
-
-
-
-void insertInHistoryByWeeks (HistoryManager* mngr, Date firstDayOfWeek, void* top10artistWeek);
-
-
-
 
 
 /**
