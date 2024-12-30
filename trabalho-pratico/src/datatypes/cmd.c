@@ -21,7 +21,7 @@ typedef struct cmd {
     char separator;     // separator for output (';' or '=')
 } CMD;
 
-CMD* createCMD (char** tokens, int counter) {
+CMD* createEmptyCMD () {
     CMD* cmd = malloc(sizeof(CMD));
     if (mallocErrorCheck (cmd)) exit (EXIT_FAILURE);
     cmd->query = -1;
@@ -37,7 +37,11 @@ CMD* createCMD (char** tokens, int counter) {
     cmd->year = 0;
     cmd->nArtists = 0;
     cmd->separator = ';';
+    return cmd;
+}
 
+CMD* createCMD (char** tokens, int counter) {
+    CMD* cmd = createEmptyCMD ();
     int query;
     if (tokens[0]) {
         if (tokens[0][1] == 'S') {
@@ -90,7 +94,6 @@ CMD* createCMD (char** tokens, int counter) {
 }
 
 void freeCmd (CMD *cmd) {
-    //if (cmd->entity) free (cmd->entity);
     if (cmd->paises) free (cmd->paises);
     free (cmd);
 }
@@ -100,8 +103,6 @@ int getCMDquery (CMD* cmd) {
 }
 
 char getCMDentity (CMD* cmd) {
-    //if (cmd->entity == NULL) return NULL;
-    //else return strdup (cmd->entity);
     return cmd->entity;
 }
 
@@ -148,4 +149,55 @@ short int getCMDyear(CMD* cmd) {
 
 short int getCMDnArtists(CMD* cmd) {
     return cmd->nArtists;
+}
+
+// Setters
+void setCMDQuery(CMD* cmd, int query) {
+    cmd->query = query;
+}
+
+void setCMDEntity(CMD* cmd, char entity) {
+    if (entity == 'A' || entity == 'U') {
+        cmd->entity = entity;
+    }
+}
+
+void setCMDId(CMD* cmd, int id) {
+    cmd->id = id;
+}
+
+void setCMDTopN(CMD* cmd, int topN) {
+    cmd->topN = topN;
+}
+
+void setCMDCountry(CMD* cmd, const char* paises) {
+    cmd->paises = strdup(paises);
+}
+
+void setCMDAgeMin(CMD* cmd, int ageMin) {
+        cmd->ageMin = ageMin;
+}
+
+void setCMDAgeMax(CMD* cmd, int ageMax) {
+    cmd->ageMax = ageMax;
+}
+
+void setCMDDateMin(CMD* cmd, Date dateMin) {
+    cmd->dateMin = dateMin;
+}
+
+void setCMDDateMax(CMD* cmd, Date dateMax) {
+    cmd->dateMax = dateMax;
+}
+
+void setCMDNoUsers(CMD* cmd, int noUsers) {
+    cmd->noUsers = noUsers;
+}
+
+void setCMDYear(CMD* cmd, short int year) {
+    cmd->year = year;
+}
+
+void setCMDNArtists(CMD* cmd, short int nArtists) {
+    cmd->nArtists = nArtists;
 }

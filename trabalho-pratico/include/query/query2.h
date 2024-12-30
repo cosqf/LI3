@@ -20,6 +20,7 @@
  */
 void query2(CMD *cmd, AlmightyManager* mngr, int cmdCounter);
 
+<<<<<<< HEAD
 /**
  * @brief For each artist ID given, checks if they belong to a certain country (if any is given) and updates a hash table with a duration given.
  * 
@@ -30,6 +31,11 @@ void query2(CMD *cmd, AlmightyManager* mngr, int cmdCounter);
  * @param a_mngr A pointer to the artist manager, used to look up the artist's country.
  */
 void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int* minDuration);
+=======
+void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int topN, int* minDuration);
+
+void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted, int topN, int* minDuration);
+>>>>>>> afd13d6a98a35d3449a46ec3fee26ebadc8aa408
 
 
 
