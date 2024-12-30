@@ -3,7 +3,7 @@
 #include <history.h>
 #include <musicManager.h>
 #include <historyManager.h>
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <cmd.h>
 #include <utils.h>
 #include <queryUtils.h>

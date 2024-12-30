@@ -10,7 +10,7 @@
    5. History,
 */
 
-int getData (char *path, hashtableManager *mngr) {
+int getData (char *path, AlmightyManager *mngr) {
     bool error = 0;
     char *artistPath = changePath(path, Artists);
     char *albumPath = changePath(path, Albums);

@@ -11,7 +11,7 @@
 #include <output_handling/errorfiles.h>
 #include <parsing.h>
 #include <validateDatatypes.h>
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <artistManager.h>
 #include <userManager.h>
 #include <musicManager.h>

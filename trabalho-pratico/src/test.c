@@ -14,7 +14,7 @@
 #include <query3.h>
 #include <query4.h>
 #include <query5.h>
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <cmdManager.h>
 
 int main (int argc, char** argv){
@@ -58,7 +58,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
 
     int i = 1, q1c = 0, q2c = 0, q3c = 0, q4c = 0, q5c = 0, q6c = 0; // i counts the total commands run, the others count the commands run for each query
     int correctQ1 = 0, correctQ2 = 0, correctQ3 = 0, correctQ4 = 0, correctQ5 = 0, correctQ6 = 0; // counts the commands that execute correctly
-    hashtableManager* mngr = initializeHash ();
+    AlmightyManager* mngr = initializeHash ();
 
     getData (pathData, mngr);
 

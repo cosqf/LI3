@@ -19,7 +19,7 @@ typedef struct {
 } FeederData;
 
 
-void query2(CMD *cmd, hashtableManager *mngr, int cmdCounter) {
+void query2(CMD *cmd, AlmightyManager *mngr, int cmdCounter) {
     GHashTable *hashDuration = createHash(); // temporary hash table 
     char* country = getCMDCountry(cmd);
     Tuple top10Sorted[10];

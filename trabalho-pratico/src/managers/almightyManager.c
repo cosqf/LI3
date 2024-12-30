@@ -1,4 +1,4 @@
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <parsingUtils.h>
 #include <userManager.h>
 #include <artistManager.h>
@@ -7,16 +7,16 @@
 #include <historyManager.h>
 #include <stdbool.h>
 
-typedef struct hashtableManager {
+typedef struct almightyManager {
     UserManager* user;
     ArtistManager* artist;
     MusicManager* music;
     AlbumManager* album;
     HistoryManager* history;
-} hashtableManager;
+} AlmightyManager;
 
-hashtableManager* initializeHash () {
-    hashtableManager *mngr = malloc (sizeof (hashtableManager));
+AlmightyManager* initializeHash () {
+    AlmightyManager *mngr = malloc (sizeof (AlmightyManager));
     mngr->artist = initializeHashArtist();
     mngr->user = initializeHashUser();
     mngr->music = initializeHashMusic();
@@ -25,7 +25,7 @@ hashtableManager* initializeHash () {
     return mngr;
 }
 
-void freeHash (hashtableManager *mngr) {
+void freeHash (AlmightyManager *mngr) {
     if (mngr->artist) freeHashArtist (mngr->artist);
     if (mngr->user) freeHashUser (mngr->user);
     if (mngr->music) freeHashMusic (mngr->music);
@@ -34,23 +34,23 @@ void freeHash (hashtableManager *mngr) {
     free (mngr);
 }
 
-UserManager* getUserManager (hashtableManager *mngr) {
+UserManager* getUserManager (AlmightyManager *mngr) {
     return mngr->user;
 }
 
-MusicManager* getMusicManager (hashtableManager *mngr) {
+MusicManager* getMusicManager (AlmightyManager *mngr) {
     return mngr->music;
 }
 
-ArtistManager* getArtistManager (hashtableManager *mngr) {
+ArtistManager* getArtistManager (AlmightyManager *mngr) {
     return mngr->artist;
 }
 
-AlbumManager* getAlbumManager (hashtableManager *mngr) {
+AlbumManager* getAlbumManager (AlmightyManager *mngr) {
     return mngr->album;
 }
 
-HistoryManager* getHistoryManager (hashtableManager *mngr) {
+HistoryManager* getHistoryManager (AlmightyManager *mngr) {
     return mngr->history;
 }
 

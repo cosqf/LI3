@@ -11,7 +11,7 @@
 #include <query4.h>
 #include <query5.h>
 
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <cmdManager.h>
 
 int main (int argc, char** argv){
@@ -26,7 +26,7 @@ int main (int argc, char** argv){
 }
 
 int principal (char* pathData, char* pathCmd) {
-    hashtableManager* mngr = initializeHash ();
+    AlmightyManager* mngr = initializeHash ();
 
     if (getData (pathData, mngr)) return 1;
 

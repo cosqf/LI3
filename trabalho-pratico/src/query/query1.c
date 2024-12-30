@@ -10,7 +10,7 @@
 #include <output_handling/outputWriter.h>
 
 
-void query1(CMD* cmd, hashtableManager* mngr, int counter) {
+void query1(CMD* cmd, AlmightyManager* mngr, int counter) {
     char filename[50];  // buffer for the formatted file name
 
     // Format the filename with the counter value
@@ -64,7 +64,7 @@ void userinfo (CMD* cmd, User* user, Output* file) {
 }
 
 
-void artistinfo (CMD* cmd, hashtableManager* mngr, Artist* artist, Output* file) {
+void artistinfo (CMD* cmd, AlmightyManager* mngr, Artist* artist, Output* file) {
     char* lines[5] = {NULL};
 
     lines[0] = getArtistName(artist);
@@ -92,7 +92,7 @@ void artistinfo (CMD* cmd, hashtableManager* mngr, Artist* artist, Output* file)
     deleteArtist(artist);
 }
 
-int individualAlbums(hashtableManager* mngr, Artist* artist) {
+int individualAlbums(AlmightyManager* mngr, Artist* artist) {
     AlbumManager* al_mngr = getAlbumManager(mngr);
     int artistID = getArtistID(artist);
     int count = 0;
@@ -102,7 +102,7 @@ int individualAlbums(hashtableManager* mngr, Artist* artist) {
     return count;
 }
 
-double singleArtist (GHashTable*  hashtable, Artist* artist, hashtableManager* mngr) {
+double singleArtist (GHashTable*  hashtable, Artist* artist, AlmightyManager* mngr) {
     MusicManager* m_mngr = getMusicManager(mngr);
     ArtistManager* a_mngr = getArtistManager(mngr);
 
@@ -149,7 +149,7 @@ double singleArtist (GHashTable*  hashtable, Artist* artist, hashtableManager* m
     return total;
 }
 
-double collectiveArtist (GHashTable* hashtable, Artist* artist, hashtableManager* mngr) {
+double collectiveArtist (GHashTable* hashtable, Artist* artist, AlmightyManager* mngr) {
     MusicManager* m_mngr = getMusicManager(mngr);
 
     GHashTableIter iter;

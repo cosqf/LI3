@@ -66,7 +66,7 @@ void iterateMusic(MusicManager* m_mngr, void (*MusicProcessor)(gpointer, gpointe
 }
 
 
-int getDataMusic (char *path, hashtableManager* mngr) {
+int getDataMusic (char *path, AlmightyManager* mngr) {
     Output* output = openErrorOutputMusics ();
 
     int error = parseFile(path, callbackMusic, mngr, output);
@@ -79,7 +79,7 @@ int getDataMusic (char *path, hashtableManager* mngr) {
 // creates a musicString according to its tokens and validates them. 
 // if valid, its converted to a music and added to the hashtable
 void callbackMusic (char** tokens, void* manager, Output* output) { // receives entity manager
-    hashtableManager* mngr = (hashtableManager*) manager;
+    AlmightyManager* mngr = (AlmightyManager*) manager;
     MusicManager* music_mngr = getMusicManager (mngr);
     ArtistManager* artist_mngr = getArtistManager (mngr);
     AlbumManager* album_mngr = getAlbumManager (mngr);

@@ -1,7 +1,7 @@
 #include <users.h>
 #include <glib.h>
 #include <userManager.h>
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <musicManager.h>
 #include <historyManager.h>
 #include <parsingUtils.h>
@@ -59,7 +59,7 @@ GHashTable* getUserTable (UserManager *u_mngr) {
 }
 
 
-int getDataUser (char* path, hashtableManager* mngr) {
+int getDataUser (char* path, AlmightyManager* mngr) {
     Output* output = openErrorOutputUser ();
     
     int error = parseFile(path, callbackUser, mngr, output);
@@ -73,7 +73,7 @@ int getDataUser (char* path, hashtableManager* mngr) {
 // creates an userString according to its tokens and validates them. 
 // if valid, its converted to an user and added to the hashtable
 void callbackUser(char **tokens, void *manager, Output *output) { // receives entity manager
-    hashtableManager* mngr = (hashtableManager*) manager;
+    AlmightyManager* mngr = (AlmightyManager*) manager;
     UserManager* user_mngr = getUserManager(mngr);
     MusicManager* music_mngr = getMusicManager(mngr);
 

@@ -53,7 +53,7 @@ void albumCountArtist(int artistID, AlbumManager* al_mngr, int* count) {
     }
 }
 
-int getDataAlbum (char* path, hashtableManager* mngr) {
+int getDataAlbum (char* path, AlmightyManager* mngr) {
     Output* output = openErrorOutputAlbum ();
     int error = parseFile(path, callbackAlbum, mngr, output);
     closeOutputFile (output); 
@@ -63,7 +63,7 @@ int getDataAlbum (char* path, hashtableManager* mngr) {
 // creates an albumString according to its tokens and validates them. 
 // if valid, its converted to an album and added to the hashtable
 void callbackAlbum(char** tokens, void* manager, Output* output) {
-    hashtableManager* mngr = (hashtableManager*) manager;
+    AlmightyManager* mngr = (AlmightyManager*) manager;
     AlbumManager* al_mngr = getAlbumManager(mngr);
     ArtistManager* a_mngr = getArtistManager(mngr);
  

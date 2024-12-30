@@ -102,7 +102,7 @@ int lengthHistory (HistoryManager* mngr) {
     return g_hash_table_size(mngr->historyByUser);
 }
 
-double totalRecipe (hashtableManager* mngr, Artist* artist) {
+double totalRecipe (AlmightyManager* mngr, Artist* artist) {
     HistoryManager* h_mngr = getHistoryManager(mngr);
     int constituentsNumber = getArtistIDConstituentCounter(artist);
 

@@ -1,4 +1,4 @@
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <glib.h>
 #include <queryUtils.h>
 #include <utils.h>

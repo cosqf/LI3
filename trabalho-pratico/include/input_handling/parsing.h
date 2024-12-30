@@ -1,6 +1,6 @@
 #include <users.h>
 
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <userManager.h>
 #include <musicManager.h>
 #include <artistManager.h>
@@ -19,7 +19,7 @@
  * 
  * @return An @c int indicating whether an error occurred during data extraction (0 for success, 1 for error).
  */
-int getData (char *path, hashtableManager *mngr);
+int getData (char *path, AlmightyManager *mngr);
 
 /**
  * @brief Parses a file and processes each line using a callback function.

@@ -1,4 +1,4 @@
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <cmd.h>
 
 #ifndef _QUERY5_H_
