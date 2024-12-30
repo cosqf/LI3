@@ -10,7 +10,7 @@
    5. History,
 */
 
-int getData (char *path, hashtableManager *mngr) {
+int getData (char *path, AlmightyManager *mngr) {
     bool error = 0;
     char *artistPath = changePath(path, Artists);
     char *albumPath = changePath(path, Albums);
@@ -24,8 +24,6 @@ int getData (char *path, hashtableManager *mngr) {
     else if (getDataUser (userPath, mngr)) error = 1;
     else if (getDataHistory (historyPath, getHistoryManager(mngr))) error = 1;
 
-    if (error) freeHash (mngr);
-
     free(artistPath);
     free(albumPath);
     free(musicPath);
@@ -38,6 +36,8 @@ int getData (char *path, hashtableManager *mngr) {
 // opens a file, gets its tokens and processes the line accordingly using a callback 
 int parseFile (char* pathToFile, void (processLine)(char**, void*, Output*), void* manager, Output* output) {
     FILE* fileData = openFile (pathToFile);
+    if (fileData == NULL) return 1;
+
     char str[DEFAULT];
     if (fgets(str, sizeof(str), fileData) == NULL) { // skip header
             perror ("skipping artist header error");

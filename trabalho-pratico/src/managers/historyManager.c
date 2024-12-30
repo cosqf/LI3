@@ -43,13 +43,6 @@ bool historyTreeIsInitialized (HistoryManager* mngr) {
     else return 0;
 }
 
-void insertInHistoryByWeeks (HistoryManager* mngr, Date firstDayOfWeek, void* top10artistWeek) {
-    Date* key = malloc(sizeof(Date));
-        if (mallocErrorCheck (key)) return;   
-    *key = firstDayOfWeek; // a copy
-
-    g_tree_insert (mngr->historyInWeeks, key, top10artistWeek);
-}
 
 void traverseTree(HistoryManager* mngr, gboolean callback(gpointer key, gpointer value, gpointer user_data), gpointer feeder) {
     GTree* tree = mngr->historyInWeeks;
@@ -102,18 +95,20 @@ int lengthHistory (HistoryManager* mngr) {
     return g_hash_table_size(mngr->historyByUser);
 }
 
-double totalRecipe (hashtableManager* mngr, Artist* artist) {
+double totalRecipe (AlmightyManager* mngr, Artist* artist) {
     HistoryManager* h_mngr = getHistoryManager(mngr);
-
-    double total = 0;
     int constituentsNumber = getArtistIDConstituentCounter(artist);
 
-    if(constituentsNumber == 0) total = singleArtist(h_mngr->historyByMusic, artist, mngr);
-    else total = collectiveArtist(h_mngr->historyByMusic, artist, mngr);
+    if(constituentsNumber == 0) return singleArtist(h_mngr->historyByMusic, artist, mngr);
+    else return collectiveArtist(h_mngr->historyByMusic, artist, mngr);
 
-    return total;
+    return 0;
 }
 
+void traverseHistorybyUser(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data) {
+    GHashTable* historyByUser = mngr->historyByUser;
+    g_hash_table_foreach(historyByUser, callback, data);
+}
 
 // get data
 
@@ -185,12 +180,25 @@ int transformHistory (HistoryManager* manager, History*** hashArray) { // hashAr
     return i;
 }
 
-void insertInHistoryByWeeks2 (GTree* tree, Date firstDayOfWeek, GHashTable* artist) {
-    Date* key = malloc(sizeof(Date));
-        if (mallocErrorCheck (key)) return;   
-    *key = firstDayOfWeek; // a copy
+void createAndSortTree (HistoryManager* manager, void (processHistory) (History*, MusicManager*, GHashTable*), MusicManager* m_mngr) {
+    GHashTable* hashWithWeeks = g_hash_table_new_full(dateHashFunc, dateEqualFunc, (GDestroyNotify) free, (GDestroyNotify) deleteHash);
+    //iterate through history
+    GHashTable* hash = manager->historyByUser;
+    GHashTableIter iter;
+    gpointer key, value;
 
-    g_tree_insert (tree, key, artist);
+    g_hash_table_iter_init(&iter, hash);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        History* hist = (History*) value;
+        while (hist) {
+            processHistory (hist, m_mngr, hashWithWeeks);
+            hist = getNextHistoryByUser (hist);
+        }
+    }
+
+    filterToTree (manager, hashWithWeeks);
+    g_hash_table_destroy (hashWithWeeks);
 }
 
 // will create a tree in historyManager with the data from treeWithHashes

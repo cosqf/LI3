@@ -15,6 +15,7 @@ typedef struct user {
     char* country;                      //– país onde a conta do utilizador foi registada;
     int* liked_musics_id;               //– lista de identificadores únicos das músicas gostadas pelo utilizador.
     unsigned int liked_musics_count;    //– número de quantas músicas o utlizador gosta
+    int user_array_position;              //– posição do ID no array de utilizadores
 } User;
 
 /* Temporary User struct */
@@ -60,6 +61,7 @@ User* createUser (char** tokens) {
     user->country = strdup (trimString((tokens[5])));
     user->liked_musics_id = parseIDs (trimStringWithoutBrackets((tokens[7])));
     user->liked_musics_count = IdCounter ((tokens[7]));
+    user->user_array_position = -1;
     return user;
 }
 
@@ -133,6 +135,11 @@ int getUserLikedCounter (User* user) {
     return user->liked_musics_count;
 }
 
+/* Getter for user_array_position */
+int getUserArrayPosition(User* user) {
+    return user->user_array_position;
+}
+
 /* Getter for the age of the user
 Current date 2024/09/09 */
 int getUserAge (User* user) {
@@ -188,10 +195,17 @@ User* copyUser( User* userOg) {
     } else userCopy->liked_musics_id = NULL;
 
     userCopy->liked_musics_count = arrayCount;
+    userCopy->user_array_position = userOg->user_array_position;
 
     return userCopy;
 }
 
+// SETTERs
+
+/* Getter for user_array_position */
+void setUserArrayPosition(User* user, int position) {
+    user->user_array_position = position;
+}
 
 // GETTERS FOR USER STRING
 

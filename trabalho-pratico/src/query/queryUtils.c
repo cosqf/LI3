@@ -1,4 +1,4 @@
-#include <hashtableManager.h>
+#include <almightyManager.h>
 #include <glib.h>
 #include <queryUtils.h>
 #include <utils.h>
@@ -55,4 +55,10 @@ Tuple* sortHash (GHashTable* hash, int sorterFunc (const void*, const void*)) {
     qsort (hashArray, lengthHash, sizeof(Tuple), sorterFunc);
 
     return hashArray;
+}
+
+char* formatUserID (int id) {
+    char* formatted = (char*)malloc(9 * sizeof(char));
+    sprintf(formatted, "U%07d", id);
+    return formatted;
 }
