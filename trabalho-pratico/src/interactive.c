@@ -41,7 +41,7 @@ int loadMainPage () {
     }
 }
 
-int gettingData (WINDOW* win, hashtableManager* mngr) {
+int gettingData (WINDOW* win, AlmightyManager* mngr) {
     int widthS, heightS, widthW, heightW;;
     getmaxyx(stdscr, heightS, widthS);
     getmaxyx(win, heightW, widthW);
@@ -143,7 +143,7 @@ int main () {
     WINDOW* win1 = newWindowWithBorder ((int) (heightS/1.5), (int) (widthS/1.5), (int) (heightS/6)+2, (int) (widthS/6));
 
     // Fetching data
-    hashtableManager* mngr = initializeHash ();
+    AlmightyManager* mngr = initializeHash ();
     int paths = gettingData (win1, mngr);
     if (paths == -1) {
         clear ();
