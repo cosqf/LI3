@@ -28,7 +28,10 @@ int main (int argc, char** argv){
 int principal (char* pathData, char* pathCmd) {
     hashtableManager* mngr = initializeHash ();
 
-    if (getData (pathData, mngr)) return 1;
+    if (getData (pathData, mngr)){
+        freeHash (mngr);
+        return 1;
+    }
 
     cmdManager* cmdMngr = createCmdManager ();
     int cmdNumber = parseCmdFile (pathCmd, cmdMngr);

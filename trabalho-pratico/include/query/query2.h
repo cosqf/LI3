@@ -9,7 +9,9 @@
 
 void query2(CMD *cmd, hashtableManager* mngr, int cmdCounter);
 
-void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int* minDuration);
+void getArtistsDiscography (int id, GHashTable* newtable, int duration, char* country, ArtistManager *a_mngr, Tuple* top10Sorted, int topN, int* minDuration);
+
+void updateSortedArray(GHashTable* table, int id, Tuple* top10Sorted, int topN, int* minDuration);
 
 int durationInSeconds (Duration time);
 
