@@ -56,3 +56,9 @@ Tuple* sortHash (GHashTable* hash, int sorterFunc (const void*, const void*)) {
 
     return hashArray;
 }
+
+char* formatUserID (int id) {
+    char* formatted = (char*)malloc(9 * sizeof(char));
+    sprintf(formatted, "U%07d", id);
+    return formatted;
+}

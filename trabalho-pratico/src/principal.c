@@ -9,6 +9,7 @@
 #include <query2.h>
 #include <query3.h>
 #include <query4.h>
+#include <query5.h>
 
 #include <hashtableManager.h>
 #include <cmdManager.h>
@@ -60,6 +61,7 @@ int principal (char* pathData, char* pathCmd) {
             break;
         
         case 5:
+            query5 (cmd, getHistoryManager(mngr), getMusicManager (mngr), getUserManager(mngr), i+1);
             break;
 
         case 6:

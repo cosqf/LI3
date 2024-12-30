@@ -22,6 +22,7 @@ Date getUserBirthDate(User* user);
 char* getUserCountry(User* user);
 const int* getUserLikedMusicsID(User* user);
 int getUserLikedCounter (User* user);
+int getUserArrayPosition(User* user);
 int getUserAge (User* user);
 User* copyUser (User* userOg);
 
@@ -35,5 +36,8 @@ char* getUserSubscriptionTypeString (UserString *user);
 char* getUserLikedMusicsIDString (UserString *user);
 int getUserLikedCounterString (UserString* user);
 const int* getUserLikedMusicsIDStringArray (UserString *user);
+
+// SETTERs
+void setUserArrayPosition(User* user, int position);
 
 #endif  

@@ -2,8 +2,9 @@
 #include <panel.h>
 #include <utils.h>
 #include <parsing.h>
-#include <interactive_queries.h>
+
 #include <interactive.h>
+#include <interactive_queries.h>
 #include <interactive_utils.h>
 
 int loadMainPage () {
@@ -52,8 +53,8 @@ int gettingData (WINDOW* win, hashtableManager* mngr) {
     char path[38];
     while (true) {
         curs_set(1);
-        wmove(win, (int)(heightW / 8), (int)(widthW / 8));
-        wgetnstr(win, path, 37);
+        wmove(win, (int)(heightW / 8), (int)(widthW / 10));
+        wgetnstr(win, path, 36);
         if (strcmp (path, "exit")  == 0) {
             delwin (win);
             return -1;
@@ -68,17 +69,13 @@ int gettingData (WINDOW* win, hashtableManager* mngr) {
         move(0, 0);
         refresh();
         
-        FILE* file = freopen("/dev/null", "w", stderr); //redirecting stderr to avoid perror message from showing
         if (getData(path, mngr)) {
             mvprintw((int)heightS / 6, (int)widthS / 2 - 11, "Invalid path, try again");
             refresh();
             mvwprintw (win, (int)(heightW / 8), (int)(widthW / 8) , "                                     ");
             wrefresh(win);
             memset(path, 0, sizeof(path));
-        } else {
-            fclose (file);
-            break;
-        }
+        } else break;
     }
     noecho();
     return 0;
@@ -120,7 +117,7 @@ int gettingQuery (WINDOW* win) {
         }
     }
 }
-
+/**@brief Runs the interactive program.*/
 int main () {
     initscr();
     noecho(); cbreak(); keypad(stdscr, TRUE); curs_set(0);
@@ -132,8 +129,10 @@ int main () {
         endwin();
         return -1;
     }
-    FILE* file = freopen("/dev/null", "w", stderr); //redirecting stderr to prevent perror message from showing
+    FILE* file = freopen("/dev/null", "w", stderr); //redirecting stderr to prevent perror messages from showing
     (void) file;
+
+    // Loading
     int mainPageChoice = loadMainPage();
     if (mainPageChoice == -1) {
         clear();
@@ -143,6 +142,7 @@ int main () {
     
     WINDOW* win1 = newWindowWithBorder ((int) (heightS/1.5), (int) (widthS/1.5), (int) (heightS/6)+2, (int) (widthS/6));
 
+    // Fetching data
     hashtableManager* mngr = initializeHash ();
     int paths = gettingData (win1, mngr);
     if (paths == -1) {
@@ -152,9 +152,13 @@ int main () {
         return 0;
     }
     delwin (win1);
-    while (true) { // queries loop
+
+
+    // Queries loop
+    while (true) { 
         WINDOW* win2 = newWindowWithBorder ((int) (heightS/1.5), (int) (widthS/1.5), (int) (heightS/6)+2, (int) (widthS/6));
         wrefresh (win2);
+        mvprintw (heightS-1, 1, "                               ");
         mvprintw (heightS-1, 1, "Hit \"Esc\" to leave");
         refresh ();
         int query = gettingQuery (win2);
@@ -167,8 +171,8 @@ int main () {
         clear();
         delwin (win2);
 
-        WINDOW* inWin  = newWindowWithBorder((int) (heightS / 8), (int) (widthS / 1.3), (int) (heightS / 4), (int) (widthS * 0.3/(1.3*2)));
-        WINDOW* outWin = newWindowWithBorder((int) (heightS / 1.6)-1, (int) (widthS / 1.3), (int) (heightS /4 + heightS /8), (int) (widthS * 0.3/(1.3*2)));
+        WINDOW* inWin  = newWindowWithBorder((int) (heightS / 8)+1, (int) (widthS / 1.3), (int) (heightS / 5), (int) (widthS * 0.3/(1.3*2)));
+        WINDOW* outWin = newWindowWithBorder((int) (heightS / 1.6)-1, (int) (widthS / 1.3), (int) (heightS /5 + heightS /8 +1), (int) (widthS * 0.3/(1.3*2)));
 
         echo();
         int repeat = 0;
@@ -177,7 +181,7 @@ int main () {
             repeat = loadQ1 (inWin, outWin, mngr);
             break;
         case 2:
-            repeat = loadQ2 (inWin, outWin, mngr);
+            repeat = loadQ2 (inWin, mngr);
             break;
         case 3: 
             repeat = loadQ3 (inWin, outWin, mngr);
@@ -186,6 +190,7 @@ int main () {
             repeat = loadQ4 (inWin, outWin, mngr);
             break;
         case 5:
+            repeat = loadQ5 (inWin, mngr);
             break;
         case 6:
             break;
@@ -193,6 +198,7 @@ int main () {
             perror ("Starting query error");
             break;
         }
+        noecho();
         clear();
         delwin (inWin);
         delwin (outWin);
