@@ -75,24 +75,100 @@ int getDataUser (char* path, AlmightyManager* mngr);
  */
 void callbackUser(char **tokens, void *manager, Output *output);
 
-bool userMatrixIsInitialized (UserManager* mngr);
+/**
+ * @brief A matrix feeder struct.
+ */
+typedef struct matrixFeeder MatrixFeeder;
 
-void createMatrix(HistoryManager* h_mngr, MusicManager* m_mngr, UserManager* u_mngr);
+/**
+ * @brief Checks if the matrix that contains all the users and the amount of times they have listened to each genre exists.
+ *
+ * @param u_mngr Pointer to the user manager.
+ *
+ * @return Returns 1 for success, 0 for error.
+ */
+bool userMatrixIsInitialized (UserManager* u_mngr);
 
+/**
+ * @brief Creates the matrix that contains all the users and the amount of times they have listened to each genre.
+ *
+ * @param h_mngr Pointer to the history manager.
+ * @param m_mngr Pointer to the music manager.
+ * @param u_mngr Pointer to the user manager.
+ */
+void createMatrixAndArray(HistoryManager* h_mngr, MusicManager* m_mngr, UserManager* u_mngr);
+
+/**
+ * @brief Iterates the user hashtable, adding each ID to the user array and replacing the hashtable entry with an updated one.
+ *
+ * @param u_mngr Pointer to the user manager.
+ */
 void fillUserIDArray(UserManager* u_mngr);
 
+/**
+ * @brief Callback function used in traverseHistorybyUser.
+ * Handles the necessary information to safely call the auxiliary function processHistory and fill the matrix.
+ * 
+ * @param key The user ID to which the history entry is associated.
+ * @param value The first history entry associated to said user.
+ * @param data A pointer to a MatrixFeeder.
+ */
 void updateMatrix (gpointer key, gpointer value, gpointer data);
 
+/**
+ * @brief Frees each row in the matrix and the matrix pointer itself.
+ * 
+ * @param matrix A pointer to the matrix.
+ * @param rows The number of rows in the matrix.
+ */
 void freeMatrix(int** matrix, int rows);
 
-void freeUserArray(char** array, int rows);
+/**
+ * @brief Frees each slot in the array and the array pointer itself.
+ * 
+ * @param matrix A pointer to the array.
+ * @param slots The number of slots in the array.
+ */
+void freeUserArray(char** array, int slots);
 
+/**
+ * @brief Auxiliary function to updateMatrix, processes a linked list of history entries, updating the counters on the given line in the matrix.
+ * 
+ * @param matrix A pointer to the matrix.
+ * @param value A pointer to a history entry (linked list).
+ * @param line The line to update.
+ * @param m_mngr Pointer to the music manager.
+ */
 void processHistory (int** matrix, gpointer value, int line, MusicManager* m_mngr);
 
-void recomendations(char* targetID, char* genre_array[10], int lines_used, int noUsers, UserManager* u_mngr, char*** recUsers);
+/**
+ * @brief Calculates user recommendations through a function provided by the professors.
+ * 
+ * @param targetID Formatted target user ID to generate recommendations.
+ * @param genre_array An array containing the name of each music genre following the same order as the matrix.
+ * @param lines_used The number of lines occupied in the matrix (total number of users).
+ * @param noUsers The number of recommendations to calculate.
+ * @param u_mngr Pointer to the user manager.
+ * @param recUsers Pointer to the array that will store the results.
+ */
+void recommendations(char* targetID, char* genre_array[10], int lines_used, int noUsers, UserManager* u_mngr, char*** recUsers);
 
+/**
+ * @brief A getter function for the number of lines available in the matrix, which is also the number of slots available in the user array.
+ *
+ * @param u_mngr Pointer to the user manager.
+ *
+ * @return Returns the number of lines in the matrix.
+ */
 int getUserMatrixLinesAvail (UserManager *u_mngr);
 
+/**
+ * @brief A getter function for the number of lines used in the matrix, which is also the number of slots occupied in the user array.
+ *
+ * @param u_mngr Pointer to the user manager.
+ *
+ * @return Returns the number of lines in the matrix that have an associated user.
+ */
 int getUserMatrixLinesUsed (UserManager *u_mngr);
 
 #endif

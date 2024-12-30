@@ -88,17 +88,17 @@ void callbackUser(char **tokens, void *manager, Output *output) { // receives en
 
 //matrix and array
 
-typedef struct {
+typedef struct matrixFeeder {
     MusicManager* m_mngr;
     UserManager* u_mngr;
 } MatrixFeeder;
 
-bool userMatrixIsInitialized (UserManager* mngr) {
-    if (mngr->listenedGenresMatrix) return 1;
+bool userMatrixIsInitialized (UserManager* u_mngr) {
+    if (u_mngr->listenedGenresMatrix) return 1;
     else return 0;
 }
 
-void createMatrix(HistoryManager* h_mngr, MusicManager* m_mngr, UserManager* u_mngr){ //returns the number of lines occupied
+void createMatrixAndArray (HistoryManager* h_mngr, MusicManager* m_mngr, UserManager* u_mngr){ //returns the number of lines occupied
 
     int matrix_lines = g_hash_table_size(u_mngr->user);
 
@@ -182,8 +182,8 @@ void freeMatrix(int** matrix, int rows) {
     free(matrix);
 }
 
-void freeUserArray(char** array, int rows) {
-    for (int i = 0; i < rows; i++) {
+void freeUserArray(char** array, int slots) {
+    for (int i = 0; i < slots; i++) {
         free(array[i]);
     }
     free(array);
@@ -213,7 +213,7 @@ void processHistory (int** matrix, gpointer value, int line, MusicManager* m_mng
     }
 }
 
-void recomendations(char* targetID, char* genre_array[10], int lines_used, int noUsers, UserManager* u_mngr, char*** recUsers) {
+void recommendations(char* targetID, char* genre_array[10], int lines_used, int noUsers, UserManager* u_mngr, char*** recUsers) {
     *recUsers = recomendaUtilizadores(targetID, u_mngr->listenedGenresMatrix, u_mngr->usersIDArray, genre_array, lines_used, 10, noUsers);
 }
 

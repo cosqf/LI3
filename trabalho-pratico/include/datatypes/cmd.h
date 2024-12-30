@@ -176,5 +176,4 @@ void setCMDNoUsers(CMD* cmd, int noUsers);
 void setCMDYear(CMD* cmd, short int year);
 
 void setCMDNArtists(CMD* cmd, short int nArtists);
-
 #endif
