@@ -13,7 +13,7 @@ HistoryManager* initializeHashHistory ();
 
 void freeHistory (HistoryManager* h_mngr);
 
-GHashTable* reorganizeHTableByMusicID(HistoryManager* h_mngr);
+void traverseHistorybyUser(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data);
 
 int getDataHistory (char *path, HistoryManager* mngr);
 int lengthHistory (HistoryManager* mngr);

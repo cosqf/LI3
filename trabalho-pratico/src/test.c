@@ -13,6 +13,7 @@
 #include <query2.h>
 #include <query3.h>
 #include <query4.h>
+#include <query5.h>
 #include <hashtableManager.h>
 #include <cmdManager.h>
 
@@ -136,7 +137,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
             q5c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
 
-            //query5 ();
+            query5 (cmd, getHistoryManager(mngr), getMusicManager (mngr), getUserManager(mngr), i);
 
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q5total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;

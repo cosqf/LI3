@@ -15,4 +15,6 @@ void updateHash(GHashTable* newtable, int id, int newValue);
 
 Tuple* sortHash (GHashTable* hash, int sorterFunc (const void*, const void*)) ;
 
+char* formatUserID (int id);
+
 #endif

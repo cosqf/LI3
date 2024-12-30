@@ -3,11 +3,11 @@ CC =gcc
 EXEC := programa-principal
 EXEC_TEST :=  programa-testes
 
-INCLUDE_DIRS := $(shell find include/ -type d)
+INCLUDE_DIRS := $(shell find include/ -type d) recomendador/
 
 CFLAGS := -c -g -Og -std=gnu99 -Wall -Wextra $(addprefix -I,$(INCLUDE_DIRS)) `pkg-config --cflags glib-2.0`
 
-LDFLAGS := `pkg-config --libs glib-2.0` -lm
+LDFLAGS := `pkg-config --libs glib-2.0` -lm recomendador/recomendador-linux-x86_64.o
 
 SRC_PRINCIPAL := $(shell find src/ -name "*.c" -not -name "test.c")
 SRC_TESTS := $(shell find src/ -name "*.c" -not -name "principal.c")
