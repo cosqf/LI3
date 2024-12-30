@@ -42,14 +42,11 @@ void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, UserManager
 
     Output* output = openOutputFile (filename);
 
-    if (!userMatrixIsInitialized(u_mngr)) {
-        createMatrix(h_mngr, m_mngr, u_mngr);
-    }
-
     // Target user information handling
+    int noUsers = getCMDnoUsers(cmd); //numRecomendacoes
     int id = getCMDId(cmd);
     User* targetUser = lookupUserHash(u_mngr, id);
-    if(!targetUser){
+    if(!targetUser || noUsers == 0){
         writeNewLine(output);
         closeOutputFile(output);
         deleteUser(targetUser);
@@ -57,13 +54,16 @@ void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, UserManager
     }
     deleteUser(targetUser);
 
+    if (!userMatrixIsInitialized(u_mngr)) {
+        createMatrixAndArray(h_mngr, m_mngr, u_mngr);
+    }
+
     char* targetID = formatUserID(id); //idUtilizadorAlvo
     char* genre_array [10] = {"Metal", "Reggae", "Jazz", "Hip Hop", "Classical", "Rock", "Blues", "Country", "Pop", "Electronic"}; //nomesGeneros
     int lines_used = getUserMatrixLinesUsed(u_mngr); //numUtilizadores
-    int noUsers = getCMDnoUsers(cmd); //numRecomendacoes
 
     char** recUsers = NULL;
-    recomendations(targetID, genre_array, lines_used, noUsers, u_mngr, &recUsers);
+    recommendations(targetID, genre_array, lines_used, noUsers, u_mngr, &recUsers);
 
     if (!recUsers) writeNewLine(output);
     else {
