@@ -102,78 +102,84 @@ int individualAlbums(AlmightyManager* mngr, Artist* artist) {
     return count;
 }
 
-double singleArtist (GHashTable*  hashtable, Artist* artist, AlmightyManager* mngr) {
+double totalRecipe (AlmightyManager* mngr, Artist* artist) {
+    HistoryManager* h_mngr = getHistoryManager(mngr);
+
+    Q1Feeder feeder = { .artist = artist,
+                        .mngr = mngr,
+                        .total = 0
+                      };
+
+    if(!getArtistType(artist)) traverseHistorybyMusic(h_mngr, singleArtist, &feeder);
+    else traverseHistorybyMusic(h_mngr, collectiveArtist, &feeder);
+
+    return feeder.total;
+}
+
+void singleArtist (gpointer key, gpointer value, gpointer data) {
+    Q1Feeder* feeder = (Q1Feeder*) data;
+    AlmightyManager* mngr = feeder->mngr;
     MusicManager* m_mngr = getMusicManager(mngr);
     ArtistManager* a_mngr = getArtistManager(mngr);
 
-    GHashTableIter iter;
-    gpointer key, value;
-
-    double total = 0;
+    Artist* artist = feeder->artist;
     int artistID = getArtistID(artist);
-
-    g_hash_table_iter_init(&iter, hashtable);
     
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
+    Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
+    const int* artistList = getMusicArtistID(currentMusic);
+    int constcounter = getMusicArtistIDCount(currentMusic);
 
-        Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
-        const int* artistList = getMusicArtistID(currentMusic);
-        int constcounter = getMusicArtistIDCount(currentMusic);
+    double total = feeder->total;
 
-        for(int i = 0; i < constcounter; i++) {
-            Artist* currentArtist = lookupArtistHash(a_mngr, artistList[i]);
+    for(int i = 0; i < constcounter; i++) {
+        Artist* currentArtist = lookupArtistHash(a_mngr, artistList[i]);
             
-            if (getArtistType(currentArtist)){
-                int currentArtistSize = getArtistIDConstituentCounter(currentArtist);
+        if (getArtistType(currentArtist)){
+            int currentArtistSize = getArtistIDConstituentCounter(currentArtist);
 
-                if (isArtistInList(getArtistIDConstituent(currentArtist), artistID, currentArtistSize)) {
-                    double currentArtistRecipe = getArtistRecipePerStream(currentArtist);
-                    int reproductions = getHistoryListLengthByMusic(value);
-
-                    total += (reproductions * currentArtistRecipe) / currentArtistSize;
-                }
-
-            } else if (getArtistID(currentArtist) == artistID) {
+            if (isArtistInList(getArtistIDConstituent(currentArtist), artistID, currentArtistSize)) {
                 double currentArtistRecipe = getArtistRecipePerStream(currentArtist);
                 int reproductions = getHistoryListLengthByMusic(value);
 
-                    total += (reproductions * currentArtistRecipe);
+                total += (reproductions * currentArtistRecipe) / currentArtistSize;
             }
 
-            deleteArtist(currentArtist);
+        } else if (getArtistID(currentArtist) == artistID) {
+            double currentArtistRecipe = getArtistRecipePerStream(currentArtist);
+            int reproductions = getHistoryListLengthByMusic(value);
+
+            total += (reproductions * currentArtistRecipe);
         }
 
-        deleteMusic(currentMusic);
+        deleteArtist(currentArtist);
     }
 
-    return total;
+    deleteMusic(currentMusic);
+
+    feeder->total = total;
 }
 
-double collectiveArtist (GHashTable* hashtable, Artist* artist, AlmightyManager* mngr) {
+void collectiveArtist (gpointer key, gpointer value, gpointer data) {
+    Q1Feeder* feeder = (Q1Feeder*) data;
+    AlmightyManager* mngr = feeder->mngr;
     MusicManager* m_mngr = getMusicManager(mngr);
 
-    GHashTableIter iter;
-    gpointer key, value;
-    double total = 0;
+    Artist* artist = feeder->artist;
     int artistID = getArtistID(artist);
-    
     double recipe_per_stream = getArtistRecipePerStream(artist);
 
-    g_hash_table_iter_init(&iter, hashtable);
+    double total = feeder->total;
     
-    while (g_hash_table_iter_next(&iter, &key, &value)) {
+    Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
+    const int* artistList = getMusicArtistID(currentMusic);
+    int constcounter = getMusicArtistIDCount(currentMusic);
 
-        Music* currentMusic = lookupMusicHash(m_mngr, GPOINTER_TO_INT(key));
-        const int* artistList = getMusicArtistID(currentMusic);
-        int constcounter = getMusicArtistIDCount(currentMusic);
-
-        if (isArtistInList(artistList, artistID, constcounter)) {
-            int reproductions = getHistoryListLengthByMusic(value);
-            total += reproductions * recipe_per_stream;
-        }
-
-        deleteMusic(currentMusic);
+    if (isArtistInList(artistList, artistID, constcounter)) {
+        int reproductions = getHistoryListLengthByMusic(value);
+        total += reproductions * recipe_per_stream;
     }
 
-    return total;
+    deleteMusic(currentMusic);
+
+    feeder->total = total;
 }

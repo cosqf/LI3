@@ -54,10 +54,9 @@ User* lookupUserHash (UserManager *u_mngr, int id) {
     return copyUser (user);
 }
 
-GHashTable* getUserTable (UserManager *u_mngr) {
-    return u_mngr->user;
+void iterateUser(UserManager* u_mngr, void (*UserProcessor)(gpointer key, gpointer value, gpointer user_data), gpointer user_data) {
+    g_hash_table_foreach (u_mngr->user, UserProcessor, user_data);
 }
-
 
 int getDataUser (char* path, AlmightyManager* mngr) {
     Output* output = openErrorOutputUser ();
@@ -88,11 +87,6 @@ void callbackUser(char **tokens, void *manager, Output *output) { // receives en
 
 //matrix and array
 
-typedef struct matrixFeeder {
-    MusicManager* m_mngr;
-    UserManager* u_mngr;
-} MatrixFeeder;
-
 bool userMatrixIsInitialized (UserManager* u_mngr) {
     if (u_mngr->listenedGenresMatrix) return 1;
     else return 0;
@@ -113,13 +107,13 @@ void createMatrixAndArray (HistoryManager* h_mngr, MusicManager* m_mngr, UserMan
 
     for (int i = 0; i < matrix_lines; i++) {
         u_mngr->listenedGenresMatrix[i] = calloc(10, sizeof(int));
-        if (mallocErrorCheck (u_mngr->usersIDArray)) {
+        if (mallocErrorCheck (u_mngr->listenedGenresMatrix[i])) {
             freeMatrix(u_mngr->listenedGenresMatrix, matrix_lines);
             freeUserArray(u_mngr->usersIDArray, matrix_lines);
             return;
         }
         u_mngr->usersIDArray[i] = calloc(9, sizeof(char));
-        if (mallocErrorCheck (u_mngr->usersIDArray)) {
+        if (mallocErrorCheck (u_mngr->usersIDArray[i])) {
             freeMatrix(u_mngr->listenedGenresMatrix, matrix_lines);
             freeUserArray(u_mngr->usersIDArray, matrix_lines);
             return;
@@ -154,7 +148,7 @@ void fillUserIDArray(UserManager* u_mngr) {
 
         User* currentUser = lookupUserHash(u_mngr, currentID);
         setUserArrayPosition(currentUser, position);
-        insertUserHash(u_mngr, currentID, currentUser);
+        insertUserHash(u_mngr, currentID, currentUser); //replaces the User in the hastable with an updated one
 
         u_mngr->matrix_lines_used++;
     }
@@ -173,6 +167,47 @@ void updateMatrix(gpointer key, gpointer value, gpointer data) {
     processHistory(u_mngr->listenedGenresMatrix, value, line, m_mngr);
 
     deleteUser(user);
+}
+
+int** copyMatrix(int** matrix, int rows, int columns) {
+    int** newmatrix = (int**)malloc(rows * sizeof(int*));
+    if (mallocErrorCheck (newmatrix)) return NULL;
+
+    for (int i = 0; i < rows; i++) {
+        newmatrix[i] = calloc(columns, sizeof(int));
+        if (mallocErrorCheck (matrix[i])) {
+            freeMatrix(newmatrix, rows);
+            return NULL;
+        }
+    }
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            newmatrix[i][j] = matrix[i][j];
+        }
+    }
+
+    return newmatrix;
+}
+
+char** copyUserArray (char** array, int slots) {
+    char** newarray = (char**)malloc(slots * sizeof(char*));
+    if (mallocErrorCheck (newarray)) return NULL;
+
+    for (int i = 0; i < slots; i++) {
+        newarray[i] = calloc(9, sizeof(char));
+        if (mallocErrorCheck (newarray[i])) {
+            freeUserArray(newarray, slots);
+            return NULL;
+        }
+    }
+
+    for (int i = 0; i < slots; i++) {
+        strcpy(newarray[i], array[i]);
+        newarray[i][8] = '\0';
+    }
+
+    return newarray;
 }
 
 void freeMatrix(int** matrix, int rows) {
@@ -214,7 +249,19 @@ void processHistory (int** matrix, gpointer value, int line, MusicManager* m_mng
 }
 
 void recommendations(char* targetID, char* genre_array[10], int lines_used, int noUsers, UserManager* u_mngr, char*** recUsers) {
-    *recUsers = recomendaUtilizadores(targetID, u_mngr->listenedGenresMatrix, u_mngr->usersIDArray, genre_array, lines_used, 10, noUsers);
+    int** matrix = copyMatrix(u_mngr->listenedGenresMatrix, lines_used, 10);
+    char** userArray = copyUserArray(u_mngr->usersIDArray, lines_used);
+
+    char** recs = recomendaUtilizadores(targetID, matrix, userArray, genre_array, lines_used, 10, noUsers);
+    /*after some experimentation we concluded that the array returned by recomendaUtilizadores doesn't allocate memory
+    for itself, which led to trouble on our part trying to manage it before understanding. Here we create an independent
+    copy of the return array, so that we can freely free the matrix and user array copies, without messing up the user
+    recommendations that we need to access in a later stage.*/
+    *recUsers = copyUserArray(recs, noUsers);
+
+    freeMatrix(matrix, lines_used);
+    freeUserArray(userArray, lines_used);
+    free(recs);
 }
 
 int getUserMatrixLinesAvail (UserManager *u_mngr) {
