@@ -116,7 +116,6 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
     
             if(compareFiles(output, expected, i) == true) correctQ3++;
             break;
-
         case 4:
             q4c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
@@ -132,8 +131,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
             if(compareFiles(output, expected, i) == true) correctQ4++;
 
             break;
-
-        case 5:
+      case 5:
             q5c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
 
@@ -148,7 +146,6 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
             if(compareFiles(output, expected, i) == true) correctQ5++;
 
             break;
-
         case 6:
             q6c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time

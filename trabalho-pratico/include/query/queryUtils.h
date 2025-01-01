@@ -40,7 +40,22 @@ void updateHash(GHashTable* newtable, int id, int newValue);
  */
 Tuple* sortHash (GHashTable* hash, int sorterFunc (const void*, const void*)) ;
 
+/**
+ * @brief This function traverses a hash table and returns a @ Tuple with the biggest value.
+ * 
+ * @param table A pointer to the hash table.
+ * 
+ * @return A tuple with the key and value.
+ */
+Tuple getBiggestFromHash (GHashTable* table);
 
+/**
+ * @brief Formats the user ID from an @c int to a string.
+ * 
+ * @param id The ID in integer format.
+ * 
+ * @return The string with the proper ID format.
+ */
 char* formatUserID (int id);
 
 #endif

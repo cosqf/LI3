@@ -143,9 +143,9 @@ bool convertToInt(const char *str, int *out);
 /**
  * @brief Compares two @c Date objects.
  * Compares two @c Date objects (year, month, day) and returns:
- * - 1 if dateA is greater than dateB
- * - -1 if dateA is smaller than dateB
- * - 0 if both dates are equal
+ *  1 if dateA is greater than dateB,
+ * -1 if dateA is smaller than dateB,
+ *  0 if both dates are equal
  *
  * @param dateA The first date to compare.
  * @param dateB The second date to compare.
@@ -163,17 +163,7 @@ Duration secondsInDuration (int seconds);
 
 
 /**
- * @brief Calculates the difference in days between two dates.
- * Returns the difference in days between two dates (dateA - dateB), assuming that dateA is more recent.
- *
- * @param dateA The more recent Date.
- * @param dateB The older Date.
- * @return The difference in days between the two dates.
- */
-int daysDiff(Date dateA, Date dateB);
-
-/**
- * @brief Gets the weekday of a given date (0 = Sunday, 1 = Monday, ...).
+ * @brief Gets the weekday of a given date (0 = Saturday, 1 = Sunday, ...).
  * Computes the weekday of a given date using a simplified version of Zeller's Congruence algorithm.
  * https://en.wikipedia.org/wiki/Zeller%27s_congruence#Common_simplification
  * 
