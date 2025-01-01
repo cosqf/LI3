@@ -10,48 +10,31 @@
 #include <parsingUtils.h>
 #include <utils.h>
 
-void adjustDateLimits(Date *date, bool flag) { // will subtract the days till the beggining of the week and add till the end of the week depending on flag
+void adjustDateLimits(Date *date) { // will subtract the days till the beggining of the week
     if (!date) {
         perror ("Error adjusting the date limits");
         return;
     }
     short int weekday = getWeekday (*date);
-    if (flag == 0) {
-        while (weekday != 0) { // subtract till sunday
-            date->day--;
+    while (weekday != 1) { // subtract till sunday
+        date->day--;
 
-            if (date->day < 1) {
-                date->month--;
-                if (date->month < 1) {
-                    date->month = 12;
-                    date->year--;
-                }
-                date->day = getDaysInMonth(date->month, date->year);
+        if (date->day < 1) {
+            date->month --;
+            if (date->month < 1) {
+                date->month = 12;
+                date->year --;
             }
-            weekday = getWeekday(*date);
+            date->day = getDaysInMonth (date->month, date->year);
         }
-    }
-    else {
-        while (weekday != 6) { // add till saturday
-            date->day++;
-
-            if (date->day > getDaysInMonth (date->month, date->year)) {
-                date->month++;
-                if (date->month > 12) {
-                    date->month = 1;
-                    date->year++;
-                }
-                date->day = 1;
-            }
-            weekday = getWeekday(*date);
-        }
+        weekday = getWeekday(*date);
     }
 }
+
 void freeArtistList (ArtistList* list) {
     free(list->artistsIds);
     free (list);
 }
-
 
 guint dateHashFunc(gconstpointer key) {
     const Date* date = (const Date*) key;
@@ -68,12 +51,11 @@ gboolean dateEqualFunc(gconstpointer a, gconstpointer b) {
 
 void sortHistoryByWeek (History* history, MusicManager* musicManager, GHashTable* hashWithWeeks) {
     Date date = (getHistoryTimestamp (history)).date;
-    adjustDateLimits (&date, 0); // get last sunday
+    adjustDateLimits (&date); // get last sunday
     
     int musicId = getHistoryMusicId(history);
     int* artistIds;
     int artistCount = lookupMusicArtistIDsHash (musicManager, musicId, &artistIds);
-    
     for (int j = 0; j < artistCount; j++) {
         Tuple tuple = {.key = artistIds[j], .value = durationInSeconds (getHistoryDuration(history))};
         updateHashWithWeeks (hashWithWeeks, date, tuple);
@@ -88,13 +70,14 @@ void updateHashWithWeeks (GHashTable* bigTable, Date date, Tuple tuple) {
     } else {
         weekTable = createHash();
         insertHash(weekTable, tuple.key, tuple.value);
-        
+
         Date* dateKey = malloc(sizeof(Date));
         if (mallocErrorCheck (dateKey)) return;
         *dateKey = date;
         g_hash_table_insert(bigTable, dateKey, weekTable);
     }
 }
+
 
 gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed) { // key: date, value: artistlist
     Date* date = (Date*)key;
@@ -115,7 +98,6 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
                 updateHash (artistsTimeInTop, artistId, 1);
             }
         }
-
     }
     else {      
             for (int i = 0; i < list->count; i++) {
@@ -130,16 +112,15 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
 void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManager, ArtistManager* artistManager, int cmdCounter) {
     Date minDay = getCMDdateMin (cmd);
     Date maxDay = getCMDdateMax (cmd);
-    GHashTable* artistsTimeInTop = createHash(); // will store the artists with the number of times they were on the top 10
     if (!historyTreeIsInitialized (historyManager)) { // will get all the top artists in each week
         createAndSortTree (historyManager, sortHistoryByWeek,  musicManager);
+        //printGTree(historyManager);
     }
+    GHashTable* artistsTimeInTop = createHash(); // will store the artists with the number of values they were on the top 10
 
-    bool isFilterOn = ! (minDay.year == 0);
-    if (isFilterOn) {
-        adjustDateLimits (&minDay, 0);
-        adjustDateLimits (&maxDay, 1);
-    }
+    bool isFilterOn = (minDay.year != 0);
+    if (isFilterOn) adjustDateLimits (&minDay);
+
     feederHistory data = {.maxDay = maxDay, 
                           .minDay = minDay,
                           .table = artistsTimeInTop,
@@ -153,12 +134,12 @@ void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManage
     snprintf (filename, sizeof(filename),"resultados/command%d_output.txt", cmdCounter);
     Output* output = openOutputFile (filename);
 
-    Tuple* array = sortHash (artistsTimeInTop, compareTuple);
+    Tuple biggestArtist = getBiggestFromHash (artistsTimeInTop);
  
-    if (array == NULL) writeNewLine(output);
+    if (biggestArtist.key == -1) writeNewLine(output);
     else {
-        int artistId = array[0].key;
-        int artistCount = array[0].value;
+        int artistId = biggestArtist.key;
+        int artistCount = biggestArtist.value;
 
         char* lines [3] = {NULL};
         char idString[15], typeString[15], artistCountString[15];
@@ -178,6 +159,5 @@ void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManage
     }
     closeOutputFile (output);
 
-    free (array);
     deleteHash (artistsTimeInTop);
 }

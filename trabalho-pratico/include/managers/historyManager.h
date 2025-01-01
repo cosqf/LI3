@@ -140,4 +140,6 @@ void traverseTree(HistoryManager* mngr, gboolean callback(gpointer key, gpointer
  */
 void callbackHistory(char **tokens, void *manager, Output *output);
 
+
+void printGTree(HistoryManager* mngr);
 #endif

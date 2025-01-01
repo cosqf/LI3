@@ -62,3 +62,21 @@ char* formatUserID (int id) {
     sprintf(formatted, "U%07d", id);
     return formatted;
 }
+
+Tuple getBiggestFromHash (GHashTable* table) {
+    GHashTableIter iter;
+    gpointer key, value;
+    int maxValues = 0, maxId = -1;
+    g_hash_table_iter_init(&iter, table);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        int values = GPOINTER_TO_INT (value);
+        int id = GPOINTER_TO_INT (key);
+        if (values > maxValues || (values == maxValues && id < maxId)) {
+            maxValues = values;
+            maxId = id;
+        }
+    } 
+    Tuple result = {.key = maxId, .value = maxValues};
+    return result;
+}

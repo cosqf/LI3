@@ -182,6 +182,7 @@ int transformHistory (HistoryManager* manager, History*** hashArray) { // hashAr
 
 void createAndSortTree (HistoryManager* manager, void (processHistory) (History*, MusicManager*, GHashTable*), MusicManager* m_mngr) {
     GHashTable* hashWithWeeks = g_hash_table_new_full(dateHashFunc, dateEqualFunc, (GDestroyNotify) free, (GDestroyNotify) deleteHash);
+
     //iterate through history
     GHashTable* hash = manager->historyByUser;
     GHashTableIter iter;
@@ -211,6 +212,8 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
     while (g_hash_table_iter_next(&iter, &key, &value)) {
         GHashTable* table = (GHashTable*) value;
         int tupleCount = g_hash_table_size (table);
+        int limit = (tupleCount < 10) ? tupleCount : 10;
+
         Tuple* artistsWeek = sortHash (table, compareTuple);
 
         ArtistList* top10artistWeek = malloc(sizeof(ArtistList));
@@ -218,14 +221,13 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
                 free (artistsWeek);
                 return;
             }
-        int* limitedArray = malloc (sizeof (Tuple) * tupleCount);
+        int* limitedArray = malloc (sizeof (int) * limit);
             if (mallocErrorCheck (limitedArray)) {
                 free (artistsWeek);
                 free (top10artistWeek);
                 return;
             }
         // get only the top 10 artists
-        int limit = (tupleCount < 10) ? tupleCount : 10;
         for (int i = 0; i< limit; i++) limitedArray[i] = artistsWeek [i].key;
         free(artistsWeek);
 
@@ -234,11 +236,10 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
 
         Date* dateKeyCopy = malloc(sizeof(Date));
         if (mallocErrorCheck (dateKeyCopy)) {
-            free (top10artistWeek);
+            freeArtistList (top10artistWeek);
             return;
         }
         *dateKeyCopy = *(Date*) key;
         g_tree_insert (mngr->historyInWeeks, dateKeyCopy, top10artistWeek);
     }
 }
-

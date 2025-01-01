@@ -192,8 +192,7 @@ int compareDate(Date dateA, Date dateB) {  // if a > b returns 1, a < b returns 
     return 0;
 }
 
-// days functions
-short int getWeekday (Date date) { // gotten from wikipedia, sunday == 0
+short int getWeekday (Date date) { // gotten from wikipedia, sunday == 1
     int d = date.day;
     int m = date.month;
     int y = date.year;
