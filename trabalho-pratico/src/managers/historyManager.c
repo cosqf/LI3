@@ -241,4 +241,16 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
         g_tree_insert (mngr->historyInWeeks, dateKeyCopy, top10artistWeek);
     }
 }
+/*
+GHashTable* getHistoryByUserTable (HistoryManager *h_mngr) {
+    return h_mngr->historyByUser;
+}
+*/
+
+
+History* lookupHistoryHash (HistoryManager *h_mngr, int id) {
+    History* history = g_hash_table_lookup (h_mngr->historyByUser, GINT_TO_POINTER(id));
+    if (history == NULL) return NULL;
+    return copyHistory (history);
+}
 

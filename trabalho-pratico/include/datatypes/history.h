@@ -133,6 +133,12 @@ int getHistoryListLengthByMusic(History* history);
 
 
 
+
+
+History* copyHistory( History* historyOg);
+
+
+
 /* Getters string */
 /**
  * @brief A getter function that returns the ID of a history entry in string format.

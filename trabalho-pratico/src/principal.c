@@ -10,6 +10,7 @@
 #include <query3.h>
 #include <query4.h>
 #include <query5.h>
+#include <query6.h>
 
 #include <almightyManager.h>
 #include <cmdManager.h>
@@ -65,6 +66,7 @@ int principal (char* pathData, char* pathCmd) {
             break;
 
         case 6:
+            query6(cmd, getHistoryManager(mngr), i+1);
             break;
             
         default:

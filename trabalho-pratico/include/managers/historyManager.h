@@ -140,4 +140,11 @@ void traverseTree(HistoryManager* mngr, gboolean callback(gpointer key, gpointer
  */
 void callbackHistory(char **tokens, void *manager, Output *output);
 
+/*
+
+GHashTable* getHistoryByUserTable (HistoryManager *h_mngr);
+*/
+History* lookupHistoryHash (HistoryManager *h_mngr, int id);
+
+
 #endif
