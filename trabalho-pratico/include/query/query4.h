@@ -76,14 +76,11 @@ void updateHashWithWeeks(GHashTable* bigTable, Date date, Tuple tuple);
 gboolean callbackHistoryQuery4(gpointer key, gpointer value, gpointer dataFeed);
 
 /**
- * @brief This function adjustes the date depending on the flag.
- * If the flag is false it will subtract the date until the last sunday, 
- * if it is true it will add until it is saturday.
+ * @brief This function adjustes the date to the last sunday.
  * 
  * @param date A pointer to the date to change.
- * @param flag The flag to decide how to change the date.
  */
-void adjustDateLimits(Date *date, bool flag);
+void adjustDateLimits(Date *date);
 
 /**
  * @brief Frees the artist Ids in the struct and then the @c ArtistList itself.

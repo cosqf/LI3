@@ -29,11 +29,20 @@ HistoryManager* initializeHashHistory ();
 void freeHistory (HistoryManager* h_mngr);
 
 /**
+ * @brief Traverses the history by music and applies a callback function to each element.
+ *
+ * @param mngr Pointer to the history manager.
+ * @param callback A callback function to be executed for each element.
+ * @param data Additional data to pass to the callback function.
+ */
+void traverseHistorybyMusic(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data);
+
+/**
  * @brief Traverses the history by user and applies a callback function to each element.
  *
  * @param mngr Pointer to the history manager.
  * @param callback A callback function to be executed for each element.
- * @param feeder Additional data to pass to the callback function.
+ * @param data Additional data to pass to the callback function.
  */
 void traverseHistorybyUser(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data);
 
@@ -145,6 +154,5 @@ void callbackHistory(char **tokens, void *manager, Output *output);
 GHashTable* getHistoryByUserTable (HistoryManager *h_mngr);
 */
 History* lookupHistoryHash (HistoryManager *h_mngr, int id);
-
 
 #endif

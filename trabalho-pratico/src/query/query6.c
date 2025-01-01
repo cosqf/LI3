@@ -16,8 +16,9 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     
     char filename[50];  // buffer for the formatted file name
 
-    Output* output = openOutputFile (filename);
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
+
+    Output* output = openOutputFile (filename);
 
 
     if (history == NULL) {
@@ -28,6 +29,8 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     int idHistory = getHistoryId(history);
     printf("IdHistory: %d, IDUser: %d, Query: %d, Número artistas: %d \n", 
             idHistory, id, query, nArtists);
+
+    closeOutputFile(output);
 }
 
 

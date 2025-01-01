@@ -9,6 +9,15 @@
 #define _QUERY1_H_
 
 /**
+ * @brief Structure representing a feeder for the callback functions used in Q1.
+ */
+typedef struct q1feeder {
+    Artist* artist;
+    AlmightyManager* mngr;
+    double total;
+} Q1Feeder;
+
+/**
  * @brief
  * 
  * @param cmd A pointer to the command struct.
@@ -58,25 +67,21 @@ int individualAlbums (AlmightyManager* mngr, Artist* artist);
 double totalRecipe (AlmightyManager* mngr, Artist* artist);
 
 /**
- * @brief Calculates the total recipe an individual artist gains.
+ * @brief Callback function to calculate the total recipe an individual artist gains.
  * 
- * @param hashtable A pointer to a hashtable of Historys. (?)
- * @param artist A pointer to the individual artist.
- * @param mngr A pointer to the main manager.
- * 
- * @return The total recipe of the individual artist.
+ * @param key The music ID to which the history entry is associated.
+ * @param value The first history entry associated to said music.
+ * @param data A pointer to a Q1Feeder.
  */
-double singleArtist (GHashTable* hashtable, Artist* artist, AlmightyManager* mngr);
+void singleArtist (gpointer key, gpointer value, gpointer data);
 
 /**
- * @brief Calculates the total recipe a group gains.
+ * @brief Callback function to calculate the total recipe a group gains.
  * 
- * @param hashtable A pointer to a hashtable of Historys. (?)
- * @param artist A pointer to the collective artist.
- * @param mngr A pointer to the main manager.
- * 
- * @return The total recipe of the group.
+ * @param key The music ID to which the history entry is associated.
+ * @param value The first history entry associated to said music.
+ * @param data A pointer to a Q1Feeder.
  */
-double collectiveArtist (GHashTable* hashtable, Artist* artist, AlmightyManager* mngr);
+void collectiveArtist (gpointer key, gpointer value, gpointer data);
 
 #endif  

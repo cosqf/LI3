@@ -6,15 +6,10 @@
 
 
 void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter){
-    GHashTable* userHashTable = getUserTable (u_mngr);
-    GHashTableIter iter;
-    gpointer key, value;
     char filename[50];  // buffer for the formatted file name
 
     // Format the filename with the counter value
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
-
-    g_hash_table_iter_init(&iter, userHashTable);
 
     int AgeMin = getCMDAgeMin(cmd);
     int AgeMax = getCMDAgeMax(cmd);
@@ -22,19 +17,14 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
 
     defineGenre (arrayResults); // initialize arrayResults
 
-    while (g_hash_table_iter_next(&iter, &key, &value)) { // for each user
-        User* user = (User*) value;
-        int age = getUserAge (user), nLikes = getUserLikedCounter (user);
-        const int* LikedMusics = getUserLikedMusicsID (user);
+    q3Data data = {
+        .ageMax = AgeMax,
+        .ageMin = AgeMin,
+        .arrayResults = arrayResults,
+        .m_mngr = m_mngr
+    };
 
-        if (age >= AgeMin && age <= AgeMax){
-            for (int i = 0; i < nLikes; i++){ // for each music
-                int idAtual = LikedMusics[i];
-                Genre genre = lookupMusicGenreHash (m_mngr, idAtual);
-                addToResults (arrayResults, genre);
-            }
-        }
-    }
+    iterateUser (u_mngr, q3ProcessUsers, &data);
 
     qsort(arrayResults, 10, sizeof(TupleMusics), compareLikes);
 
@@ -61,6 +51,26 @@ void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter
     closeOutputFile (output);
 }
 
+void q3ProcessUsers(gpointer key, gpointer value, gpointer data) {
+    (void) key;
+    User* user = (User*) value;
+    q3Data* q3data = (q3Data*) data;
+    int AgeMin = q3data->ageMin;
+    int AgeMax = q3data->ageMax;
+    TupleMusics* arrayResults = q3data->arrayResults;
+    MusicManager* m_mngr = q3data->m_mngr;
+
+    int age = getUserAge (user), nLikes = getUserLikedCounter (user);
+    const int* LikedMusics = getUserLikedMusicsID (user);
+
+    if (age >= AgeMin && age <= AgeMax){
+        for (int i = 0; i < nLikes; i++){ // for each music
+            int idAtual = LikedMusics[i];
+            Genre genre = lookupMusicGenreHash (m_mngr, idAtual);
+            addToResults (arrayResults, genre);
+        }
+    }
+}
 
 
 void addToResults(TupleMusics *array, Genre genre) {
