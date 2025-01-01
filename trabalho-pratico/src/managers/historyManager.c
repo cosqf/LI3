@@ -95,14 +95,9 @@ int lengthHistory (HistoryManager* mngr) {
     return g_hash_table_size(mngr->historyByUser);
 }
 
-double totalRecipe (AlmightyManager* mngr, Artist* artist) {
-    HistoryManager* h_mngr = getHistoryManager(mngr);
-    int constituentsNumber = getArtistIDConstituentCounter(artist);
-
-    if(constituentsNumber == 0) return singleArtist(h_mngr->historyByMusic, artist, mngr);
-    else return collectiveArtist(h_mngr->historyByMusic, artist, mngr);
-
-    return 0;
+void traverseHistorybyMusic(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data) {
+    GHashTable* historyByMusic = mngr->historyByMusic;
+    g_hash_table_foreach(historyByMusic, callback, data);
 }
 
 void traverseHistorybyUser(HistoryManager* mngr, void (callback)(gpointer key, gpointer value, gpointer query_data), gpointer data) {
