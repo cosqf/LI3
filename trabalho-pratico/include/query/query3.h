@@ -14,6 +14,15 @@ typedef struct {
 } TupleMusics;
 
 /**
+ * @brief A struct to hold the data to feed.
+ */
+typedef struct {
+    int ageMin, ageMax;
+    TupleMusics* arrayResults;
+    MusicManager* m_mngr;
+} q3Data;
+
+/**
  * @brief
  * 
  * @param cmd A pointer to the command struct.
@@ -21,7 +30,16 @@ typedef struct {
  * @param m_mngr A pointer to a music manager.
  * @param cmdCounter A counter with the number of the command. 
  */
-void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int);
+void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter);
+
+/**
+ * @brief 
+ * 
+ * @param key Unused parameter.
+ * @param value A pointer to a User.
+ * @param data A pointer to a @c q3Data.
+ */
+void q3ProcessUsers(gpointer key, gpointer value, gpointer data);
 
 /**
  * @brief Increments the number of likes of the genre in the given array.
@@ -48,4 +66,4 @@ void defineGenre (TupleMusics *array);
  */
 int compareLikes(const void* a, const void* b);
 
-#endif  
+#endif

@@ -15,6 +15,14 @@ typedef struct almightyManager AlmightyManager;
 typedef struct userManager UserManager;
 
 /**
+ * @brief A matrix feeder struct.
+ */
+typedef struct matrixFeeder {
+    MusicManager* m_mngr;
+    UserManager* u_mngr;
+} MatrixFeeder;
+
+/**
  * @brief Inserts a @c User into the hash table.
  *
  * @param u_mngr Pointer to the user manager, where the hash table is stored.
@@ -48,6 +56,15 @@ void freeHashUser (UserManager* u_mngr);
 User* lookupUserHash (UserManager *u_mngr, int id);
 
 /**
+ * @brief Iterates through all entries in the user hash table and processes each entry using a callback function.
+ *
+ * @param u_mngr Pointer to the user manager.
+ * @param UserProcessor Callback function to process each user record.
+ * @param user_data Pointer to additional data passed to the callback function.
+ */
+void iterateUser(UserManager* u_mngr, void (*UserProcessor)(gpointer key, gpointer value, gpointer user_data), gpointer user_data);
+
+/**
  * @brief Parses user dataset and checks for validity, writing to error logs if it fails.
  *
  * @param path A string with the path to the user dataset.
@@ -67,11 +84,6 @@ int getDataUser (char* path, AlmightyManager* mngr);
  * @param output The error file structure.
  */
 void callbackUser(char **tokens, void *manager, Output *output);
-
-/**
- * @brief A matrix feeder struct.
- */
-typedef struct matrixFeeder MatrixFeeder;
 
 /**
  * @brief Checks if the matrix that contains all the users and the amount of times they have listened to each genre exists.

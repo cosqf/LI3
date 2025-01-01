@@ -54,6 +54,10 @@ User* lookupUserHash (UserManager *u_mngr, int id) {
     return copyUser (user);
 }
 
+void iterateUser(UserManager* u_mngr, void (*UserProcessor)(gpointer key, gpointer value, gpointer user_data), gpointer user_data) {
+    g_hash_table_foreach (u_mngr->user, UserProcessor, user_data);
+}
+
 int getDataUser (char* path, AlmightyManager* mngr) {
     Output* output = openErrorOutputUser ();
     
@@ -82,11 +86,6 @@ void callbackUser(char **tokens, void *manager, Output *output) { // receives en
 }
 
 //matrix and array
-
-typedef struct matrixFeeder {
-    MusicManager* m_mngr;
-    UserManager* u_mngr;
-} MatrixFeeder;
 
 bool userMatrixIsInitialized (UserManager* u_mngr) {
     if (u_mngr->listenedGenresMatrix) return 1;
