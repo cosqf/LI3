@@ -47,13 +47,6 @@ void freeHashUser (UserManager* u_mngr);
  */
 User* lookupUserHash (UserManager *u_mngr, int id);
 
-
-
-
-GHashTable* getUserTable (UserManager *u_mngr);
-
-
-
 /**
  * @brief Parses user dataset and checks for validity, writing to error logs if it fails.
  *
@@ -106,7 +99,7 @@ void createMatrixAndArray(HistoryManager* h_mngr, MusicManager* m_mngr, UserMana
 void fillUserIDArray(UserManager* u_mngr);
 
 /**
- * @brief Callback function used in traverseHistorybyUser.
+ * @brief Callback function used in traverseHistorybyUser to update the matrix counters.
  * Handles the necessary information to safely call the auxiliary function processHistory and fill the matrix.
  * 
  * @param key The user ID to which the history entry is associated.
@@ -114,6 +107,23 @@ void fillUserIDArray(UserManager* u_mngr);
  * @param data A pointer to a MatrixFeeder.
  */
 void updateMatrix (gpointer key, gpointer value, gpointer data);
+
+/**
+ * @brief Creates a copy of a given matrix.
+ * 
+ * @param matrix Pointer to the matrix to copy.
+ * @param rows Number of rows in the matrix to copy.
+ * @param colums Number of columns in the matrix to copy.
+ */
+int** copyMatrix(int** matrix, int rows, int columns);
+
+/**
+ * @brief Creates a copy of a given user array.
+ * 
+ * @param array Pointer to the user array to copy.
+ * @param slots Number of slots in the user array to copy.
+ */
+char** copyUserArray (char** array, int slots);
 
 /**
  * @brief Frees each row in the matrix and the matrix pointer itself.

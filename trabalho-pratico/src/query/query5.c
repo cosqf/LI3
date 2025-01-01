@@ -75,6 +75,6 @@ void query5 (CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, UserManager
 
     closeOutputFile(output);
 
-    free(recUsers);
+    freeUserArray(recUsers, noUsers);
     free(targetID);
 }
