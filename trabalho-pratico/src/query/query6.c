@@ -12,7 +12,12 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     int query = getCMDquery(cmd);
     int nArtists = getCMDnArtists(cmd);
     int id = getCMDId(cmd);
+
+    Duration listenTime = {0, 0, 0, 0}; //Duration used to output
+
     History* history = lookupHistoryHash(h_mngr, id);
+
+
     
     char filename[50];  // buffer for the formatted file name
 
@@ -21,21 +26,68 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     Output* output = openOutputFile (filename);
 
 
-    if (history == NULL) {
+    if (history == NULL) { //writes a "\n" in the output file if the user doesn't have an history
         writeNewLine(output);
         printf("Error: No history found for ID %d.\n", id);
         return;
     }
+
     int idHistory = getHistoryId(history);
-    printf("IdHistory: %d, IDUser: %d, Query: %d, Número artistas: %d \n", 
-            idHistory, id, query, nArtists);
+
+
+    while (history!=NULL){ //calculates the data taking into account the year
+        int currentYear = getHistoryTimestamp(history).date.year;
+        int intendedYear = getCMDyear (cmd);
+        if (currentYear == intendedYear){
+
+
+        listenTime = calculateListenTime (history, listenTime);
+
+
+        }
+        history = getNextHistoryByUser (history);
+
+    }
+
+
+
+    int hour = listenTime.hours;
+    int min = listenTime.minutes;
+    int seg = listenTime.seconds;
+
+    printf("%d:%d:%d    IdHistory: %d, IDUser: %d, Query: %d, Número artistas: %d \n", hour, min, seg, idHistory, id, query, nArtists);
 
     closeOutputFile(output);
 }
 
 
 
+
+
+
+Duration calculateListenTime (History* history, Duration listenTime){
+        Duration currentDuration = getHistoryDuration(history);
+
+        int hours = currentDuration.hours;
+        int min = currentDuration.minutes;
+        int sec = currentDuration.seconds;
+
+        listenTime.hours += hours;
+        listenTime.minutes += min;
+        listenTime.seconds += sec;
+
+        
+    return listenTime;
+}
+
+
 /*
+
+00:04:47;1;A0009964;2019/12/13;Hip Hop;AL006156;07
+A0009964;1;00:04:47
+
+
+
 typedef struct cmd {
     int query;          // 1, 2, 3, 4, 5, or 6
     char entity;       // A or U (Q1)
@@ -68,4 +120,13 @@ typedef struct historyManager {
     GHashTable *historyByMusic;
     GTree* historyInWeeks; // will only have the top 10 artists of each week, key: first day of the week, value: array with artists and duration
 } HistoryManager;
+
+
+typedef struct {
+    int hours;         
+    int minutes;       
+    int seconds;       
+    short int error;   
+} Duration;
+
 */
