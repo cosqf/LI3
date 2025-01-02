@@ -91,11 +91,13 @@ ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artis
         }
     } else {
         // Add a new artist
-        array = realloc(array, (*size + 1) * sizeof(ArtistListenData));
-        if (!array) {
+        ArtistListenData* new_array = realloc(array, (*size + 1) * sizeof(ArtistListenData));
+        if (!new_array) {
             printf("Erro ao alocar memória!\n");
+            free(array);
             exit(1);
         }
+        array = new_array;
         array[*size].artist_id = artist_id;
         array[*size].totalTime = duration;
         (*size)++;
