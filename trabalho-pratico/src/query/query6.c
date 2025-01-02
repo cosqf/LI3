@@ -135,7 +135,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     int nMusics = 0;
 
     Duration listenTime = {0, 0, 0, 0}; 
-    History* history = lookupHistoryHash(h_mngr, userId);
+    History* history = lookupHistoryHashByUser(h_mngr, userId);
     ListenedMusicNode* listenedList = NULL; 
     ArtistListenData* artistData = NULL;
     int artistCount = 0;
@@ -148,17 +148,24 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
         writeNewLine(output);
         printf("Error: No history found for ID %d.\n", userId);
         closeOutputFile(output);
+
+        freeMusicList(listenedList);
+        free(artistData);
+        deleteHistoryByUser(history);
+
         return;
     }
 
-    while (history != NULL) {
-        int currentYear = getHistoryTimestamp(history).date.year;
+    History* ptr = history;
+
+    while (ptr != NULL) {
+        int currentYear = getHistoryTimestamp(ptr).date.year;
         int intendedYear = getCMDyear(cmd);
 
         if (currentYear == intendedYear) {
-            listenTime = calculateListenTime(history, listenTime);
+            listenTime = calculateListenTime(ptr, listenTime);
 
-            int music_id = getHistoryMusicId(history);
+            int music_id = getHistoryMusicId(ptr);
             if (!wasMusicListened(listenedList, music_id)) {
                 nMusics++;
                 listenedList = addMusic(listenedList, music_id);
@@ -166,32 +173,39 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
             Music* music = lookupMusicHash(m_mngr, music_id);
             if (music == NULL) {
-                history = getNextHistoryByUser(history);
+                ptr = getNextHistoryByUser(ptr);
                 continue;
             }
 
             const int* artist_id_ptr = getMusicArtistID(music);
             if (artist_id_ptr == NULL) {
-                history = getNextHistoryByUser(history);
+                ptr = getNextHistoryByUser(ptr);
+                deleteMusic(music);
                 continue;
             }
 
             int artist_id = *artist_id_ptr;
-            Duration duration = getHistoryDuration(history);
+            Duration duration = getHistoryDuration(ptr);
             artistData = updateArtistData(artistData, &artistCount, artist_id, duration);
+            
+            deleteMusic(music);
         }
 
-        history = getNextHistoryByUser(history);
+        ptr = getNextHistoryByUser(ptr);
     }
-
+    free(ptr);
     int mostListenedArtist = findMostListenedArtist(artistData, artistCount);
 
 
     if (mostListenedArtist == -1) {
-    writeNewLine(output);
-    printf("Error: No history found for ID %d.\n", userId);
-    closeOutputFile(output);
-    return;
+        writeNewLine(output);
+        printf("Error: No history found for ID %d.\n", userId);
+        closeOutputFile(output);
+
+        freeMusicList(listenedList);
+        free(artistData);
+        deleteHistoryByUser(history);
+        return;
     }
 
 
@@ -205,6 +219,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     closeOutputFile(output);
     freeMusicList(listenedList);
     free(artistData);
+    deleteHistoryByUser(history);
 }
 
 
