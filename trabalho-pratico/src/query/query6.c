@@ -185,6 +185,14 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     int mostListenedArtist = findMostListenedArtist(artistData, artistCount);
 
 
+    if (mostListenedArtist == -1) {
+    writeNewLine(output);
+    printf("Error: No history found for ID %d.\n", userId);
+    closeOutputFile(output);
+    return;
+    }
+
+
     int hour = listenTime.hours;
     int min = listenTime.minutes;
     int seg = listenTime.seconds;
