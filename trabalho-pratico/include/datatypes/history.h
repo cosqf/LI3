@@ -30,7 +30,7 @@ History* createHistory (char** tokens);
  *
  * @param history A pointer to the history struct to be deleted.
  */
-void deleteHistory (History* history);
+void deleteHistoryByUser (History* history);
 
 /**
  * @brief Creates a history struct in string format.
@@ -135,7 +135,7 @@ int getHistoryListLengthByMusic(History* history);
 
 
 
-History* copyHistory( History* historyOg);
+History* copyHistoryByUser( History* historyOg);
 
 
 

@@ -57,7 +57,7 @@ HistoryManager* initializeHashHistory () {
         perror("Failed to allocate memory for HistoryManager");
         exit(EXIT_FAILURE); 
     }
-    h_mngr->historyByUser = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistory);
+    h_mngr->historyByUser = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistoryByUser);
     h_mngr->historyByMusic = g_hash_table_new(g_direct_hash, g_direct_equal);
     h_mngr->historyInWeeks = NULL;
     return h_mngr;
@@ -238,16 +238,10 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
         g_tree_insert (mngr->historyInWeeks, dateKeyCopy, top10artistWeek);
     }
 }
-/*
-GHashTable* getHistoryByUserTable (HistoryManager *h_mngr) {
-    return h_mngr->historyByUser;
-}
-*/
 
-
-History* lookupHistoryHash (HistoryManager *h_mngr, int id) {
+History* lookupHistoryHashByUser (HistoryManager *h_mngr, int id) {
     History* history = g_hash_table_lookup (h_mngr->historyByUser, GINT_TO_POINTER(id));
     if (history == NULL) return NULL;
-    return copyHistory (history);
+    return copyHistoryByUser (history);
 }
 

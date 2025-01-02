@@ -48,7 +48,7 @@ History* createHistory (char** tokens) {
     return history;
 }
 
-void deleteHistory(History* history) {
+void deleteHistoryByUser(History* history) {
     History* temp;
 
     while (history != NULL) {
@@ -58,6 +58,46 @@ void deleteHistory(History* history) {
     }
 }
 
+History* copyHistoryByUser( History* historyOg) {
+    if (historyOg == NULL) {
+        return NULL;
+    }
+
+    History* historyCopy = malloc(sizeof(History));
+    if (!historyCopy) {
+        perror("Error allocating memory for User");
+        return NULL;
+    }
+
+    // Copia os campos simples (inteiros)
+    historyCopy->id = historyOg->id;
+    historyCopy->user_id = historyOg->user_id;
+    historyCopy->music_id = historyOg->music_id;
+
+    // Copia o campo Timestamp (composto por Date e Duration)
+    historyCopy->timestamp.date = historyOg->timestamp.date;  // Copia Date
+    historyCopy->timestamp.hour.hours = historyOg->timestamp.hour.hours;
+    historyCopy->timestamp.hour.minutes = historyOg->timestamp.hour.minutes;
+    historyCopy->timestamp.hour.seconds = historyOg->timestamp.hour.seconds;
+    historyCopy->timestamp.hour.error = historyOg->timestamp.hour.error;
+
+    // Copia o campo Duration (relacionado à duração da música)
+    historyCopy->duration.hours = historyOg->duration.hours;
+    historyCopy->duration.minutes = historyOg->duration.minutes;
+    historyCopy->duration.seconds = historyOg->duration.seconds;
+    historyCopy->duration.error = historyOg->duration.error;
+
+    // Copia os ponteiros para as listas encadeadas, se existirem
+    if (historyOg->nextByUser != NULL) {
+        historyCopy->nextByUser = copyHistoryByUser(historyOg->nextByUser);  // Cópia recursiva para a lista encadeada por user_id
+    } else {
+        historyCopy->nextByUser = NULL;  // Se o próximo for NULL, também definimos o próximo como NULL
+    }
+
+    historyCopy->nextByMusic = NULL;
+
+    return historyCopy;
+}
 
 // GETTERs
 
@@ -113,71 +153,6 @@ int getHistoryListLengthByMusic(History* history) {
     }
     return length;
 }
-
-
-
-
-
-
-History* copyHistory( History* historyOg) {
-    if (historyOg == NULL) {
-        return NULL;
-    }
-
-    History* historyCopy = malloc(sizeof(History));
-    if (!historyCopy) {
-        perror("Error allocating memory for User");
-        return NULL;
-    }
-
-    // Copia os campos simples (inteiros)
-    historyCopy->id = historyOg->id;
-    historyCopy->user_id = historyOg->user_id;
-    historyCopy->music_id = historyOg->music_id;
-
-    // Copia o campo Timestamp (composto por Date e Duration)
-    historyCopy->timestamp.date = historyOg->timestamp.date;  // Copia Date
-    historyCopy->timestamp.hour.hours = historyOg->timestamp.hour.hours;
-    historyCopy->timestamp.hour.minutes = historyOg->timestamp.hour.minutes;
-    historyCopy->timestamp.hour.seconds = historyOg->timestamp.hour.seconds;
-    historyCopy->timestamp.hour.error = historyOg->timestamp.hour.error;
-
-    // Copia o campo Duration (relacionado à duração da música)
-    historyCopy->duration.hours = historyOg->duration.hours;
-    historyCopy->duration.minutes = historyOg->duration.minutes;
-    historyCopy->duration.seconds = historyOg->duration.seconds;
-    historyCopy->duration.error = historyOg->duration.error;
-
-    // Copia os ponteiros para as listas encadeadas, se existirem
-    if (historyOg->nextByUser != NULL) {
-        historyCopy->nextByUser = copyHistory(historyOg->nextByUser);  // Cópia recursiva para a lista encadeada por user_id
-    } else {
-        historyCopy->nextByUser = NULL;  // Se o próximo for NULL, também definimos o próximo como NULL
-    }
-
-    if (historyOg->nextByMusic != NULL) {
-        historyCopy->nextByMusic = copyHistory(historyOg->nextByMusic);  // Cópia recursiva para a lista encadeada por music_id
-    } else {
-        historyCopy->nextByMusic = NULL;  // Se o próximo for NULL, também definimos o próximo como NULL
-    }
-
-
-    return historyCopy;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // SETTERs
