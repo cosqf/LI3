@@ -7,6 +7,44 @@
 #include <userManager.h>
 #include <cmd.h>
 
+typedef struct ListenedMusicNode {
+    int music_id;                     // Identificador da música
+    struct ListenedMusicNode* next;   // Próximo nó
+} ListenedMusicNode;
+
+// Função para adicionar uma música à lista ligada
+ListenedMusicNode* addMusic(ListenedMusicNode* head, int music_id) {
+    ListenedMusicNode* new_node = malloc(sizeof(ListenedMusicNode));
+    if (!new_node) {
+        printf("Erro ao alocar memória!\n");
+        return head;
+    }
+    new_node->music_id = music_id;
+    new_node->next = head;
+    return new_node;
+}
+
+// Função para verificar se uma música já foi ouvida
+int wasMusicListened(ListenedMusicNode* head, int music_id) {
+    ListenedMusicNode* current = head;
+    while (current != NULL) {
+        if (current->music_id == music_id) {
+            return 1;  // Música encontrada
+        }
+        current = current->next;
+    }
+    return 0;  // Música não encontrada
+}
+
+// Função para liberar a memória da lista ligada
+void freeMusicList(ListenedMusicNode* head) {
+    ListenedMusicNode* current = head;
+    while (current != NULL) {
+        ListenedMusicNode* temp = current;
+        current = current->next;
+        free(temp);
+    }
+}
 
 void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     int query = getCMDquery(cmd);
@@ -18,6 +56,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     Duration listenTime = {0, 0, 0, 0}; //Duration used to output
 
     History* history = lookupHistoryHash(h_mngr, id);
+    ListenedMusicNode* listenedList = NULL; // Cabeça da lista ligada
 
 
     
@@ -41,9 +80,14 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
         int currentYear = getHistoryTimestamp(history).date.year;
         int intendedYear = getCMDyear (cmd);
         if (currentYear == intendedYear){
+            int music_id = getHistoryMusicId(history);
 
-        nMusics++;
-        listenTime = calculateListenTime (history, listenTime);
+            if (!wasMusicListened(listenedList, music_id)) {
+                nMusics++;
+                listenedList = addMusic(listenedList, music_id); // Adiciona à lista
+            }
+
+            listenTime = calculateListenTime (history, listenTime);
 
 
         }
@@ -60,6 +104,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     printf("%d:%d:%d  nMusicas: %d,  IdHistory: %d, IDUser: %d, Query: %d, Número artistas: %d \n", hour, min, seg, nMusics, idHistory, id, query, nArtists);
 
     closeOutputFile(output);
+    freeMusicList(listenedList);
 }
 
 
