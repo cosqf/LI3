@@ -66,7 +66,7 @@ int principal (char* pathData, char* pathCmd) {
             break;
 
         case 6:
-            query6(cmd, getHistoryManager(mngr), i+1);
+            query6(cmd, getHistoryManager(mngr), getMusicManager (mngr), i+1);
             break;
             
         default:
