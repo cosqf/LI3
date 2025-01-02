@@ -14,6 +14,7 @@
 #include <query3.h>
 #include <query4.h>
 #include <query5.h>
+#include <query6.h>
 #include <almightyManager.h>
 #include <cmdManager.h>
 
@@ -150,7 +151,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
             q6c++;
             clock_gettime(CLOCK_REALTIME, &cmdstart); //Get the start time
 
-            //query6 ();
+            query6(cmd, getHistoryManager(mngr), getMusicManager (mngr), i);
 
             clock_gettime(CLOCK_REALTIME, &cmdend); //Get the end time
             q6total += (cmdend.tv_sec - cmdstart.tv_sec) + (cmdend.tv_nsec - cmdstart.tv_nsec) / 1e9;
@@ -215,6 +216,13 @@ int compareFiles(char* output, char* expected, int queryn) {
             return 0;
         }
         line++;
+    }
+
+    if (fgets(line1, sizeof(line1), outp) != NULL || fgets(line2, sizeof(line2), exp) != NULL) {
+        printf("Descrepância na query %d: linha %d de \"%s\"\n", queryn, line, output);
+        fclose(outp);
+        fclose(exp);
+        return 0;
     }
 
     fclose(outp);
