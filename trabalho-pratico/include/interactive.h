@@ -45,4 +45,17 @@ int gettingData (WINDOW* win, AlmightyManager* mngr);
 int gettingQuery (WINDOW* win);
 
 
+/**
+ * @brief Loads the greeting animation.
+ * This function will fetch an ASCII image and print it on the screen.
+ */
+void loadGreeting ();
+
+/**
+ * @brief Loads the ending the program animation.
+ * This function will fetch two ASCII images and print them on the screen.
+ */
+void loadBye ();
+
+
 #endif

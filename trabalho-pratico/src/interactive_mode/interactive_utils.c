@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <utils.h>
+#include <unistd.h>
 
 int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digits, int minVal, int maxVal, int flag) { // flag: reading ids ("A0000")
     int widthS, heightS;
@@ -19,7 +20,8 @@ int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digi
         wgetnstr(win, numberS, digits);
 
         if (strcmp(numberS, "exit") == 0 || 
-            (digits == 2 && strcmp(numberS, "ex") == 0)) {
+            (digits == 2 && strcmp(numberS, "ex") == 0)||
+            (digits == 3 && strcmp (numberS, "exi") == 0)) {
             curs_set(0);
             return -1;
         }
@@ -33,10 +35,10 @@ int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digi
         if (convertSuccess && number >= minVal && number <= maxVal && (!flag || check)) break;
         else {
             attron (A_UNDERLINE);
-            mvprintw (heightS/6 + 1, widthS /2 - 12, "Invalid input, try again");
+            mvprintw (heightS/5 - 1, widthS /2 - 12, "Invalid input, try again");
             attroff (A_UNDERLINE);
             refresh();
-            mvwprintw(win, posy, posx, "         ");
+            for (int i = 0; i < digits; i++) mvwaddch(win, posy, posx + i, ' '); // cleanup
             wrefresh(win);
             int size = sizeof (numberS);
             memset(numberS, 0, size);
@@ -46,7 +48,8 @@ int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digi
     return number;
 }
 
-void getStringFromInput (WINDOW* win, char* string, int digits) {
+void getStringFromInput (WINDOW* win, int posy, int posx, char* string, int digits) {
+    wmove (win, posy, posx);
     curs_set(1);
     wgetnstr(win, string, digits);
     curs_set(0);
@@ -92,16 +95,18 @@ void printResults (WINDOW* win) {
     getmaxyx(win, heightW, widthW);
     (void) heightW;
     char** results = readOutputFiles ();
-    for (int i = 0, j = 0; results[i]; i++, j++) {
-        int lines = printWrapped (win, results[i], j + 1, (int)(widthW / 11));
-        j += lines - 1;
-    }
+    if (results[0][0] == '\0') mvwprintw (win, heightW/3, widthW/2 - 5, "No output.");
+    else for (int i = 0, j = 0; results[i]; i++, j++) {
+            int lines = printWrapped (win, results[i], j + 1, (int)(widthW / 11));
+            j += lines - 1;
+        }
 
     attron (A_BLINK);
     mvprintw (heightS-1, widthS -25, "Press any key to return");
     attroff(A_BLINK);
     wrefresh(win);
     getch();
+    for (int i = 0; results[i]; i++) free (results[i]);
     free (results);
 }
 
@@ -144,8 +149,9 @@ void printHighlightedText (WINDOW* win, int y, int x, char* text, bool highlight
 
 void readResultsScrollable(int height, int width, int posy, int posx) {
     char** results = readOutputFiles ();
-    if (!results) {
+    if (!results || results[0][0] == '\0') {
         mvprintw(posy, posx, "No results available.");
+        mvprintw(posy+1, posx, "Press any key to leave.");
         refresh();
         getch();
         return;
@@ -193,9 +199,7 @@ void readResultsScrollable(int height, int width, int posy, int posx) {
         prefresh(pad, firstRow, 0, posy, posx, posy + visibleRows -1, posx + visibleCols -1);
     }
     delwin(pad);
-    for (i = 0; results[i]; i++) {
-        free(results[i]);
-    }
+    for (i = 0; results[i]; i++) free(results[i]);
     free(results);
 }
 
@@ -205,4 +209,34 @@ WINDOW* newWindowWithBorder (int height, int width, int posy, int pox){
     box (win, 0, 0);
     wrefresh(win);
     return win;
+}
+
+void loadDotAnimation () {
+    int x, y, widthS, heightS;
+    getmaxyx(stdscr, heightS, widthS);
+
+    int nextX = 0;
+    int direction = 1;
+
+    x = 0;
+    y = 0; 
+
+    while(true){
+        getmaxyx(stdscr, heightS, widthS);
+        if (y == heightS) break;
+
+        mvprintw(y , x, ".");
+        refresh();
+
+        usleep(500);
+
+        nextX = x + direction;
+
+        if(nextX >= widthS || nextX < 0){
+            direction*= -1;
+            y++;
+        }
+        else x += direction;
+        if (y == heightS) break;
+    }
 }

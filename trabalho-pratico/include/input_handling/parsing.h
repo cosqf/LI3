@@ -87,4 +87,15 @@ int parseCmdLine(char* line, char* tokens[]);
  */
 char * changePath(char *path, DataType type);
 
+/**
+ * @brief Will open a file and get all of it's lines.
+ * This function will allocate memory to a string dynamically, and it must be freed later.
+ * 
+ * @param path A string containing the path to the folder holding the datasets.
+ * @param maxLines The maximum number of lines the function will read.
+ * @param maxLineLength the maximum length of a line it will read.
+ * 
+ * @return A dynamically allocated string with all the lines of a file.
+ */
+char** getAllLines(const char *path, int maxLines, int maxLineLength);
 #endif

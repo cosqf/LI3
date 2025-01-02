@@ -136,3 +136,28 @@ char* changePath(char *path, DataType type) {
     return pathUpdated;
 }
 
+char** getAllLines(const char *path, int maxLines, int maxLineLength) {
+    FILE* titleFile = fopen(path, "r");
+    if (titleFile == NULL) return NULL;
+
+    char** str = malloc(maxLines * sizeof(char*));
+    if (mallocErrorCheck (str)) {
+        fclose(titleFile);
+        return NULL;
+    }
+
+    for (int i = 0; i < maxLines; i++) {
+        str[i] = malloc(maxLineLength);
+        if (mallocErrorCheck (str[i])) {
+            fclose(titleFile);
+            return NULL;
+        }
+
+        if (fgets(str[i], maxLineLength, titleFile) == NULL) { // reach the end of the file
+            free(str[i]);
+            break;
+        }
+    }
+    fclose(titleFile);
+    return str; 
+}

@@ -6,16 +6,63 @@
 #include <interactive.h>
 #include <interactive_queries.h>
 #include <interactive_utils.h>
+#include <unistd.h>
+
+void loadGreeting () {
+    int widthS, heightS;
+    getmaxyx(stdscr, heightS, widthS);
+
+    loadDotAnimation ();
+
+    char** title = getAllLines ("images/title.txt", heightS, widthS);
+    if (title == NULL) return;
+
+    int size = strlen (title[0]) -1;
+    int posy = (int) (heightS/8);
+    int posx = (int) (widthS/2 - size/2);
+    for (int i = 0; i<6; i++) { // fixed number of lines of the title        
+        for (int j= 0; j < widthS; j++) {
+            if (j<posx || j> posx + size) mvaddch (posy+i, j, ' ');
+            else mvaddch (posy+i, j, title[i][j-posx]);
+            refresh ();
+            usleep (1000);
+        }
+        usleep (100000);
+    }
+    free (title);
+}
+
+void loadBye () {
+    int widthS, heightS;
+    getmaxyx(stdscr, heightS, widthS);
+
+    char** bye1 = getAllLines ("images/bye1.txt", heightS, widthS);
+    if (bye1 == NULL) return;
+    char** bye2 = getAllLines ("images/bye2.txt", heightS, widthS);
+    if (bye2 == NULL) return;
+
+    int size = strlen (bye1[0]) -1;
+    int posy = (int) (heightS-14);
+    int posx = (int) (widthS-size);
+    for (int times = 0; times <3; times++) {
+        if (times != 0) usleep (500000);
+        for (int i = 0; i<14; i++) mvaddstr (posy+i, posx, bye1[i]); 
+        refresh ();
+        usleep (500000);
+        clear ();
+        for (int i = 0; i<14; i++) mvaddstr (posy+i, posx, bye2[i]); 
+        refresh ();
+    }
+    loadDotAnimation();
+    free (bye1);
+    free (bye2);
+}
 
 int loadMainPage () {
     int widthS, heightS;
     getmaxyx(stdscr, heightS, widthS);
 
-    attron (A_BOLD | A_UNDERLINE);
-    mvprintw ((int) (heightS/6), (int) (widthS/2) - 5, "Main Menu");
-    refresh();
-    attroff (A_BOLD | A_UNDERLINE);
-    WINDOW* win = newWindowWithBorder((int)(heightS / 2), (int)(widthS / 1.5), (int)(heightS / 6) + 3, (int)(widthS / 6));
+    WINDOW* win = newWindowWithBorder((int)((heightS / 2)), (int)(widthS / 1.5), (int)(heightS / 8) + 7, (int)(widthS / 6));
     if (!win) {
         perror ("Error creating window");
         return -1;
@@ -51,10 +98,11 @@ int gettingData (WINDOW* win, AlmightyManager* mngr) {
     refresh();
 
     char path[38];
+    char pathDefault[] = "small/dataset/sem_erros/";
     while (true) {
         curs_set(1);
         wmove(win, (int)(heightW / 8), (int)(widthW / 10));
-        wgetnstr(win, path, 36);
+        wgetnstr(win, path, 37);
         if (strcmp (path, "exit")  == 0) {
             delwin (win);
             return -1;
@@ -66,10 +114,9 @@ int gettingData (WINDOW* win, AlmightyManager* mngr) {
         attron (A_BLINK);
         mvprintw((int)heightS / 6, (int)widthS / 2 - 7, "Getting data...");
         attroff(A_BLINK);
-        move(0, 0);
         refresh();
-        
-        if (getData(path, mngr)) {
+
+        if (getData(path, mngr) && getData(pathDefault, mngr)) {
             mvprintw((int)heightS / 6, (int)widthS / 2 - 11, "Invalid path, try again");
             refresh();
             mvwprintw (win, (int)(heightW / 8), (int)(widthW / 8) , "                                     ");
@@ -123,7 +170,7 @@ int main () {
     noecho(); cbreak(); keypad(stdscr, TRUE); curs_set(0);
     int widthS, heightS;
     getmaxyx(stdscr, heightS, widthS);
-    if (widthS < 60 || heightS < 14) {
+    if (widthS < 65 || heightS < 15) {
         printw ("The window size is too small to load the page!");
         getch();
         endwin();
@@ -133,6 +180,7 @@ int main () {
     (void) file;
 
     // Loading
+    loadGreeting();
     int mainPageChoice = loadMainPage();
     if (mainPageChoice == -1) {
         clear();
@@ -163,10 +211,7 @@ int main () {
         refresh ();
         int query = gettingQuery (win2);
         if (query == -1) {
-            clear ();
-            delwin (win2);
-            endwin ();
-            return 0;
+            break;
         }
         clear();
         delwin (win2);
@@ -195,7 +240,6 @@ int main () {
         case 6:
             break;
         default:
-            perror ("Starting query error");
             break;
         }
         noecho();
@@ -204,6 +248,9 @@ int main () {
         delwin (outWin);
         if (repeat == -1) break;
     }
+    freeHash (mngr);
+    clear ();
+    loadBye ();
     endwin ();
     return 0;
 }
