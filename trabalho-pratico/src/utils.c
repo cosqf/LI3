@@ -213,25 +213,4 @@ int getDaysInMonth(int month, int year) {
     }
 }
 
-// function to calculate total days since year 0 for a given date (epinoch)
-int calculateDays(Date date) {
-    int days = date.day;
 
-    for (int month = 1; month < date.month; month++) {
-        days += getDaysInMonth(month, date.year);
-    }
-
-    for (int year = 0; year < date.year; year++) {
-        days += (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) ? 366 : 365;
-    }
-
-    return days;
-}
-
-int daysDiff(Date dateA, Date dateB) { // assuming dateA is more recent
-
-    int daysA = calculateDays(dateA);
-    int daysB = calculateDays(dateB);
-
-    return daysA - daysB;
-}

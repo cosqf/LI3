@@ -182,13 +182,6 @@ short int getWeekday (Date date); // gotten from wikipedia, sunday == 0
  */
 int getDaysInMonth(int month, int year);
 
-/**
- * @brief Calculates the total number of days since year 0 for a given date.
- * Calculates the total number of days that have passed since year 0 (epoch) for the given Date.
- *
- * @param date The Date object to calculate the number of days for.
- * @return The total number of days since year 0 for the given date.
- */
-int calculateDays(Date date);
+
 
 #endif
