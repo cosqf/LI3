@@ -12,6 +12,8 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     int query = getCMDquery(cmd);
     int nArtists = getCMDnArtists(cmd);
     int id = getCMDId(cmd);
+    int nMusics = 0;
+
 
     Duration listenTime = {0, 0, 0, 0}; //Duration used to output
 
@@ -40,7 +42,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
         int intendedYear = getCMDyear (cmd);
         if (currentYear == intendedYear){
 
-
+        nMusics++;
         listenTime = calculateListenTime (history, listenTime);
 
 
@@ -55,7 +57,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr,int cmdCounter ) {
     int min = listenTime.minutes;
     int seg = listenTime.seconds;
 
-    printf("%d:%d:%d    IdHistory: %d, IDUser: %d, Query: %d, Número artistas: %d \n", hour, min, seg, idHistory, id, query, nArtists);
+    printf("%d:%d:%d  nMusicas: %d,  IdHistory: %d, IDUser: %d, Query: %d, Número artistas: %d \n", hour, min, seg, nMusics, idHistory, id, query, nArtists);
 
     closeOutputFile(output);
 }
