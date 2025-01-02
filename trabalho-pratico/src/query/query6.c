@@ -78,6 +78,16 @@ Duration calculateListenTime (History* history, Duration listenTime){
         listenTime.minutes += min;
         listenTime.seconds += sec;
 
+        if (listenTime.seconds >= 60){ // checks if the duration is more than 60 seconds and corrects it
+            listenTime.minutes += listenTime.seconds / 60;
+            listenTime.seconds = listenTime.seconds % 60;
+        }
+
+        if (listenTime.minutes >= 60){ // checks if the duration is more than 60 minutes and corrects it
+            listenTime.hours += listenTime.minutes / 60;
+            listenTime.minutes = listenTime.minutes % 60;
+        }
+
         
     return listenTime;
 }
