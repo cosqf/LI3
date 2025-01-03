@@ -79,7 +79,7 @@ int loadQ2 (WINDOW* inWin, AlmightyManager* mngr) {
     move (heightS -1, 0);
     clrtoeol ();
     
-    readResultsScrollable((int) (heightS / 1.6)-3, (int) (widthS / 1.3)-2, (int) (heightS /5 + heightS /8)+3, (int) (widthS * 0.3/(1.3*2))+1); // same as outwin but slightly smaller
+    readResultsScrollable((int) (heightS / 1.6)-2, (int) (widthS / 1.3)-2, (int) (heightS /5 + heightS /8 +1)+1, (int) (widthS * 0.3/(1.3*2))+1); // same as outwin but slightly smaller
 
     freeCmd (cmd);
     return 0;
@@ -121,7 +121,17 @@ int loadQ3 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr) {
     UserManager* u_mngr = getUserManager (mngr);
     MusicManager* m_mngr = getMusicManager (mngr);
 
+    attron (A_BLINK);
+    mvprintw ((int)(heightS / 8) -1, (int) (widthS / 2) - 6, "Running...");
+    attroff(A_BLINK);
+    refresh ();
+
     query3 (cmd, u_mngr, m_mngr, 1);
+
+    move ((int)(heightS / 8) -1, (int) (widthS / 2) - 6);
+    clrtoeol();
+    refresh();
+
     printResults (outWin);
 
     freeCmd (cmd);
@@ -199,7 +209,16 @@ int loadQ4 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr) {
     MusicManager* m_mngr = getMusicManager (mngr);
     ArtistManager* a_mngr = getArtistManager (mngr);
 
+    attron (A_BLINK);
+    mvprintw ((int)(heightS / 8) -1, (int) (widthS / 2) - 6, "Running...");
+    attroff(A_BLINK);
+    refresh ();
+
     query4 (cmd, h_mngr, m_mngr, a_mngr, 1);
+
+    move ((int)(heightS / 8) -1, (int) (widthS / 2) - 6);
+    clrtoeol();
+    refresh();
 
     printResults (outWin);
     freeCmd (cmd);
@@ -249,7 +268,8 @@ int loadQ5 (WINDOW* inWin, AlmightyManager* mngr) {
     move (heightS -1, 0);
     clrtoeol ();
     
-    readResultsScrollable((int) (heightS / 1.6)-3, (int) (widthS / 1.3)-2, (int) (heightS /5 + heightS /8)+3, (int) (widthS * 0.3/(1.3*2))+1); // same as outwin but slightly smaller
+    readResultsScrollable((int) (heightS / 1.6)-2, (int) (widthS / 1.3)-2, (int) (heightS /5 + heightS /8 +1)+1, (int) (widthS * 0.3/(1.3*2))+1); // same as outwin but slightly smaller
+    
     freeCmd (cmd);
     return 0;
 }

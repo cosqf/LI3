@@ -20,16 +20,18 @@ void loadGreeting () {
     int size = strlen (title[0]) -1;
     int posy = (int) (heightS/8);
     int posx = (int) (widthS/2 - size/2);
-    for (int i = 0; i<6; i++) { // fixed number of lines of the title        
+    for (int i = 0; i< LINES_TITLE; i++) {        
         for (int j= 0; j < widthS; j++) {
             if (j<posx || j> posx + size) mvaddch (posy+i, j, ' ');
             else mvaddch (posy+i, j, title[i][j-posx]);
             refresh ();
             usleep (1000);
         }
-        usleep (100000);
+        usleep (80000);
     }
-    free (title);
+    for (int i = 0; i < LINES_TITLE; i++) free(title[i]);
+    free(title);
+
 }
 
 void loadBye () {
@@ -39,21 +41,30 @@ void loadBye () {
     char** bye1 = getAllLines ("images/bye1.txt", heightS, widthS);
     if (bye1 == NULL) return;
     char** bye2 = getAllLines ("images/bye2.txt", heightS, widthS);
-    if (bye2 == NULL) return;
-
+    if (bye2 == NULL){
+        free (bye1);
+        return;
+    }
+    clear();
     int size = strlen (bye1[0]) -1;
-    int posy = (int) (heightS-14);
+    int posy = (int) (heightS - LINES_BYE);
     int posx = (int) (widthS-size);
     for (int times = 0; times <3; times++) {
         if (times != 0) usleep (500000);
-        for (int i = 0; i<14; i++) mvaddstr (posy+i, posx, bye1[i]); 
+        for (int i = 0; i < LINES_BYE; i++) mvaddstr (posy+i, posx, bye1[i]); 
         refresh ();
         usleep (500000);
         clear ();
-        for (int i = 0; i<14; i++) mvaddstr (posy+i, posx, bye2[i]); 
+        for (int i = 0; i < LINES_BYE; i++) mvaddstr (posy+i, posx, bye2[i]); 
         refresh ();
     }
+
     loadDotAnimation();
+
+    for (int i = 0; i < LINES_BYE; i++) {
+        free (bye1[i]);
+        free (bye2[i]);
+    }
     free (bye1);
     free (bye2);
 }
@@ -112,7 +123,7 @@ int gettingData (WINDOW* win, AlmightyManager* mngr) {
         move ((int)heightS / 6, 0);
         clrtoeol();
         attron (A_BLINK);
-        mvprintw((int)heightS / 6, (int)widthS / 2 - 7, "Getting data...");
+        mvprintw((int)heightS / 6, (int)widthS / 2 - 8, "Getting data...");
         attroff(A_BLINK);
         refresh();
 
@@ -164,6 +175,7 @@ int gettingQuery (WINDOW* win) {
         }
     }
 }
+
 /**@brief Runs the interactive program.*/
 int main () {
     initscr();
@@ -183,7 +195,7 @@ int main () {
     loadGreeting();
     int mainPageChoice = loadMainPage();
     if (mainPageChoice == -1) {
-        clear();
+        loadBye ();
         endwin();
         return 0;
     }
@@ -196,11 +208,11 @@ int main () {
     if (paths == -1) {
         clear ();
         delwin (win1);
+        loadBye();
         endwin();
         return 0;
     }
     delwin (win1);
-
 
     // Queries loop
     while (true) { 

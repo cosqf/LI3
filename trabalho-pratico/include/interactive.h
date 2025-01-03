@@ -7,6 +7,9 @@
 #ifndef _INTERACTIVE_H_
 #define _INTERACTIVE_H_
 
+#define LINES_TITLE 6
+#define LINES_BYE 14
+
 /**
  * @brief Displays the Main Menu interface.
  * This function creates and displays a Main Menu interface with 

@@ -67,7 +67,7 @@ char** readOutputFiles() {
         return NULL;
     }
     int i = 0;
-    char buffer[100]; 
+    char buffer[DEFAULT]; 
 
     while (fgets(buffer, sizeof(buffer), file) != NULL && i < maxSize) {
         buffer[strcspn(buffer, "\n")] = '\0';
@@ -83,7 +83,6 @@ char** readOutputFiles() {
         }
         i++;
     }
-    // terminate the array
     results[i] = NULL;
 
     return results;
@@ -129,6 +128,7 @@ int printWrapped (WINDOW* win, char* str, int posy, int posx) {
     }
     return line;
 }
+
 int countLines (int width, char* str, int posx) {
     int maxWidth = width - 2* posx;
     int line = 0, index = 0;
@@ -140,7 +140,6 @@ int countLines (int width, char* str, int posx) {
     return line;
 }
 
-
 void printHighlightedText (WINDOW* win, int y, int x, char* text, bool highlight) {
     if (highlight) wattron(win, A_REVERSE | A_BLINK);
     mvwprintw(win, y, x, "%s", text);
@@ -148,6 +147,10 @@ void printHighlightedText (WINDOW* win, int y, int x, char* text, bool highlight
 }
 
 void readResultsScrollable(int height, int width, int posy, int posx) {
+    int heightS, widthS;
+    getmaxyx (stdscr, heightS, widthS);
+    (void) widthS;
+
     char** results = readOutputFiles ();
     if (!results || results[0][0] == '\0') {
         mvprintw(posy, posx, "No results available.");
@@ -161,7 +164,7 @@ void readResultsScrollable(int height, int width, int posy, int posx) {
         int lines = countLines (width, results[i], (int)(width / 11)); //getting the number of lines;
         j += lines+1; // assuming one space in between every line
     }
-    int maxRow = j; // Total rows required
+    int maxRow = j; // total rows required
 
     WINDOW* pad = newpad(maxRow, width);
     if (!pad) {
@@ -175,7 +178,7 @@ void readResultsScrollable(int height, int width, int posy, int posx) {
         int lines = printWrapped (pad, results[i], j, (int)(width/ 11)); //printing
         j += lines +1;
     }
-    mvprintw(0, 0, "Use UP/DOWN arrow keys to scroll. Press 'Esc' to quit.");
+    mvprintw(heightS - 1, 0, "Use UP/DOWN arrow keys to scroll. Press 'Esc' to quit.");
     refresh();
 
     int firstRow = 0; 
@@ -217,21 +220,17 @@ void loadDotAnimation () {
 
     int nextX = 0;
     int direction = 1;
-
     x = 0;
-    y = 0; 
-
+    y = 0;
+    int delayTime = 2000000 / (heightS * (widthS + 3)); // takes 2 sec
     while(true){
-        getmaxyx(stdscr, heightS, widthS);
         if (y == heightS) break;
-
         mvprintw(y , x, ".");
         refresh();
 
-        usleep(500);
+        usleep(delayTime);
 
         nextX = x + direction;
-
         if(nextX >= widthS || nextX < 0){
             direction*= -1;
             y++;
