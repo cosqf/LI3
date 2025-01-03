@@ -131,12 +131,16 @@ int getHistoryListLengthByUser(History* history);
  */
 int getHistoryListLengthByMusic(History* history);
 
-
-
-
-
+/**
+ * @brief Creates a @c History struct from another, copying its contents.
+ * The @c History entries are stored through linked lists, this copying function copies the linked list by user,
+ * maintaining the pointer to another @c History with the same music NULL.
+ * 
+ * @param userOg A pointer to the original user struct.
+ * 
+ * @return A pointer to the copied user struct.
+ */
 History* copyHistoryByUser( History* historyOg);
-
 
 
 /* Getters string */

@@ -69,7 +69,7 @@ Timestamp parseTimestamp (char* string);
  * 
  * @return The date type represented in the given string.
  */
-Date parseDate(char*);
+Date parseDate(char* string);
 
 /**
  * @brief Parses a @c Duration type from a string
@@ -81,7 +81,7 @@ Date parseDate(char*);
  * 
  * @return The duration type represented in the given string.
  */
-Duration parseDuration(char*);
+Duration parseDuration(char* string);
 
 /**
  * @brief Parses a list of IDs from a string to an array of numbers.
@@ -95,17 +95,7 @@ Duration parseDuration(char*);
  * 
  * @return An array of @c int, with the IDs as numbers.
  */
-int* parseIDs(char *);
-
-
-
-
-
-char* trimString (char *);
-
-
-
-
+int* parseIDs(char * string);
 
 /**
  * @brief Counts how many IDs are in a string, separated by commas.
@@ -117,6 +107,6 @@ char* trimString (char *);
  * 
  * @return The number of valid IDs in the string. Returns 0 if the input string is NULL.
  */
-int IdCounter (char*);
+int IdCounter (char* string);
 
 #endif  

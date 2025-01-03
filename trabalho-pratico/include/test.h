@@ -34,7 +34,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput); // same a
  * 
  * @param output String with the path where the output will be stored.
  * @param expected String with the path where the expected results are.
- * @param queryn Number of query for printint purposes.
+ * @param queryn Number of query for printing purposes.
  */
 int compareFiles(char* output, char* expected, int queryn);
 

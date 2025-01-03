@@ -130,13 +130,14 @@ const int* getUserLikedMusicsID(User* user);
  */
 int getUserLikedCounter (User* user);
 
-
-
-
+/**
+ * @brief A getter function that returns the position of the user ID in the ID array.
+ *
+ * @param user A pointer to the user struct.
+ * 
+ * @return The array position it occupies.
+ */
 int getUserArrayPosition(User* user);
-
-
-
 
 /**
  * @brief A getter function that returns the age of a user.
@@ -146,7 +147,6 @@ int getUserArrayPosition(User* user);
  * @return Age of the given user.
  */
 int getUserAge (User* user);
-
 
 
 /* Getter string*/
@@ -241,14 +241,14 @@ int getUserLikedCounterString (UserString* user);
 const int* getUserLikedMusicsIDStringArray (UserString *user);
 
 
-
 /* Setters*/
 
-
-
-
+/**
+ * @brief A setter function used during the creation of the user array that updates the array position.
+ *
+ * @param user A pointer to the user struct.
+ * @param position The position number to store.
+ */
 void setUserArrayPosition(User* user, int position);
-
-
 
 #endif  
