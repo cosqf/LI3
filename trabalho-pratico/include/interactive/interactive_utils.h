@@ -32,14 +32,16 @@ int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digi
 /**
  * @brief Reads a string from input, setting the curser to one while running.
 
- * @param win A pointer to the ncurses window for displaying input prompts.
+ * @param win A pointer to the ncurses window for displaying input prompts. 
+ * @param posy The y-coordinate in the window the text will be printed.
+ * @param posx The x-coordinate in the window the text will be printed.
  * @param string A string buffer to store the input.
  * @param digits The maximum number of digits allowed for input.
 
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-void getStringFromInput (WINDOW* win, char* string, int digits);
+void getStringFromInput (WINDOW* win, int posy, int posx, char* string, int digits);
 
 
 /**
@@ -135,5 +137,12 @@ void readResultsScrollable(int height, int width, int posy, int posx);
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
 WINDOW* newWindowWithBorder (int height, int width, int posy, int pox);
+
+/**
+ * @brief Will load a dot animation
+ * @note 
+ * This function uses ncurses for input and display, so it should be called within an ncurses session.
+ */
+void loadDotAnimation ();
 
 #endif
