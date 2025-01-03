@@ -192,136 +192,193 @@ void updateMusicDay(History* ptr, MusicDay** musicDay, int* musicDaysCount) {
 }
 
 
+    // Structures and functions used to store the genre
 
 
+    typedef struct {
+    Genre genre;  // O gênero da música (utiliza a enumeração Genre)
+    int time;     // Tempo total de reprodução em segundos
+    } GenreCount;
+
+// Função que atualiza o tempo de reprodução de cada gênero
+int durationToSeconds(Duration duration) {
+    return (duration.hours * 3600) + (duration.minutes * 60) + duration.seconds;
+}
 
 
-    void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCounter) {
-        int userId = getCMDId(cmd);
-        int nMusics = 0;
-
-        Duration listenTime = {0, 0, 0, 0}; 
-        History* history = lookupHistoryHashByUser(h_mngr, userId);
-        ListenedMusicNode* listenedList = NULL; 
-        ArtistListenData* artistData = NULL;
-        MusicDay* musicDay = NULL;
-
-        int artistCount = 0; //conta o número de artistas diferentes já acessados
-        int musicDaysCount = 0; //conta o número de dias diferentes já acessados
-
-        char filename[50];
-        snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
-        Output* output = openOutputFile(filename);
-
-        if (history == NULL) {
-            writeNewLine(output);
-            printf("Error: No history found for ID %d.\n", userId);
-            closeOutputFile(output);
-
-            freeMusicList(listenedList);
-            free(artistData);
-            free(musicDay);
-            deleteHistoryByUser(history);
-
-            return;
+void updateGenreTime(GenreCount** genreCount, int* genreCountSize, Genre genre, Duration duration) {
+    int genreIndex = -1;
+    for (int i = 0; i < *genreCountSize; i++) { // Verifica se o gênero já foi registrado
+        if ((*genreCount)[i].genre == genre) {
+            (*genreCount)[i].time += durationToSeconds(duration);// Se já foi registrado, adiciona o tempo de reprodução
+            genreIndex = i;
+            break;
         }
+    }
 
-        History* ptr = history;
-
-        while (ptr != NULL) {
-            int currentYear = getHistoryTimestamp(ptr).date.year;
-            int intendedYear = getCMDyear(cmd);
-
-            if (currentYear == intendedYear) { //check the year of the history
-                listenTime = calculateListenTime(ptr, listenTime);
-
-                int music_id = getHistoryMusicId(ptr);
-                if (!wasMusicListened(listenedList, music_id)) {
-                    nMusics++;
-                    listenedList = addMusic(listenedList, music_id);
-                }
-
-                Music* music = lookupMusicHash(m_mngr, music_id);
-                if (music == NULL) {
-                    ptr = getNextHistoryByUser(ptr);
-                    continue;
-                }
-
-                const int* artist_id_ptr = getMusicArtistID(music);
-                if (artist_id_ptr == NULL) {
-                    ptr = getNextHistoryByUser(ptr);
-                    deleteMusic(music);
-                    continue;
-                }
-
-                int artist_id = *artist_id_ptr;
-                Duration duration = getHistoryDuration(ptr);
-                artistData = updateArtistData(artistData, &artistCount, artist_id, duration);
+    // Se o gênero não foi encontrado, cria uma nova entrada
+    if (genreIndex == -1) {
+        *genreCount = realloc(*genreCount, (*genreCountSize + 1) * sizeof(GenreCount));
+        (*genreCount)[*genreCountSize].genre = genre;
+        (*genreCount)[*genreCountSize].time = durationToSeconds(duration);  // Inicializa com o tempo
+        (*genreCountSize)++;
+    }
+}
 
 
 
-                updateMusicDay(ptr, &musicDay, &musicDaysCount);
 
 
-                
-                
-                deleteMusic(music);
-            }
 
-            ptr = getNextHistoryByUser(ptr); //
+
+Genre getMostHeardGenre(GenreCount* genreCount, int genreCountSize) {
+    int maxTime = 0;
+    Genre mostHeardGenre = 0;
+
+    for (int i = 0; i < genreCountSize; i++) {
+        if (genreCount[i].time > maxTime) {
+            maxTime = genreCount[i].time;
+            mostHeardGenre = genreCount[i].genre;
         }
-        free(ptr);
-        int mostListenedArtist = findMostListenedArtist(artistData, artistCount);
-        Date mostListenedDay = findMostListenedDay(musicDay, musicDaysCount);
+    }
 
-        if (mostListenedDay.year == 0) { //if the user doesn't have a most listened day writes \n int he output
-            writeNewLine(output);
-            printf("Error: No history found for ID %d.\n", userId);
-            closeOutputFile(output);
-
-            freeMusicList(listenedList);
-            free(artistData);
-            free(musicDay);
-            deleteHistoryByUser(history);
-            return;
-        }
-
-        if (mostListenedArtist == -1) { //if the user doesn't have a mostListenedArtist writes \n in the output
-            writeNewLine(output);
-            printf("Error: No history found for ID %d.\n", userId); //0000
-            closeOutputFile(output);
-
-            freeMusicList(listenedList);
-            free(artistData);
-            free(musicDay);
-            deleteHistoryByUser(history);
-            return;
-        }
+    return mostHeardGenre;
+}
 
 
-        int hour = listenTime.hours;
-        int min = listenTime.minutes;
-        int seg = listenTime.seconds;
 
 
-        int ano = mostListenedDay.year;
-        int mes = mostListenedDay.month;
-        int dia = mostListenedDay.day;
 
-        printf("duração: %d:%d:%d  \n dia: %d-%02d-%02d \n nMusicas: %d,  Artista: %d,  IdHistory: %d, IDUser: %d\n\n",
-            hour, min, seg, ano, mes, dia, nMusics, mostListenedArtist, userId, userId);
 
+
+
+
+
+
+
+
+void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCounter) {
+    int userId = getCMDId(cmd);
+    int nMusics = 0;
+
+    Duration listenTime = {0, 0, 0, 0}; 
+    History* history = lookupHistoryHashByUser(h_mngr, userId);
+    ListenedMusicNode* listenedList = NULL; 
+    ArtistListenData* artistData = NULL;
+    MusicDay* musicDay = NULL;
+    GenreCount* genreCount = NULL;
+
+    int artistCount = 0;
+    int musicDaysCount = 0;
+    int genreCountSize = 0;
+
+    char filename[50];
+    snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
+    Output* output = openOutputFile(filename);
+
+    if (history == NULL) {
+        writeNewLine(output);
+        printf("Error: No history found for ID %d.\n\n", userId);
         closeOutputFile(output);
+
         freeMusicList(listenedList);
         free(artistData);
         free(musicDay);
         deleteHistoryByUser(history);
+
+        return;
     }
 
+    History* ptr = history;
 
+    while (ptr != NULL) {
+        int currentYear = getHistoryTimestamp(ptr).date.year;
+        int intendedYear = getCMDyear(cmd);
 
+        if (currentYear == intendedYear) { 
+            listenTime = calculateListenTime(ptr, listenTime);
 
+            int music_id = getHistoryMusicId(ptr);
+            if (!wasMusicListened(listenedList, music_id)) {
+                nMusics++;
+                listenedList = addMusic(listenedList, music_id);
+            }
 
+            Music* music = lookupMusicHash(m_mngr, music_id);
+            if (music == NULL) {
+                ptr = getNextHistoryByUser(ptr);
+                continue;
+            }
+
+            const int* artist_id_ptr = getMusicArtistID(music);
+            if (artist_id_ptr == NULL) {
+                ptr = getNextHistoryByUser(ptr);
+                deleteMusic(music);
+                continue;
+            }
+
+            int artist_id = *artist_id_ptr;
+            Duration duration = getHistoryDuration(ptr);
+            artistData = updateArtistData(artistData, &artistCount, artist_id, duration);
+
+            updateMusicDay(ptr, &musicDay, &musicDaysCount);
+
+            Genre genre = getMusicGenre(music);
+            updateGenreTime(&genreCount, &genreCountSize, genre, duration);
+
+            deleteMusic(music);
+        }
+
+        ptr = getNextHistoryByUser(ptr);
+    }
+    free(ptr);
+
+    Genre mostHeardGenre = getMostHeardGenre(genreCount, genreCountSize);
+
+    int mostListenedArtist = findMostListenedArtist(artistData, artistCount);
+    Date mostListenedDay = findMostListenedDay(musicDay, musicDaysCount);
+
+    if (mostListenedDay.year == 0) { 
+        writeNewLine(output);
+        printf("Error: No history found for ID %d.\n\n", userId);
+        closeOutputFile(output);
+
+        freeMusicList(listenedList);
+        free(artistData);
+        free(musicDay);
+        deleteHistoryByUser(history);
+        return;
+    }
+
+    if (mostListenedArtist == -1) { 
+        writeNewLine(output);
+        printf("Error: No history found for ID %d.\n\n", userId);
+        closeOutputFile(output);
+
+        freeMusicList(listenedList);
+        free(artistData);
+        free(musicDay);
+        deleteHistoryByUser(history);
+        return;
+    }
+
+    int hour = listenTime.hours;
+    int min = listenTime.minutes;
+    int seg = listenTime.seconds;
+
+    int ano = mostListenedDay.year;
+    int mes = mostListenedDay.month;
+    int dia = mostListenedDay.day;
+
+    printf("duração: %d:%d:%d  \n dia: %d-%02d-%02d \n   nMusicas: %d,  Artista: %d, Gênero: %s,  IdHistory: %d, IDUser: %d\n\n",
+        hour, min, seg, ano, mes, dia, nMusics, mostListenedArtist, genreToString(mostHeardGenre), userId, userId);
+
+    closeOutputFile(output);
+    freeMusicList(listenedList);
+    free(artistData);
+    free(musicDay);
+    deleteHistoryByUser(history);
+}
 
 
 

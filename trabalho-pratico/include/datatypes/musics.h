@@ -72,6 +72,15 @@ void deleteMusicString (MusicString* music);
  */
 Genre getGenre (const char *genre);
 
+
+
+
+const char* genreToString(Genre genre);
+
+
+
+
+
 /**
  * @brief Creates a music struct from another, copying its contents.
  *

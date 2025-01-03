@@ -100,6 +100,22 @@ Genre getGenre(const char *genre) {
     return -1; // Invalid genre
 }
 
+const char* genreToString(Genre genre) {
+    switch (genre) {
+        case GENRE_METAL: return "Metal";
+        case GENRE_REGGAE: return "Reggae";
+        case GENRE_JAZZ: return "Jazz";
+        case GENRE_HIPHOP: return "HipHop";
+        case GENRE_CLASSICAL: return "Classical";
+        case GENRE_ROCK: return "Rock";
+        case GENRE_BLUES: return "Blues";
+        case GENRE_COUNTRY: return "Country";
+        case GENRE_POP: return "Pop";
+        case GENRE_ELECTRONIC: return "Electronic";
+        default: return "Unknown";
+    }
+}
+
 Music* copyMusic(Music* musicOg) {
     if (!musicOg) return NULL;
     Music* music = malloc(sizeof(Music));
