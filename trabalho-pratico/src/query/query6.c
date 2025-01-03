@@ -292,6 +292,57 @@ int findMostListenedAlbum(AlbumListenData* albumData, int albumCount) {
 
 
 
+typedef struct HourCount {
+    int hour;     
+    int count;    
+} HourCount;
+
+
+
+HourCount* updateHourCount(HourCount* hours, int* count, Duration duration, int hour) {
+    int totalSeconds = duration.hours * 3600 + duration.minutes * 60 + duration.seconds;  // Converter tudo para segundos
+
+    for (int i = 0; i < *count; i++) {
+        if (hours[i].hour == hour) {
+            hours[i].count += totalSeconds;  // Somar o tempo em segundos
+            return hours;
+        }
+    }
+
+    // Se a hora não for encontrada, adiciona uma nova
+    hours = realloc(hours, (*count + 1) * sizeof(HourCount));
+    hours[*count].hour = hour;
+    hours[*count].count = totalSeconds;  // Armazena o tempo em segundos
+    (*count)++;
+
+    return hours;
+}
+
+
+
+int findMostListenedHour(HourCount* hours, int count) {
+    int mostListenedHour = -1;
+    int maxCount = 0;
+
+    for (int i = 0; i < count; i++) {
+        if (hours[i].count > maxCount) {
+            maxCount = hours[i].count;
+            mostListenedHour = hours[i].hour;
+        }
+    }
+
+    return mostListenedHour;
+}
+
+
+
+void freeHourCount(HourCount* hours) {
+    if (hours != NULL) {
+        free(hours);
+    }
+}
+
+
 void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCounter) {
     int userId = getCMDId(cmd);
     int nMusics = 0;
@@ -303,11 +354,13 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     MusicDay* musicDay = NULL;
     GenreCount* genreCount = NULL;
     AlbumListenData* albumData = NULL;
+    HourCount* hourCount = NULL;
 
     int artistCount = 0;
     int musicDaysCount = 0;
     int genreCountSize = 0;
     int albumCount = 0;
+    int hourCountSize = 0;
 
     char filename[50];
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
@@ -366,6 +419,12 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
             int album_id = getMusicAlbumID(music);
             albumData = updateAlbumData(albumData, &albumCount, album_id, duration);
 
+
+            Duration hourDuration = getHistoryTimestamp(ptr).hour;
+            int hourInt = hourDuration.hours;
+            hourCount = updateHourCount(hourCount, &hourCountSize, duration, hourInt);
+
+
             deleteMusic(music);
         }
 
@@ -378,6 +437,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     int mostListenedArtist = findMostListenedArtist(artistData, artistCount);
     Date mostListenedDay = findMostListenedDay(musicDay, musicDaysCount);
     int mostListenedAlbum = findMostListenedAlbum(albumData, albumCount);
+    int mostListenedHour = findMostListenedHour(hourCount, hourCountSize);
 
     if (mostListenedDay.year == 0) { 
         writeNewLine(output);
@@ -411,8 +471,8 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     int mes = mostListenedDay.month;
     int dia = mostListenedDay.day;
 
-    printf("duração: %d:%d:%d  \n dia: %d-%02d-%02d \n   album: %d,  nMusicas: %d,  Artista: %d, Gênero: %s,  IdHistory: %d, IDUser: %d\n\n",
-        hour, min, seg, ano, mes, dia,mostListenedAlbum, nMusics, mostListenedArtist, genreToString(mostHeardGenre), userId, userId);
+    printf("duração: %d:%d:%d  \n dia: %d-%02d-%02d \n   hora Mais Ouvida: %d,  album: %d,  nMusicas: %d,  Artista: %d, Gênero: %s,  IdHistory: %d, IDUser: %d\n\n",
+        hour, min, seg, ano, mes, dia,mostListenedHour, mostListenedAlbum, nMusics, mostListenedArtist, genreToString(mostHeardGenre), userId, userId);
 
     closeOutputFile(output);
     freeMusicList(listenedList);
