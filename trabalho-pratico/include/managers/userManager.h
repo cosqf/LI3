@@ -165,6 +165,7 @@ void processHistory (int** matrix, gpointer value, int line, MusicManager* m_mng
 
 /**
  * @brief Calculates user recommendations through a function provided by the professors.
+ * Allocates memory for the resulting array, which the caller is responsible for freeing.
  * 
  * @param targetID Formatted target user ID to generate recommendations.
  * @param genre_array An array containing the name of each music genre following the same order as the matrix.
