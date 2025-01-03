@@ -41,6 +41,7 @@ void deleteAlbum (Album* album) {
     free (album);
 }
 
+
 // GETTERs
 
 // Getter for the id field

@@ -225,12 +225,6 @@ void updateGenreTime(GenreCount** genreCount, int* genreCountSize, Genre genre, 
     }
 }
 
-
-
-
-
-
-
 Genre getMostHeardGenre(GenreCount* genreCount, int genreCountSize) {
     int maxTime = 0;
     Genre mostHeardGenre = 0;
@@ -248,12 +242,53 @@ Genre getMostHeardGenre(GenreCount* genreCount, int genreCountSize) {
 
 
 
+typedef struct {
+    int album_id;  // ID do álbum
+    int time;      // Tempo total ouvido em segundos
+} AlbumListenData;
 
 
 
+AlbumListenData* updateAlbumData(AlbumListenData* albumData, int* albumCount, int album_id, Duration duration) {
+    int index = -1;
+
+    for (int i = 0; i < *albumCount; i++) { // Procura pelo álbum
+        if (albumData[i].album_id == album_id) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index != -1) { // Atualiza tempo se encontrado
+        albumData[index].time += durationToSeconds(duration);
+    } else { // Caso contrário, adiciona um novo álbum
+        AlbumListenData* new_albumData = realloc(albumData, (*albumCount + 1) * sizeof(AlbumListenData));
+        if (!new_albumData) {
+            printf("Erro ao alocar memória para AlbumListenData!\n");
+            free(albumData);
+            exit(1);
+        }
+        albumData = new_albumData;
+        albumData[*albumCount].album_id = album_id;
+        albumData[*albumCount].time = durationToSeconds(duration);
+        (*albumCount)++;
+    }
+
+    return albumData;
+}
 
 
+int findMostListenedAlbum(AlbumListenData* albumData, int albumCount) {
+    if (albumCount == 0) return -1;
 
+    int maxIndex = 0;
+    for (int i = 1; i < albumCount; i++) {
+        if (albumData[i].time > albumData[maxIndex].time) {
+            maxIndex = i;
+        }
+    }
+    return albumData[maxIndex].album_id;
+}
 
 
 
@@ -267,10 +302,12 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     ArtistListenData* artistData = NULL;
     MusicDay* musicDay = NULL;
     GenreCount* genreCount = NULL;
+    AlbumListenData* albumData = NULL;
 
     int artistCount = 0;
     int musicDaysCount = 0;
     int genreCountSize = 0;
+    int albumCount = 0;
 
     char filename[50];
     snprintf(filename, sizeof(filename), "resultados/command%d_output.txt", cmdCounter);
@@ -326,6 +363,9 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
             Genre genre = getMusicGenre(music);
             updateGenreTime(&genreCount, &genreCountSize, genre, duration);
 
+            int album_id = getMusicAlbumID(music);
+            albumData = updateAlbumData(albumData, &albumCount, album_id, duration);
+
             deleteMusic(music);
         }
 
@@ -337,6 +377,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
     int mostListenedArtist = findMostListenedArtist(artistData, artistCount);
     Date mostListenedDay = findMostListenedDay(musicDay, musicDaysCount);
+    int mostListenedAlbum = findMostListenedAlbum(albumData, albumCount);
 
     if (mostListenedDay.year == 0) { 
         writeNewLine(output);
@@ -370,8 +411,8 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     int mes = mostListenedDay.month;
     int dia = mostListenedDay.day;
 
-    printf("duração: %d:%d:%d  \n dia: %d-%02d-%02d \n   nMusicas: %d,  Artista: %d, Gênero: %s,  IdHistory: %d, IDUser: %d\n\n",
-        hour, min, seg, ano, mes, dia, nMusics, mostListenedArtist, genreToString(mostHeardGenre), userId, userId);
+    printf("duração: %d:%d:%d  \n dia: %d-%02d-%02d \n   album: %d,  nMusicas: %d,  Artista: %d, Gênero: %s,  IdHistory: %d, IDUser: %d\n\n",
+        hour, min, seg, ano, mes, dia,mostListenedAlbum, nMusics, mostListenedArtist, genreToString(mostHeardGenre), userId, userId);
 
     closeOutputFile(output);
     freeMusicList(listenedList);

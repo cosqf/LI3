@@ -76,3 +76,4 @@ void callbackAlbum(char** tokens, void* manager, Output* output) {
     deleteAlbumString(albumS);
 
 }
+

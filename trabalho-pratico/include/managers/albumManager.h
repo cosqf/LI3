@@ -73,4 +73,5 @@ int getDataAlbum (char* path, AlmightyManager* mngr);
  * @param output The error file structure.
  */
 void callbackAlbum(char** tokens, void* manager, Output* output);
+
 #endif
