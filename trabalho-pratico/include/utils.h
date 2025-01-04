@@ -22,12 +22,13 @@ FILE* openFile (char * argv);
  * If the pointer is NULL, an error message is printed and returns true; otherwise, it returns false.
  *
  * @param address The pointer to check.
+ * 
  * @return 1 if the pointer is NULL (indicating a malloc error), 0 otherwise.
  */
 bool mallocErrorCheck (void* add);
 
 /**
- * @brief Trims unwanted characters such as spaces, quotes and brackets from the beginning and end of a string.
+ * @brief Trims unwanted characters such as spaces, quotes, and brackets from the beginning and end of a string.
 
  * @param str The string to be trimmed.
 
@@ -62,7 +63,7 @@ char* lower (char* line);
 
  * @return 1 if the character is a lowercase letter, 0 otherwise.
  */
-int isletter(char);
+int isletter(char a);
 
 /**
  * @brief Checks if a character is a digit.
@@ -71,7 +72,7 @@ int isletter(char);
 
  * @return 1 if the character is a digit, 0 otherwise.
  */
-int isDigit(char);
+int isDigit(char a);
 
 /**
  * @brief Checks if a string is comprised of valid characters.
@@ -83,7 +84,7 @@ int isDigit(char);
 
  * @return 1 if the string consists of valid characters according to the flag, 0 otherwise.
  */
-int isstr(char*, int);
+int isstr(char* str, int flag);
 
 /**
  * @brief Creates a new hash table.
@@ -121,14 +122,6 @@ void insertHash (GHashTable* hash, int key, int value);
  */
 char* durationInString(Duration time);
 
-
-
-void writeMusicsToErrorFile(GHashTable* );
-void writeUsersToErrorFile(GHashTable* );
-void writeArtistsToErrorFile(GHashTable* );
-
-
-
 /**
  * @brief Safely converts a string to an integer with error handling.
  * Converts a string to an integer, performing checks for overflow, underflow,
@@ -145,7 +138,7 @@ bool convertToInt(const char *str, int *out);
  * Compares two @c Date objects (year, month, day) and returns:
  *  1 if dateA is greater than dateB,
  * -1 if dateA is smaller than dateB,
- *  0 if both dates are equal
+ *  0 if both dates are equal.
  *
  * @param dateA The first date to compare.
  * @param dateB The second date to compare.
@@ -154,13 +147,23 @@ bool convertToInt(const char *str, int *out);
  */
 int compareDate(Date dateA, Date dateB);
 
-
-
+/**
+ * @brief Convertes a @c Duration to seconds.
+ *
+ * @param time The @c Duration to convert.
+ * 
+ * @return The @c Duration in seconds.
+ */
 int durationInSeconds (Duration time);
 
+/**
+ * @brief Convertes seconds to @c Duration.
+ *
+ * @param seconds The seconds to convert.
+ * 
+ * @return The resulting @c Duration .
+ */
 Duration secondsInDuration (int seconds);
-
-
 
 /**
  * @brief Gets the weekday of a given date (0 = Saturday, 1 = Sunday, ...).

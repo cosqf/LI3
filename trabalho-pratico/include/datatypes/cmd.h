@@ -28,7 +28,7 @@ void freeCmd (CMD *cmd);
 /**
  * @brief Creates an empty command struct
  * 
- * @return A poitner to a command struct.
+ * @return A pointer to a command struct.
  */
 CMD* createEmptyCMD ();
 
@@ -153,27 +153,100 @@ short int getCMDnArtists(CMD* cmd);
 
 /* Setters */
 
+/**
+ * @brief A setter function that sets the command query number.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param query The number to set the query as.
+ */
 void setCMDQuery(CMD* cmd, int query);
 
+/**
+ * @brief Sets the entity type for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param entity The character representing the entity type ('U' for user, 'A' for artist).
+ */
 void setCMDEntity(CMD* cmd, char entity);
 
+/**
+ * @brief Sets the ID parameter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param id The ID to associate with the command.
+ */
 void setCMDId(CMD* cmd, int id);
 
+/**
+ * @brief Sets the top N parameter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param topN The number of top results to associate with the command.
+ */
 void setCMDTopN(CMD* cmd, int topN);
 
+/**
+ * @brief Sets the country filter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param paises A string containing the country to filter by.
+ */
 void setCMDCountry(CMD* cmd, const char* paises);
 
+/**
+ * @brief Sets the minimum age filter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param ageMin The minimum age to filter by.
+ */
 void setCMDAgeMin(CMD* cmd, int ageMin);
 
+/**
+ * @brief Sets the maximum age filter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param ageMax The maximum age to filter by.
+ */
 void setCMDAgeMax(CMD* cmd, int ageMax);
 
+/**
+ * @brief Sets the minimum date filter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param dateMin The earliest date allowed in the results.
+ */
 void setCMDDateMin(CMD* cmd, Date dateMin);
 
+/**
+ * @brief Sets the maximum date filter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param dateMax The latest date allowed in the results.
+ */
 void setCMDDateMax(CMD* cmd, Date dateMax);
 
+/**
+ * @brief Sets the number of users for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param noUsers The number of users to associate with the command.
+ */
 void setCMDNoUsers(CMD* cmd, int noUsers);
 
+/**
+ * @brief Sets the year filter for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param year The year to filter results by.
+ */
 void setCMDYear(CMD* cmd, short int year);
 
+/**
+ * @brief Sets the number of artists for the command.
+ * 
+ * @param cmd A pointer to the command struct.
+ * @param nArtists The number of artists to associate with the command.
+ */
 void setCMDNArtists(CMD* cmd, short int nArtists);
+
 #endif

@@ -7,6 +7,9 @@
 #ifndef _INTERACTIVE_H_
 #define _INTERACTIVE_H_
 
+#define LINES_TITLE 6
+#define LINES_BYE 14
+
 /**
  * @brief Displays the Main Menu interface.
  * This function creates and displays a Main Menu interface with 
@@ -43,6 +46,19 @@ int gettingData (WINDOW* win, AlmightyManager* mngr);
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
 int gettingQuery (WINDOW* win);
+
+
+/**
+ * @brief Loads the greeting animation.
+ * This function will fetch an ASCII image and print it on the screen.
+ */
+void loadGreeting ();
+
+/**
+ * @brief Loads the ending the program animation.
+ * This function will fetch two ASCII images and print them on the screen.
+ */
+void loadBye ();
 
 
 #endif

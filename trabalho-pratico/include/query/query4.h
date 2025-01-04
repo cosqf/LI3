@@ -27,7 +27,7 @@ typedef struct {
 
 /**
  * @brief Identifies the artist that appeared most in the weekly top 10, with an optional date filter.
-* This function first checks whether the tree in the HistoryManager has been initialized. If not, it initializes the tree 
+ * This function first checks whether the tree in the HistoryManager has been initialized. If not, it initializes the tree 
  * by creating a hash table containing smaller hash tables. Each of these smaller tables stores artists and their total 
  * listening times for a given week. The larger hash table is then filtered and converted into a tree structure. 
  * Each weekly table is trimmed to retain only the top 10 artists, sorted by listening time, and stored as arrays within the tree. 

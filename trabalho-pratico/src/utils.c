@@ -110,6 +110,7 @@ int isstr(char* str, int flag) {
 int durationInSeconds (Duration time) {
     return time.hours*3600 + time.minutes*60 + time.seconds;
 }
+
 // Returns the duration when given seconds
 Duration secondsInDuration (int seconds) {
     Duration dur;
@@ -119,7 +120,6 @@ Duration secondsInDuration (int seconds) {
 
     return dur;
 }
-
 
 GHashTable* createHash () {
     return g_hash_table_new(g_direct_hash, g_direct_equal);
@@ -132,7 +132,6 @@ void deleteHash (GHashTable* hash) {
 void insertHash (GHashTable* hash, int key, int value) {
     g_hash_table_insert(hash, GINT_TO_POINTER (key), GINT_TO_POINTER (value));
 }
-
 
 char* durationInString(Duration time) {
     char* str = malloc(9 * sizeof(char));
