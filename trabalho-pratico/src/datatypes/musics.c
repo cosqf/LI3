@@ -105,7 +105,7 @@ const char* genreToString(Genre genre) {
         case GENRE_METAL: return "Metal";
         case GENRE_REGGAE: return "Reggae";
         case GENRE_JAZZ: return "Jazz";
-        case GENRE_HIPHOP: return "HipHop";
+        case GENRE_HIPHOP: return "Hip Hop";
         case GENRE_CLASSICAL: return "Classical";
         case GENRE_ROCK: return "Rock";
         case GENRE_BLUES: return "Blues";

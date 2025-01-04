@@ -44,6 +44,14 @@ void setOutput (Output* output, char** lines, int counter);
  */
 void writeQuerys (Output* output, CMD* cmd);
 
+
+
+void writeQ6Geral(Output* output, CMD* cmd, Duration listenTime, Date mostListenedDay, int nMusics, int mostListenedArtist, const char* mostHeardGenreString, int mostListenedAlbum, int mostListenedHour);
+
+
+void writeQ6Artists(Output* output, CMD* cmd, int mostListenedArtist, int nMusicsArtist, Duration listenedTimeArtist);
+
+
 /**
  * @brief Generic function that writes an error file.
 

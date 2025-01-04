@@ -4,7 +4,6 @@
 #include "output_handling/outputWriter.h"
 #include <cmd.h>
 
-#include <parsingUtils.h>
 
 typedef struct output {
     FILE* file;
@@ -57,9 +56,45 @@ void writeQuerys (Output* output, CMD* cmd) {
     fprintf (file, "\n");
 }
 
+
+
+
+
+void writeQ6Geral(Output* output, CMD* cmd, Duration listenTime, Date mostListenedDay, int nMusics, int mostListenedArtist, const char* mostHeardGenreString, int mostListenedAlbum, int mostListenedHour  ){
+    char separator = getCMDSeparator(cmd);
+
+    int hour = listenTime.hours;
+    int min = listenTime.minutes;
+    int seg = listenTime.seconds;
+
+    int ano = mostListenedDay.year;
+    int mes = mostListenedDay.month;
+    int dia = mostListenedDay.day;
+
+    if (separator == ';')
+    fprintf(output->file,"%02d:%02d:%02d;%d;A%07d;%04d/%02d/%02d;%s;AL%06d;%02d\n", hour, min, seg, nMusics, mostListenedArtist, ano, mes, dia, mostHeardGenreString, mostListenedAlbum, mostListenedHour);
+    else
+    fprintf(output->file,"%02d:%02d:%02d=%d=A%07d=%04d/%02d/%02d=%s=AL%06d=%02d\n", hour, min, seg, nMusics, mostListenedArtist, ano, mes, dia, mostHeardGenreString, mostListenedAlbum, mostListenedHour);
+
+}
+
+void writeQ6Artists(Output* output, CMD* cmd, int mostListenedArtist, int nMusicsArtist, Duration listenedTimeArtist){
+    char separator = getCMDSeparator(cmd);
+
+    int hourArtist = listenedTimeArtist.hours;
+    int minutesArtist = listenedTimeArtist.minutes;
+    int secondsArtist = listenedTimeArtist.seconds;
+
+    if (separator == ';')
+    fprintf(output->file,"A%07d;%d;%02d:%02d:%02d\n", mostListenedArtist, nMusicsArtist, hourArtist, minutesArtist, secondsArtist);
+    else
+    fprintf(output->file,"A%07d=%d=%02d:%02d:%02d\n", mostListenedArtist, nMusicsArtist, hourArtist, minutesArtist, secondsArtist);
+}
+
 void writeNewLine(Output* output) {
     fprintf (output->file, "\n");
 }
+
 
 // generic function to write error files
 void writeErrorFile (Output* output) {
