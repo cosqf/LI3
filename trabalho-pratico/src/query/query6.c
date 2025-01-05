@@ -7,6 +7,19 @@
     #include <userManager.h>
     #include <cmd.h>
 
+
+Duration correctTime (Duration duration){
+                if (duration.seconds >= 60){ // checks if the duration is more than 60 seconds and corrects it
+                duration.minutes += duration.seconds / 60;
+                duration.seconds = duration.seconds % 60;
+            }
+
+            if (duration.minutes >= 60){ // checks if the duration is more than 60 minutes and corrects it
+                duration.hours += duration.minutes / 60;
+                duration.minutes = duration.minutes % 60;
+            }
+    return duration;
+}
     // Structures and functions used to store music
 
     //Struct that store Listened Music
@@ -66,14 +79,15 @@ typedef struct {
 
 
     // Function to find the artist index in the array
-    int findArtistIndex(ArtistListenData* array, int size, int artist_id) {
-        for (int i = 0; i < size; i++) {
-            if (array[i].artist_id == artist_id) {
-                return i;
-            }
+int findArtistIndex(ArtistListenData* array, int size, int artist_id) {
+    for (int i = 0; i < size; i++) {
+        if (array[i].artist_id == artist_id) {
+            return i; // Índice encontrado
         }
-        return -1;
     }
+    return -1; // Não encontrado
+}
+
 
 
 
@@ -82,20 +96,16 @@ int compareArtists(const void* a, const void* b) {
     const ArtistListenData* artistA = (const ArtistListenData*)a;
     const ArtistListenData* artistB = (const ArtistListenData*)b;
 
-    // Comparar horas
-    if (artistA->totalTime.hours != artistB->totalTime.hours) {
-        return artistB->totalTime.hours - artistA->totalTime.hours;
+    // Comparar pelo tempo total (horas, minutos, segundos)
+    int timeA = artistA->totalTime.hours * 3600 + artistA->totalTime.minutes * 60 + artistA->totalTime.seconds;
+    int timeB = artistB->totalTime.hours * 3600 + artistB->totalTime.minutes * 60 + artistB->totalTime.seconds;
+
+    if (timeA != timeB) {
+        return timeB - timeA; // Ordem decrescente
     }
-    // Comparar minutos
-    if (artistA->totalTime.minutes != artistB->totalTime.minutes) {
-        return artistB->totalTime.minutes - artistA->totalTime.minutes;
-    }
-    // Comparar segundos
-    if (artistA->totalTime.seconds != artistB->totalTime.seconds) {
-        return artistB->totalTime.seconds - artistA->totalTime.seconds;
-    }
-    // Comparar IDs (crescente para desempate)
-    return artistA->artist_id - artistB->artist_id;
+
+    // Se o tempo for igual, comparar pelo ID do artista
+    return artistA->artist_id - artistB->artist_id; // Ordem crescente de ID
 }
 
 // Função para ordenar o array
@@ -105,7 +115,8 @@ void sortArtistsByListeningTime(ArtistListenData* array, int size) {
 
 ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artist_id, int music_id, Duration duration) {
     int index = findArtistIndex(array, *size, artist_id);
-
+   // if (artist_id == 377 && userId == 205751)
+   // printf("AQUI\n\n");
     if (index != -1) {
         // Atualiza a duração total
         array[index].totalTime.hours += duration.hours;
@@ -113,14 +124,7 @@ ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artis
         array[index].totalTime.seconds += duration.seconds;
 
         // Corrige segundos e minutos
-        if (array[index].totalTime.seconds >= 60) {
-            array[index].totalTime.minutes += array[index].totalTime.seconds / 60;
-            array[index].totalTime.seconds %= 60;
-        }
-        if (array[index].totalTime.minutes >= 60) {
-            array[index].totalTime.hours += array[index].totalTime.minutes / 60;
-            array[index].totalTime.minutes %= 60;
-        }
+        array[index].totalTime = correctTime (array[index].totalTime);
 
         // Verifica se a música já foi ouvida
         int already_listened = 0;
@@ -186,26 +190,6 @@ ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artis
 }
 
 
-    // Function to find the most listened artist
- //   int findMostListenedArtist(ArtistListenData* array, int size) {
- //       if (size == 0) {
- //           return -1;
- //       }
-//
- //       int maxIndex = 0;
- //       for (int i = 1; i < size; i++) {
- //           Duration current = array[i].totalTime;
- //           Duration max = array[maxIndex].totalTime;
-//
- //           if ((current.hours > max.hours) || 
- //               (current.hours == max.hours && current.minutes > max.minutes) || 
- //               (current.hours == max.hours && current.minutes == max.minutes && current.seconds > max.seconds) ||
- //               (current.hours == max.hours && current.minutes == max.minutes && current.seconds == max.seconds && array[i].artist_id < array[maxIndex].artist_id)) {
- //               maxIndex = i;
- //           }
- //       }
- //       return array[maxIndex].artist_id;
- //   }
 
 
     // Structures and functions used to store the duration of music heard in a day
@@ -441,7 +425,6 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
     if (history == NULL) {
         writeNewLine(output);
-      //  printf("Error: No history found for ID %d.\n\n", userId);
         closeOutputFile(output);
 
         freeMusicList(listenedList);
@@ -484,6 +467,8 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
             }
 
             int artist_id = *artist_id_ptr;
+         //   if(artist_id == 377 && userId == 205751)
+         //   printf("AQUI");
             Duration duration = getHistoryDuration(ptr);
             artistData = updateArtistData(artistData, &artistCount, artist_id, music_id, duration);
 
@@ -514,7 +499,6 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
     if (artistData == NULL){
         writeNewLine(output);
-     //   printf("Error: No history found for ID %d.\n\n", userId);
         closeOutputFile(output);
 
         freeMusicList(listenedList);
@@ -536,7 +520,6 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
     if (mostListenedDay.year == 0) { 
         writeNewLine(output);
-     //   printf("Error: No history found for ID %d.\n\n", userId);
         closeOutputFile(output);
 
         freeMusicList(listenedList);
@@ -549,27 +532,13 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
         return;
     }
 
-  //  int hour = listenTime.hours;
-  //  int min = listenTime.minutes;
-  //  int seg = listenTime.seconds;
-//
-  //  int ano = mostListenedDay.year;
-  //  int mes = mostListenedDay.month;
-  //  int dia = mostListenedDay.day;
+
 
     int nArtists = getCMDnArtists(cmd);
 
-//typedef struct {
-//    int artist_id;           // ID do artista
-//    int totalMusic;          // Contador de músicas ouvidas
-//    Duration totalTime;      // Duração total
-//    int* music_ids;          // Array dinâmico de IDs de músicas ouvidas
-//    int music_ids_count;     // Número de músicas no array
-//    int music_ids_capacity;  // Capacidade atual do array
-//} ArtistListenData;
+
 
     const char* mostHeardGenreString = genreToString(mostHeardGenre);
-  //  printf("%02d:%02d:%02d;%d;A%07d;%04d/%02d/%02d;%s;AL%06d;%02d\n", hour, min, seg, nMusics, mostListenedArtist2, ano, mes, dia, genreToString(mostHeardGenre), mostListenedAlbum, mostListenedHour);
     writeQ6Geral(output, cmd, listenTime, mostListenedDay, nMusics, mostListenedArtist2, mostHeardGenreString, mostListenedAlbum, mostListenedHour);
 
     for(int i=0; i<nArtists && i<artistCount; i++){
@@ -581,9 +550,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
         writeQ6Artists(output, cmd, mostListenedArtist2, nMusicsArtist, listenedTimeArtist);
     }
 
-   // printf("NART: %d,  duração: %d:%d:%d  \n dia: %d-%02d-%02d \n   hora Mais Ouvida: %d,  album: %d,  nMusicas: %d,  Artista: %d, Gênero: %s,  IdHistory: %d, IDUser: %d\n\n",
-   //     nArtists, hour, min, seg, ano, mes, dia,mostListenedHour, mostListenedAlbum, nMusics, mostListenedArtist2, genreToString(mostHeardGenre), userId, userId);
-
+  
     closeOutputFile(output);
     freeMusicList(listenedList);
     free(artistData);
@@ -606,74 +573,8 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
             listenTime.minutes += min;
             listenTime.seconds += sec;
 
-            if (listenTime.seconds >= 60){ // checks if the duration is more than 60 seconds and corrects it
-                listenTime.minutes += listenTime.seconds / 60;
-                listenTime.seconds = listenTime.seconds % 60;
-            }
-
-            if (listenTime.minutes >= 60){ // checks if the duration is more than 60 minutes and corrects it
-                listenTime.hours += listenTime.minutes / 60;
-                listenTime.minutes = listenTime.minutes % 60;
-            }
+            listenTime = correctTime (listenTime);
 
             
         return listenTime;
     }
-
-
-/*
-
-
-
-for (int i = 0; i < artistCount; i++) {
-    free(artistData[i].music_ids);
-}
-ver se é preciso fazer isto
-
-00:04:47;1;A0009964;2019/12/13;Hip Hop;AL006156;07
-A0009964;1;00:04:47
-
-
-
-typedef struct cmd {
-    int query;          // 1, 2, 3, 4, 5, or 6
-    char entity;       // A or U (Q1)
-    int id;             // entity ID
-    int topN;           // top N places
-    char *paises;       // (requires memory allocation)
-    int ageMin;         // minimum age
-    int ageMax;         // maximum age
-    Date dateMin;       // minimum date
-    Date dateMax;       // max date
-    int noUsers;        // number of users to compare with
-    short int year;     // year
-    short int nArtists; // number of artists
-    char separator;     // separator for output (';' or '=')
-} CMD;
-
-
-typedef struct history {
-    int id;                   //– identificador único do registo;
-    int user_id;              //– identificador único do utilizador a que o registo se refere;
-    int music_id;             //– identificador único da música a que o registo se refere;
-    Timestamp timestamp;      //– data e hora em que a música foi ouvida pelo utilizador;
-    Duration duration;        //– tempo de duração da audição da música. E.g., um utilizador pode ter ouvido apenas 30 segundos de uma música;
-    History* nextByUser;      // points to a History* w the same user_id
-    History* nextByMusic;     // points to a History* w the same music_id
-} History;
-
-typedef struct historyManager {
-    GHashTable *historyByUser;
-    GHashTable *historyByMusic;
-    GTree* historyInWeeks; // will only have the top 10 artists of each week, key: first day of the week, value: array with artists and duration
-} HistoryManager;
-
-
-typedef struct {
-    int hours;         
-    int minutes;       
-    int seconds;       
-    short int error;   
-} Duration;
-
-*/
