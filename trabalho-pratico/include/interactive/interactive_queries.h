@@ -82,4 +82,19 @@ int loadQ4 (WINDOW* inWin, WINDOW* outWin, AlmightyManager* mngr);
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
 int loadQ5 (WINDOW* inWin, AlmightyManager* mngr);
+
+/**
+ * @brief Displays the sixth query in an interface.
+ * This function will prompt the user to insert an user ID, a year and the number of artists.
+ * It will then show in a scrollable window the results of the query6.
+ * @param inWin A pointer to the window where the inputs will be shown.
+ * @param mngr A pointer to the main manager.
+ * 
+ * @result 0 if the function ends normally and -1 if the user exits earlier.
+ * 
+ * @note 
+ * This function uses ncurses for input and display, so it should be called within an ncurses session.
+ */
+int loadQ6 (WINDOW* inWin, AlmightyManager* mngr);
+
 #endif

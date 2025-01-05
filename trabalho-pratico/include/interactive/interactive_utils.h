@@ -9,28 +9,25 @@
 /**
  * @brief Reads a numeric input from the user with constraints and validation.
  * This function prompts the user to enter a number within a specified range (minVal to maxVal). 
- * It also supports special cases where input can include a prefix ('A' or 'U') for ID formats. 
- * The function allows exiting by typing "exit" or "ex" (for 2-digit numbers).
+ * The function allows exiting by typing "exit", "ex" or "exi" (for 2 and 3 digit numbers).
  * 
  * @param win A pointer to the ncurses window for displaying input prompts.
  * @param posy The y-coordinate in the window where the input starts.
  * @param posx The x-coordinate in the window where the input starts.
- * @param numberS A string buffer to store the input.
  * @param digits The maximum number of digits allowed for input.
  * @param minVal The minimum acceptable value for the numeric input.
  * @param maxVal The maximum acceptable value for the numeric input.
- * @param flag 0 for plain numbers and 1 for IDs ("A0000, U0000").
  * 
  * @return The parsed number if input is valid or -1 if the user exits.
  * 
  * @note 
  * This function uses ncurses for input and display, so it should be called within an ncurses session.
  */
-int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digits, int minVal, int maxVal, int flag); // flag: reading ids ("A0000"
+int getNumberFromInput (WINDOW* win, int posy, int posx, int digits, int minVal, int maxVal);
 
 
 /**
- * @brief Reads a string from input, setting the curser to one while running.
+ * @brief Reads a string from input.
 
  * @param win A pointer to the ncurses window for displaying input prompts. 
  * @param posy The y-coordinate in the window the text will be printed.
@@ -43,6 +40,22 @@ int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digi
  */
 void getStringFromInput (WINDOW* win, int posy, int posx, char* string, int digits);
 
+/**
+ * @brief Reads an ID from input ("A0000000").
+ * This function will check if the format is correct and only allow for User and Artist IDs.
+ * 
+ * @param win A pointer to the ncurses window for displaying input prompts. 
+ * @param posy The y-coordinate in the window the text will be printed.
+ * @param posx The x-coordinate in the window the text will be printed.
+ * @param idString A string buffer to store the ID input.
+ * @param flag Flag == 0: Will only accept Users as correct, Flag == 1: Will accept both Users and Artist IDs.
+ * 
+ * @return Returns the number of the ID.
+ * 
+ * @note 
+ * This function uses ncurses for input and display, so it should be called within an ncurses session.
+ */
+int getIdFromInput (WINDOW* win, int posy, int posx, char* idString, int flag); // flag == 0 : just users, flag == 1 : users and artists
 
 /**
  * @brief Reads the output file and returns an array with every line.
