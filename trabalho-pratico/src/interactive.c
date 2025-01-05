@@ -108,12 +108,12 @@ int gettingData (WINDOW* win, AlmightyManager* mngr) {
     mvprintw (heightS-1, 1, "Type \"exit\" to leave");
     refresh();
 
-    char path[38];
+    char path[50];
     char pathDefault[] = "small/dataset/sem_erros/";
     while (true) {
         curs_set(1);
         wmove(win, (int)(heightW / 8), (int)(widthW / 10));
-        wgetnstr(win, path, 37);
+        wgetnstr(win, path, 50);
         if (strcmp (path, "exit")  == 0) {
             delwin (win);
             return -1;
