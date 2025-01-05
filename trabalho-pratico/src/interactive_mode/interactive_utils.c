@@ -6,10 +6,11 @@
 #include <utils.h>
 #include <unistd.h>
 
-int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digits, int minVal, int maxVal, int flag) { // flag: reading ids ("A0000")
+int getNumberFromInput (WINDOW* win, int posy, int posx, int digits, int minVal, int maxVal) {
     int widthS, heightS;
     getmaxyx(stdscr, heightS, widthS);
 
+    char numberS[digits+1];
     int number;
     mvprintw (heightS-1, 1, "Type \"exit\" to leave");
     refresh();
@@ -25,14 +26,9 @@ int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digi
             curs_set(0);
             return -1;
         }
-        int check = 0;
         char* numberString = numberS;
-        if (flag == 1) {
-            if (numberS[0] == 'A' || numberS[0] == 'U') check = 1;
-            numberString ++;
-        }
         int convertSuccess = convertToInt (numberString, &number);
-        if (convertSuccess && number >= minVal && number <= maxVal && (!flag || check)) break;
+        if (convertSuccess && number >= minVal && number <= maxVal) break;
         else {
             attron (A_UNDERLINE);
             mvprintw (heightS/5 - 1, widthS /2 - 12, "Invalid input, try again");
@@ -49,12 +45,42 @@ int getNumberFromInput (WINDOW* win, int posy, int posx, char* numberS, int digi
 }
 
 void getStringFromInput (WINDOW* win, int posy, int posx, char* string, int digits) {
+    int widthS, heightS;
+    getmaxyx(stdscr, heightS, widthS);
+    (void) widthS;
+    mvprintw (heightS-1, 1, "Type \"exit\" to leave");
+    refresh();
+
     wmove (win, posy, posx);
     curs_set(1);
     wgetnstr(win, string, digits);
     curs_set(0);
 }
 
+int getIdFromInput (WINDOW* win, int posy, int posx, char* idString, int flag) { // flag == 0 : just users, flag == 1 : users and artists
+    int widthS, heightS;
+    getmaxyx(stdscr, heightS, widthS);
+
+    int id = 0;
+    while (true) {
+        getStringFromInput (win, posy, posx, idString, 8);
+        if(strcmp (idString, "exit") == 0) return -1;
+        if (convertToInt(idString + 1, &id)) {
+            if ((flag == 0 && idString[0] == 'U') ||                      /**< Flag 0: Allows 'U' */
+                (flag == 1 && (idString[0] == 'U' || idString[0] == 'A')))  /**< Flag 1: Allows 'U' and 'A' */ 
+                break;
+        }
+        int size = sizeof (idString);
+        memset (idString, 0, size);
+        attron (A_UNDERLINE);
+        mvprintw (heightS/5 - 1, widthS /2 - 12, "Invalid input, try again");
+        attroff (A_UNDERLINE);
+        for (int i = 0; i < 8; i++) mvwaddch(win, posy, posx + i, ' '); // cleanup
+        wrefresh(win);
+        refresh();
+    }
+    return id;
+}
 
 char** readOutputFiles() {
     char path[] = "resultados/command1_output.txt";
@@ -153,8 +179,8 @@ void readResultsScrollable(int height, int width, int posy, int posx) {
 
     char** results = readOutputFiles ();
     if (!results || results[0][0] == '\0') {
-        mvprintw(posy, posx, "No results available.");
-        mvprintw(posy+1, posx, "Press any key to leave.");
+        mvprintw(posy, posx+1, "No results available.");
+        mvprintw(posy+1, posx+1, "Press any key to leave.");
         refresh();
         getch();
         return;
