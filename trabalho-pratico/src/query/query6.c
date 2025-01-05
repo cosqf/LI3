@@ -518,22 +518,6 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     int mostListenedAlbum = findMostListenedAlbum(albumData, albumCount);
     int mostListenedHour = findMostListenedHour(hourCount, hourCountSize);
 
-    if (mostListenedDay.year == 0) { 
-        writeNewLine(output);
-        closeOutputFile(output);
-
-        freeMusicList(listenedList);
-        free(artistData);
-        free(musicDay);
-        free(genreCount);
-        free(albumData);
-        free(hourCount);
-        deleteHistoryByUser(history);
-        return;
-    }
-
-
-
     int nArtists = getCMDnArtists(cmd);
 
 
