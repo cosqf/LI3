@@ -524,10 +524,9 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
     int nArtists = getCMDnArtists(cmd);
 
-
-
     const char* mostHeardGenreString = genreToString(mostHeardGenre);
-    writeQ6Geral(output, cmd, listenTime, mostListenedDay, nMusics, mostListenedArtist2, mostHeardGenreString, mostListenedAlbum, mostListenedHour);
+
+    q6Output(output, cmd, listenTime, mostListenedDay, nMusics, mostListenedArtist2, mostHeardGenreString, mostListenedAlbum, mostListenedHour);
 
     for(int i=0; i<nArtists && i<artistCount; i++){
         ArtistListenData mostListenedArtist = artistData[i];
@@ -535,10 +534,9 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
         int nMusicsArtist = mostListenedArtist.totalMusic;
         Duration listenedTimeArtist = mostListenedArtist.totalTime;
 
-        writeQ6Artists(output, cmd, mostListenedArtist2, nMusicsArtist, listenedTimeArtist);
+        q6NArtistsOutput(output, cmd, mostListenedArtist2, nMusicsArtist, listenedTimeArtist);
     }
 
-  
     closeOutputFile(output);
     freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
 }
@@ -567,4 +565,34 @@ void freeQ6Data (History* history, ListenedMusicNode* listenedList, ArtistListen
     free(albumData);
     free(hourCount);
     deleteHistoryByUser(history);
+}
+
+void q6Output (Output* output, CMD* cmd, Duration listenTime, Date mostListenedDay, int nMusics, int mostListenedArtist, const char* mostHeardGenreString, int mostListenedAlbum, int mostListenedHour) {
+    char duration[15], musics[15], topArtist[15], topDay[15], topGenre[15], topAlbum[15], topHour[15];
+
+    snprintf (duration, sizeof(duration), "%02d:%02d:%02d", listenTime.hours, listenTime.minutes, listenTime.seconds);
+    snprintf (musics, sizeof(musics), "%d", nMusics);
+    snprintf (topArtist, sizeof(topArtist), "A%07d", mostListenedArtist);
+    snprintf (topDay, sizeof(topDay), "%04d/%02d/%02d", mostListenedDay.year, mostListenedDay.month, mostListenedDay.day);
+    snprintf (topGenre, sizeof(topGenre), "%s", mostHeardGenreString);
+    snprintf (topAlbum, sizeof(topAlbum), "AL%06d", mostListenedAlbum);
+    snprintf (topHour, sizeof(topHour), "%02d", mostListenedHour);
+
+    char* lines [7] = {duration, musics, topArtist, topDay, topGenre, topAlbum, topHour};
+
+    setOutput (output, lines, 7);
+    writeQuerys (output, cmd);
+}
+
+void q6NArtistsOutput (Output* output, CMD* cmd, int mostListenedArtist, int nMusicsArtist, Duration listenedTimeArtist) {
+    char artist[15], musics[15], duration[15];
+
+    snprintf (artist, sizeof(artist), "A%07d", mostListenedArtist);
+    snprintf (musics, sizeof(musics), "%d", nMusicsArtist);
+    snprintf (duration, sizeof(duration), "%02d:%02d:%02d", listenedTimeArtist.hours, listenedTimeArtist.minutes, listenedTimeArtist.seconds);
+
+    char* lines [3] = {artist, musics, duration};
+
+    setOutput (output, lines, 3);
+    writeQuerys (output, cmd);
 }
