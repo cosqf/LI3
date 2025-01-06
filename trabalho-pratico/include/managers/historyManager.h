@@ -19,14 +19,14 @@ typedef struct historyManager HistoryManager;
  *
  * @return A pointer to the initialized history manager, where the History hash table is stored.
  */
-HistoryManager* initializeHashHistory ();
+HistoryManager* initializeHistoryManager ();
 
 /**
  * @brief Deletes all the contents of the history hash table and frees the pointer to the history manager.
  *
  * @param h_mngr Pointer to the history manager.
  */
-void freeHistory (HistoryManager* h_mngr);
+void freeHistoryManager (HistoryManager* h_mngr);
 
 /**
  * @brief Traverses the history by music and applies a callback function to each element.

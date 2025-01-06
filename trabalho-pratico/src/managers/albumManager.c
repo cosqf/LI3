@@ -18,7 +18,7 @@ void insertAlbumHash (AlbumManager *al_mngr, int key, Album *album) {
     g_hash_table_insert(al_mngr->album, GINT_TO_POINTER (key), album);
 }
 
-AlbumManager* initializeHashAlbum () {
+AlbumManager* initializeAlbumManager () {
     AlbumManager* al_mngr = malloc (sizeof (AlbumManager));
     if (al_mngr == NULL) {
         perror("Failed to allocate memory for AlbumManager");
@@ -28,7 +28,7 @@ AlbumManager* initializeHashAlbum () {
     return al_mngr;
 }
 
-void freeHashAlbum (AlbumManager* al_mngr) {
+void freeAlbumManager (AlbumManager* al_mngr) {
     g_hash_table_destroy (al_mngr->album);
     free (al_mngr);
 }
