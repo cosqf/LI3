@@ -59,12 +59,18 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
 
     int i = 1, q1c = 0, q2c = 0, q3c = 0, q4c = 0, q5c = 0, q6c = 0; // i counts the total commands run, the others count the commands run for each query
     int correctQ1 = 0, correctQ2 = 0, correctQ3 = 0, correctQ4 = 0, correctQ5 = 0, correctQ6 = 0; // counts the commands that execute correctly
-    AlmightyManager* mngr = initializeHash ();
+    AlmightyManager* mngr = initializeManagers ();
 
-    getData (pathData, mngr);
+    if (getData (pathData, mngr)){
+        freeAlmightyManager (mngr);
+    }
 
     cmdManager* cmdMngr = createCmdManager ();
     int cmdNumber = parseCmdFile (pathCmd, cmdMngr);
+    if (cmdNumber == -1) {
+        freeCmdManager (cmdMngr);
+        freeAlmightyManager (mngr);
+    }
 
     for (; i< cmdNumber+1; i++) {
         CMD* cmd = getCommandFromMngr (cmdMngr, i-1);
@@ -186,7 +192,7 @@ void test_principal (char* pathData, char* pathCmd, char* pathOutput) { // argv[
     printf("Tempos médios de execução:\n\tQ1: %.2f ms\n\tQ2: %.2f ms\n\tQ3: %.2f ms\n\tQ4: %.2f ms\n\tQ5: %.2f ms\n\tQ6: %.2f ms\n\n", q1avg, q2avg, q3avg, q4avg, q5avg, q6avg);
     
     freeCmdManager (cmdMngr);
-    freeHash (mngr);
+    freeAlmightyManager (mngr);
 }
 
 

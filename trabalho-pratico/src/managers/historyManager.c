@@ -16,6 +16,29 @@ typedef struct historyManager {
     GTree* historyInWeeks; // will only have the top 10 artists of each week, key: first day of the week, value: array with artists and duration
 } HistoryManager;
 
+HistoryManager* initializeHistoryManager () {
+    HistoryManager* h_mngr = malloc (sizeof (HistoryManager));
+    if (h_mngr == NULL) {
+        perror("Failed to allocate memory for HistoryManager");
+        exit(EXIT_FAILURE); 
+    }
+    h_mngr->historyByUser = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistoryByUser);
+    h_mngr->historyByMusic = g_hash_table_new(g_direct_hash, g_direct_equal);
+    h_mngr->historyInWeeks = NULL;
+    return h_mngr;
+}
+
+void freeHistoryManager (HistoryManager* h_mngr) {
+    if(!h_mngr) return;
+
+    g_hash_table_steal_all (h_mngr->historyByMusic);
+    g_hash_table_destroy (h_mngr->historyByMusic);
+    g_hash_table_destroy (h_mngr->historyByUser);
+
+    if (h_mngr->historyInWeeks) g_tree_destroy(h_mngr->historyInWeeks);
+    free (h_mngr);
+}
+
 
 // tree
 
@@ -51,18 +74,6 @@ void traverseTree(HistoryManager* mngr, gboolean callback(gpointer key, gpointer
 
 // hash 
 
-HistoryManager* initializeHashHistory () {
-    HistoryManager* h_mngr = malloc (sizeof (HistoryManager));
-    if (h_mngr == NULL) {
-        perror("Failed to allocate memory for HistoryManager");
-        exit(EXIT_FAILURE); 
-    }
-    h_mngr->historyByUser = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)deleteHistoryByUser);
-    h_mngr->historyByMusic = g_hash_table_new(g_direct_hash, g_direct_equal);
-    h_mngr->historyInWeeks = NULL;
-    return h_mngr;
-}
-
 void insertHistoryHashByUser(GHashTable *hashtable, int userID, History *history) {
     History* existentHistory = g_hash_table_lookup(hashtable, GINT_TO_POINTER(userID));
 
@@ -77,18 +88,6 @@ void insertHistoryHashByMusic(GHashTable *hashtable, int musicID, History *histo
     if (existentHistory) setNextHistoryByMusic(history, existentHistory);
     
     else g_hash_table_insert(hashtable, GINT_TO_POINTER(musicID), history);
-}
-
-
-void freeHistory (HistoryManager* h_mngr) {
-    if(!h_mngr) return;
-
-    g_hash_table_steal_all (h_mngr->historyByMusic);
-    g_hash_table_destroy (h_mngr->historyByMusic);
-    g_hash_table_destroy (h_mngr->historyByUser);
-
-    if (h_mngr->historyInWeeks) g_tree_destroy(h_mngr->historyInWeeks);
-    free (h_mngr);
 }
 
 int lengthHistory (HistoryManager* mngr) {

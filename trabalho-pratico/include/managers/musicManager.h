@@ -26,14 +26,14 @@ void insertMusicHash (MusicManager *a_mngr, int key, Music *Music);
  *
  * @return A pointer to the initialized music manager, where the hash table is stored.
  */
-MusicManager* initializeHashMusic ();
+MusicManager* initializeMusicManager ();
 
 /**
  * @brief Deletes all the contents of the music hash table and frees the pointer to the music manager.
  *
  * @param a_mngr Pointer to the music manager.
  */
-void freeHashMusic (MusicManager* a_mngr);
+void freeMusicManager (MusicManager* a_mngr);
 
 /**
  * @brief Checks if a music record is present in the hash table.

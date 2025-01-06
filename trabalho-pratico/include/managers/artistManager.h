@@ -24,14 +24,14 @@ void insertArtistHash (ArtistManager *a_mngr, int key, Artist *artist);
  *
  * @return A pointer to the initialized artist manager, where the Artist hash table is stored.
  */
-ArtistManager* initializeHashArtist ();
+ArtistManager* initializeArtistManager ();
 
 /**
  * @brief Deletes all the contents of the artist hash table and frees the pointer to the artist manager.
  *
  * @param a_mngr Pointer to the artist manager.
  */
-void freeHashArtist (ArtistManager* a_mngr);
+void freeArtistManager (ArtistManager* a_mngr);
 
 /**
  * @brief Performs a lookup in the artist hash table.

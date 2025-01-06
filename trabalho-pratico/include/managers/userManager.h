@@ -36,14 +36,14 @@ void insertUserHash (UserManager *u_mngr, int key, User *User);
  *
  * @return A pointer to the initialized user manager, where the hash table is stored.
  */
-UserManager* initializeHashUser ();
+UserManager* initializeUserManager ();
 
 /**
  * @brief Deletes all the contents of the user hash table and frees the pointer to the user manager.
  *
  * @param u_mngr Pointer to the user manager.
  */
-void freeHashUser (UserManager* u_mngr);
+void freeUserManager (UserManager* u_mngr);
 
 /**
  * @brief Looks up a user record in the hash table by ID.

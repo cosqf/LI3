@@ -27,10 +27,10 @@ int main (int argc, char** argv){
 }
 
 int principal (char* pathData, char* pathCmd) {
-    AlmightyManager* mngr = initializeHash ();
+    AlmightyManager* mngr = initializeManagers();
 
     if (getData (pathData, mngr)){
-        freeHash (mngr);
+        freeAlmightyManager (mngr);
         return 1;
     }
 
@@ -38,7 +38,7 @@ int principal (char* pathData, char* pathCmd) {
     int cmdNumber = parseCmdFile (pathCmd, cmdMngr);
     if (cmdNumber == -1) {
         freeCmdManager (cmdMngr);
-        freeHash (mngr);
+        freeAlmightyManager (mngr);
         return 1;
     }
     for (int i = 0; i< cmdNumber; i++) {
@@ -75,6 +75,6 @@ int principal (char* pathData, char* pathCmd) {
         }
     }
     freeCmdManager (cmdMngr);
-    freeHash (mngr);
+    freeAlmightyManager (mngr);
     return 0;
 }

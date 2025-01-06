@@ -25,14 +25,14 @@ void insertAlbumHash (AlbumManager *a_mngr, int key, Album *album);
  * 
  * @return A pointer to the initialized album manager, where the Album hash table is stored.
  */
-AlbumManager* initializeHashAlbum ();
+AlbumManager* initializeAlbumManager ();
 
 /**
  * @brief Deletes all the contents of the album hash table and frees the pointer to the album manager.
  * 
  * @param al_mngr Pointer to the album manager.
  */
-void freeHashAlbum (AlbumManager* a_mngr);
+void freeAlbumManager (AlbumManager* a_mngr);
 
 /**
  * @brief Performs a lookup in the album hash table.

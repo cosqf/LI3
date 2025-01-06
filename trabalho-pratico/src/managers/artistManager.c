@@ -16,7 +16,7 @@ void insertArtistHash (ArtistManager *a_mngr, int key, Artist *artist) {
     g_hash_table_insert(a_mngr->artist, GINT_TO_POINTER (key), artist);
 }
 
-ArtistManager* initializeHashArtist () {
+ArtistManager* initializeArtistManager () {
     ArtistManager* a_mngr = malloc (sizeof (ArtistManager));
     if (a_mngr == NULL) {
         perror("Failed to allocate memory for ArtistManager");
@@ -26,7 +26,7 @@ ArtistManager* initializeHashArtist () {
     return a_mngr;
 } //g_int instead of g_hash
 
-void freeHashArtist (ArtistManager* a_mngr) {
+void freeArtistManager (ArtistManager* a_mngr) {
     g_hash_table_destroy (a_mngr->artist);
     free (a_mngr);
 }
