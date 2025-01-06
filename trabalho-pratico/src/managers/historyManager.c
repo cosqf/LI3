@@ -187,7 +187,7 @@ void createAndSortTree (HistoryManager* manager, void (processHistory) (History*
     while (g_hash_table_iter_next(&iter, &key, &value)) {
         History* hist = (History*) value;
         while (hist) {
-            processHistory (hist, m_mngr, hashWithWeeks);
+            processHistory (hist, m_mngr, hashWithWeeks); // using a callback so that the specific function is on the q4.c file
             hist = getNextHistoryByUser (hist);
         }
     }
@@ -206,7 +206,7 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
     while (g_hash_table_iter_next(&iter, &key, &value)) {
         GHashTable* table = (GHashTable*) value;
         int tupleCount = g_hash_table_size (table);
-        int limit = (tupleCount < 10) ? tupleCount : 10;
+        int limit = (tupleCount < 10) ? tupleCount : 10; // if the size of the table is less than 10, use the count as the limit
 
         Tuple* artistsWeek = sortHash (table, compareTuple);
 
@@ -228,7 +228,7 @@ void filterToTree (HistoryManager* mngr, GHashTable* hash) {
         top10artistWeek->artistsIds = limitedArray;
         top10artistWeek->count = limit;
 
-        Date* dateKeyCopy = malloc(sizeof(Date));
+        Date* dateKeyCopy = malloc(sizeof(Date)); // making a copy of the date
         if (mallocErrorCheck (dateKeyCopy)) {
             freeArtistList (top10artistWeek);
             return;
@@ -243,4 +243,3 @@ History* lookupHistoryHashByUser (HistoryManager *h_mngr, int id) {
     if (history == NULL) return NULL;
     return copyHistoryByUser (history);
 }
-

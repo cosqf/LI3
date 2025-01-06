@@ -58,20 +58,20 @@ void sortHistoryByWeek (History* history, MusicManager* musicManager, GHashTable
     int artistCount = lookupMusicArtistIDsHash (musicManager, musicId, &artistIds);
     for (int j = 0; j < artistCount; j++) {
         Tuple tuple = {.key = artistIds[j], .value = durationInSeconds (getHistoryDuration(history))};
-        updateHashWithWeeks (hashWithWeeks, date, tuple);
+        updateHashWithWeeks (hashWithWeeks, date, tuple); // for every artist, add the duration on the specific week
     }
     free (artistIds);
 }
 
 void updateHashWithWeeks (GHashTable* bigTable, Date date, Tuple tuple) {
     GHashTable* weekTable = (GHashTable*) g_hash_table_lookup (bigTable, &date);
-    if (weekTable) {
+    if (weekTable) { // if theres already a hash table of the week, just update it 
         updateHash(weekTable, tuple.key, tuple.value);
     } else {
         weekTable = createHash();
         insertHash(weekTable, tuple.key, tuple.value);
 
-        Date* dateKey = malloc(sizeof(Date));
+        Date* dateKey = malloc(sizeof(Date)); // making a copy of the key
         if (mallocErrorCheck (dateKey)) return;
         *dateKey = date;
         g_hash_table_insert(bigTable, dateKey, weekTable);
@@ -112,9 +112,8 @@ gboolean callbackHistoryQuery4 (gpointer key, gpointer value, gpointer dataFeed)
 void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManager, ArtistManager* artistManager, int cmdCounter) {
     Date minDay = getCMDdateMin (cmd);
     Date maxDay = getCMDdateMax (cmd);
-    if (!historyTreeIsInitialized (historyManager)) { // will get all the top artists in each week
+    if (!historyTreeIsInitialized (historyManager)) { // will get all the top artists of each week
         createAndSortTree (historyManager, sortHistoryByWeek,  musicManager);
-        //printGTree(historyManager);
     }
     GHashTable* artistsTimeInTop = createHash(); // will store the artists with the number of values they were on the top 10
 
@@ -127,16 +126,16 @@ void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManage
                           .isFilterOn = isFilterOn
                           };
 
-    traverseTree(historyManager, callbackHistoryQuery4, &data); // traverse tree according to the dates, pass the nodes to the hash
+    traverseTree(historyManager, callbackHistoryQuery4, &data); // traverse the tree according to the dates and pass the nodes to the hash table
 
     // outputting
     char filename[50];
     snprintf (filename, sizeof(filename),"resultados/command%d_output.txt", cmdCounter);
     Output* output = openOutputFile (filename);
 
-    Tuple biggestArtist = getBiggestFromHash (artistsTimeInTop);
+    Tuple biggestArtist = getBiggestFromHash (artistsTimeInTop); // get the artist with the biggest duration
  
-    if (biggestArtist.key == -1) writeNewLine(output);
+    if (biggestArtist.key == -1) writeNewLine(output); // if the hash is empty, dont output anything
     else {
         int artistId = biggestArtist.key;
         int artistCount = biggestArtist.value;
