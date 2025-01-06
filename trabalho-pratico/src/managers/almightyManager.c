@@ -15,22 +15,22 @@ typedef struct almightyManager {
     HistoryManager* history;
 } AlmightyManager;
 
-AlmightyManager* initializeHash () {
+AlmightyManager* initializeManagers () {
     AlmightyManager *mngr = malloc (sizeof (AlmightyManager));
-    mngr->artist = initializeHashArtist();
-    mngr->user = initializeHashUser();
-    mngr->music = initializeHashMusic();
-    mngr->album = initializeHashAlbum();
-    mngr->history = initializeHashHistory();
+    mngr->artist = initializeArtistManager();
+    mngr->user = initializeUserManager();
+    mngr->music = initializeMusicManager();
+    mngr->album = initializeAlbumManager();
+    mngr->history = initializeHistoryManager();
     return mngr;
 }
 
-void freeHash (AlmightyManager *mngr) {
-    if (mngr->artist) freeHashArtist (mngr->artist);
-    if (mngr->user) freeHashUser (mngr->user);
-    if (mngr->music) freeHashMusic (mngr->music);
-    if (mngr->album) freeHashAlbum (mngr->album);
-    if (mngr->history) freeHistory (mngr->history);
+void freeAlmightyManager (AlmightyManager *mngr) {
+    if (mngr->artist) freeArtistManager (mngr->artist);
+    if (mngr->user) freeUserManager (mngr->user);
+    if (mngr->music) freeMusicManager (mngr->music);
+    if (mngr->album) freeAlbumManager (mngr->album);
+    if (mngr->history) freeHistoryManager (mngr->history);
     free (mngr);
 }
 

@@ -20,14 +20,14 @@ typedef struct almightyManager AlmightyManager;
  *
  * @return Pointer to the initialized AlmightyManager.
  */
-AlmightyManager* initializeHash ();
+AlmightyManager* initializeManagers ();
 
 /**
  * @brief Frees all the managers and then itself.
  * 
  * @param mngr A pointer to the AlmightyManager to be freed.
  */
-void freeHash (AlmightyManager *mngr);
+void freeAlmightyManager (AlmightyManager *mngr);
 
 /**
  * @brief Function returns the UserManager from the main manager.

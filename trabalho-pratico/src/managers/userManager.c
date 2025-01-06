@@ -26,7 +26,7 @@ void insertUserHash (UserManager *u_mngr, int key, User *user) {
     g_hash_table_insert(u_mngr->user, GINT_TO_POINTER (key), user);
 }
 
-UserManager* initializeHashUser () {
+UserManager* initializeUserManager () {
     UserManager* u_mngr = malloc (sizeof (UserManager));
     if (u_mngr == NULL) {
         perror("Failed to allocate memory for UserManager");
@@ -41,7 +41,7 @@ UserManager* initializeHashUser () {
     return u_mngr;
 }
 
-void freeHashUser (UserManager* u_mngr) {
+void freeUserManager (UserManager* u_mngr) {
     g_hash_table_destroy (u_mngr->user);
     freeMatrix(u_mngr->listenedGenresMatrix, u_mngr->matrix_lines_available);
     freeUserArray(u_mngr->usersIDArray, u_mngr->matrix_lines_available);

@@ -19,7 +19,7 @@ void insertMusicHash (MusicManager *m_mngr, int key, Music *Music) {
     g_hash_table_insert(m_mngr->music, GINT_TO_POINTER (key), Music);
 }
 
-MusicManager* initializeHashMusic () {
+MusicManager* initializeMusicManager () {
     MusicManager* m_mngr = malloc (sizeof (MusicManager));
     if (m_mngr == NULL) {
         perror("Failed to allocate memory for MusicManager");
@@ -29,7 +29,7 @@ MusicManager* initializeHashMusic () {
     return m_mngr;
 }
 
-void freeHashMusic (MusicManager* m_mngr) {
+void freeMusicManager (MusicManager* m_mngr) {
     g_hash_table_destroy (m_mngr->music);
     free (m_mngr);
 }

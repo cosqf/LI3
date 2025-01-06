@@ -203,7 +203,7 @@ int main () {
     WINDOW* win1 = newWindowWithBorder ((int) (heightS/1.5), (int) (widthS/1.5), (int) (heightS/6)+2, (int) (widthS/6));
 
     // Fetching data
-    AlmightyManager* mngr = initializeHash ();
+    AlmightyManager* mngr = initializeManagers ();
     int paths = gettingData (win1, mngr);
     if (paths == -1) {
         clear ();
@@ -260,7 +260,7 @@ int main () {
         delwin (outWin);
         if (repeat == -1) break;
     }
-    freeHash (mngr);
+    freeAlmightyManager (mngr);
     clear ();
     loadBye ();
     endwin ();
