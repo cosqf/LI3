@@ -233,8 +233,8 @@ Date findMostListenedDay(MusicDay* musicDay, int musicDaysCount) {
         return -1;
     }
 
-void updateMusicDay(History* history, MusicDay** musicDay, int* musicDaysCount) {
-    Date day = getHistoryTimestamp(history).date;
+void updateMusicDay(History* ptr, MusicDay** musicDay, int* musicDaysCount) {
+    Date day = getHistoryTimestamp(ptr).date;
     int dayIndex = findDayIndex(*musicDay, *musicDaysCount, day);
 
     if (dayIndex == -1) {
@@ -438,16 +438,16 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
         return;
     }
 
-   // History* history = history;
+    History* ptr = history;
 
-    while (history != NULL) {
-        int currentYear = getHistoryTimestamp(history).date.year;
+    while (ptr != NULL) {
+        int currentYear = getHistoryTimestamp(ptr).date.year;
         int intendedYear = getCMDyear(cmd);
 
         if (currentYear == intendedYear) { 
-            listenTime = calculateListenTime(history, listenTime);
+            listenTime = calculateListenTime(ptr, listenTime);
 
-            int music_id = getHistoryMusicId(history);
+            int music_id = getHistoryMusicId(ptr);
             if (!wasMusicListened(listenedList, music_id)) {
                 nMusics++;
                 listenedList = addMusic(listenedList, music_id);
@@ -455,24 +455,24 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
             Music* music = lookupMusicHash(m_mngr, music_id);
             if (music == NULL) {
-                history = getNextHistoryByUser(history);
+                ptr = getNextHistoryByUser(ptr);
                 continue;
             }
 
             const int* artist_id_ptr = getMusicArtistID(music);
             if (artist_id_ptr == NULL) {
-                history = getNextHistoryByUser(history);
+                ptr = getNextHistoryByUser(ptr);
                 deleteMusic(music);
                 continue;
             }
 
             int artist_id = *artist_id_ptr;
-            if(artist_id == 377 && userId == 205751)
-            printf("AQUI");
-            Duration duration = getHistoryDuration(history);
+            //if(artist_id == 377 && userId == 205751)
+            //printf("AQUI");
+            Duration duration = getHistoryDuration(ptr);
             artistData = updateArtistData(artistData, &artistCount, artist_id, music_id, duration);
 
-            updateMusicDay(history, &musicDay, &musicDaysCount);
+            updateMusicDay(ptr, &musicDay, &musicDaysCount);
 
             Genre genre = getMusicGenre(music);
             updateGenreTime(&genreCount, &genreCountSize, genre, duration);
@@ -481,7 +481,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
             albumData = updateAlbumData(albumData, &albumCount, album_id, duration);
 
 
-            Duration hourDuration = getHistoryTimestamp(history).hour;
+            Duration hourDuration = getHistoryTimestamp(ptr).hour;
             int hourInt = hourDuration.hours;
             hourCount = updateHourCount(hourCount, &hourCountSize, duration, hourInt);
 
@@ -489,9 +489,9 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
             deleteMusic(music);
         }
 
-        history = getNextHistoryByUser(history);
+        ptr = getNextHistoryByUser(ptr);
     }
-    free(history);
+    free(ptr);
 
     sortArtistsByListeningTime(artistData,artistCount);
 
