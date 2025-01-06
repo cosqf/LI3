@@ -79,28 +79,9 @@ Duration correctTime (Duration duration);
  * @param dataFeed Pointer to feederHistory with filter settings and results.
  * @return TRUE to stop early if the date exceeds the range; FALSE otherwise.
  */
-
-
-
-
-
 void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCounter);
 
 Duration calculateListenTime (History* history, Duration listenTime);
-
-//int findDayIndex(MusicDay* musicDay, int musicDaysCount, Date day);
-
-typedef struct ListenedMusicNode ListenedMusicNode;
-
-typedef struct ArtistListenData ArtistListenData;
-
-typedef struct MusicDay MusicDay;
-
-typedef struct GenreCount GenreCount;
-
-typedef struct AlbumListenData AlbumListenData;
-
-typedef struct HourCount HourCount;
 
 void freeQ6Data (History* history, ListenedMusicNode* listenedList, ArtistListenData* artistData, MusicDay* musicDay, GenreCount* genreCount, AlbumListenData* albumData, HourCount* hourCount);
 

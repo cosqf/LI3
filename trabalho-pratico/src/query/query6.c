@@ -500,22 +500,6 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
 }
 
-Duration calculateListenTime (History* history, Duration listenTime){
-    Duration currentDuration = getHistoryDuration(history);
-
-    int hours = currentDuration.hours;
-    int min = currentDuration.minutes;
-    int sec = currentDuration.seconds;
-
-    listenTime.hours += hours;
-    listenTime.minutes += min;
-    listenTime.seconds += sec;
-
-    listenTime = correctTime (listenTime);
-
-    return listenTime;
-}
-
 void freeQ6Data (History* history, ListenedMusicNode* listenedList, ArtistListenData* artistData, MusicDay* musicDay, GenreCount* genreCount, AlbumListenData* albumData, HourCount* hourCount) {
     freeMusicList(listenedList);
     free(artistData);
