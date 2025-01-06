@@ -83,10 +83,43 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
 Duration calculateListenTime (History* history, Duration listenTime);
 
+/**
+ * @brief Frees all the additional structures created for the resolution of query 6.
+
+ * @param history Pointer to the history struct.
+ * @param listenedList Pointer to a ListenedMusicNode struct.
+ * @param artistData Pointer to an ArtistListenData struct.
+ * @param musicDay Pointer to a MusicDay struct.
+ * @param genreCount Pointer to a GenreCount struct.
+ * @param albumData Pointer to a AlbumListenData struct.
+ * @param hourCount Pointer to an HourCount struct.
+ */
 void freeQ6Data (History* history, ListenedMusicNode* listenedList, ArtistListenData* artistData, MusicDay* musicDay, GenreCount* genreCount, AlbumListenData* albumData, HourCount* hourCount);
 
+/**
+ * @brief Formats and prints the first line of the output to the correct file.
+
+ * @param output Pointer to the Output structure.
+ * @param cmd Pointer to the command struct.
+ * @param listenTime Total listening time.
+ * @param mostListenedDay Day with most listening time.
+ * @param nMusics Number of musics listened to.
+ * @param mostListenedArtist Most listened artist ID.
+ * @param mostHeardGenreString Most listened genre string.
+ * @param mostListenedAlbum Most listened album ID.
+ * @param mostListenedHour Most listened hour.
+ */
 void q6Output (Output* output, CMD* cmd, Duration listenTime, Date mostListenedDay, int nMusics, int mostListenedArtist, const char* mostHeardGenreString, int mostListenedAlbum, int mostListenedHour);
 
+/**
+ * @brief Formats and prints the optional N artists to the correct output file.
+
+ * @param output Pointer to the Output structure.
+ * @param cmd A pointer to the command struct.
+ * @param mostListenedArtist Most listened artist ID.
+ * @param nMusicsArtist Number of musics heard from said artist.
+ * @param listenedTimeArtist Time spent listening to said artist.
+ */
 void q6NArtistsOutput (Output* output, CMD* cmd, int mostListenedArtist, int nMusicsArtist, Duration listenedTimeArtist);
 
 #endif
