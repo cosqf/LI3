@@ -29,7 +29,7 @@ int compareDates(Date d1, Date d2) {
 
 // Structures and functions used to store music
 
-Duration calculateListenTime (History* history, Duration listenTime){
+Duration updateListenTime (History* history, Duration listenTime){
     Duration currentDuration = getHistoryDuration(history);
 
     int hours = currentDuration.hours;
@@ -68,6 +68,8 @@ int wasMusicListened(ListenedMusicNode* head, int music_id) {
     return 0;  // returns 0 if the music hasn't found
 }
 
+
+
 // Function to free up memory of the linked list
 void freeMusicList(ListenedMusicNode* head) {
     ListenedMusicNode* current = head;
@@ -77,6 +79,8 @@ void freeMusicList(ListenedMusicNode* head) {
         free(temp);
     }
 }
+
+
 
 // Structures and functions used to store artists and there listened time
 
@@ -397,7 +401,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
         int intendedYear = getCMDyear(cmd);
 
         if (currentYear == intendedYear) { 
-            listenTime = calculateListenTime(ptr, listenTime);
+            listenTime = updateListenTime(ptr, listenTime);
 
             int music_id = getHistoryMusicId(ptr);
             if (!wasMusicListened(listenedList, music_id)) {
