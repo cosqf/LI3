@@ -1,13 +1,12 @@
-   //#include <historyManager.h>
-    #include <query6.h>
-   //#include <stdio.h>
-   //#include <string.h>
-   //#include <glib.h>
-   //#include <history.h>
-   //#include <userManager.h>
-   //#include <cmd.h>
-   #include <utils.h>
-
+#include <historyManager.h>
+#include <query6.h>
+#include <stdio.h>
+#include <string.h>
+#include <glib.h>
+#include <history.h>
+#include <userManager.h>
+#include <cmd.h>
+#include <utils.h>
 
 Duration correctTime (Duration duration){
                 if (duration.seconds >= 60){ // checks if the duration is more than 60 seconds and corrects it
@@ -22,18 +21,13 @@ Duration correctTime (Duration duration){
     return duration;
 }
 
-
-
 int compareDates(Date d1, Date d2) {
     if (d1.year != d2.year) return d1.year - d2.year;
     if (d1.month != d2.month) return d1.month - d2.month;
     return d1.day - d2.day;
 }
 
-
-
-
-    // Structures and functions used to store music
+// Structures and functions used to store music
 
 Duration calculateListenTime (History* history, Duration listenTime){
     Duration currentDuration = getHistoryDuration(history);
@@ -51,9 +45,7 @@ Duration calculateListenTime (History* history, Duration listenTime){
     return listenTime;
 }
 
-
-
-    // Function to add musics to the linked list ListenedMusicNode
+// Function to add musics to the linked list ListenedMusicNode
 ListenedMusicNode* addMusic(ListenedMusicNode* head, int music_id) {
     ListenedMusicNode* new_node = malloc(sizeof(ListenedMusicNode));
     if (!new_node) {
@@ -65,7 +57,7 @@ ListenedMusicNode* addMusic(ListenedMusicNode* head, int music_id) {
     return new_node;
 }
 
-    // Check if the song has already been played
+// Check if the song has already been played
 int wasMusicListened(ListenedMusicNode* head, int music_id) {
     ListenedMusicNode* current = head;
     while (current != NULL) {
@@ -76,7 +68,7 @@ int wasMusicListened(ListenedMusicNode* head, int music_id) {
     return 0;  // returns 0 if the music hasn't found
 }
 
-    // Function to free up memory of the linked list
+// Function to free up memory of the linked list
 void freeMusicList(ListenedMusicNode* head) {
     ListenedMusicNode* current = head;
     while (current != NULL) {
@@ -86,13 +78,9 @@ void freeMusicList(ListenedMusicNode* head) {
     }
 }
 
-    // Structures and functions used to store artists and there listened time
+// Structures and functions used to store artists and there listened time
 
-
-
-
-
-    // Function to find the artist index in the array
+// Function to find the artist index in the array
 int findArtistIndex(ArtistListenData* array, int size, int artist_id) {
     for (int i = 0; i < size; i++) {
         if (array[i].artist_id == artist_id)
@@ -148,21 +136,21 @@ ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artis
         }
 
         // Adiciona a música se ainda não foi ouvida
-    if (!already_listened) {
-        if (array[index].music_ids_count == array[index].music_ids_capacity) {
-        // Expande a capacidade do array
-            int new_capacity = array[index].music_ids_capacity * 2;
-            if (new_capacity == 0) new_capacity = 2;
+        if (!already_listened) {
+            if (array[index].music_ids_count == array[index].music_ids_capacity) {
+                // Expande a capacidade do array
+                int new_capacity = array[index].music_ids_capacity * 2;
+                if (new_capacity == 0) new_capacity = 2;
 
-            int* new_music_ids = realloc(array[index].music_ids, new_capacity * sizeof(int));
-            if (!new_music_ids) {
-                printf("Erro ao alocar memória!\n");
-                exit(1);
-        }
+                int* new_music_ids = realloc(array[index].music_ids, new_capacity * sizeof(int));
+                if (!new_music_ids) {
+                    printf("Erro ao alocar memória!\n");
+                    return NULL;
+                }
 
-        array[index].music_ids = new_music_ids;
-        array[index].music_ids_capacity = new_capacity;
-    }
+                array[index].music_ids = new_music_ids;
+                array[index].music_ids_capacity = new_capacity;
+            }
 
             // Adiciona o ID da música
         array[index].music_ids[array[index].music_ids_count++] = music_id;
@@ -172,13 +160,12 @@ ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artis
     }
     else {
 
-
         // Adiciona um novo artista
         ArtistListenData* new_array = realloc(array, (*size + 1) * sizeof(ArtistListenData));
         if (!new_array) {
             printf("Erro ao alocar memória!\n");
             free(array);
-            exit(1);
+            return NULL;
         }
         array = new_array;
 
@@ -192,7 +179,7 @@ ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artis
         array[*size].music_ids = malloc(array[*size].music_ids_capacity * sizeof(int));
         if (!array[*size].music_ids) {
             printf("Erro ao alocar memória!\n");
-            exit(1);
+            return NULL;
         }
         array[*size].music_ids[0] = music_id;
 
@@ -202,16 +189,15 @@ ArtistListenData* updateArtistData(ArtistListenData* array, int* size, int artis
     return array;
 }
 
+void freeArtistListenData (ArtistListenData* artistData) {
+    for (int i = 0; i < artistData->music_ids_count; i++) free(artistData->music_ids);
+    free(artistData);
+}
 
 
+// Structures and functions used to store the duration of music heard in a day
 
-    // Structures and functions used to store the duration of music heard in a day
-
-
-
-
-
-    // Finds the most listened Day
+// Finds the most listened Day
 Date findMostListenedDay(MusicDay* musicDay, int musicDaysCount) {
     Date mostListenedDay = {0, 0, 0, 0};
     int maxPlays = 0;
@@ -230,7 +216,8 @@ int findDayIndex(MusicDay* musicDay, int musicDaysCount, Date day) {
     for (int i = 0; i < musicDaysCount; i++) {
         if (musicDay[i].day.year == day.year && musicDay[i].day.month == day.month && musicDay[i].day.day == day.day)
                 return i;
-        }
+    }
+
     return -1;
 }
 
@@ -243,7 +230,7 @@ void updateMusicDay(History* ptr, MusicDay** musicDay, int* musicDaysCount) {
         if (!new_musicDay) {
             printf("Erro ao alocar memória para MusicDay!\n");
             free(*musicDay);
-            exit(1);
+            return;
         }
         *musicDay = new_musicDay;
         (*musicDay)[*musicDaysCount].day = day;
@@ -256,15 +243,9 @@ void updateMusicDay(History* ptr, MusicDay** musicDay, int* musicDaysCount) {
 }
 
 
-    // Structures and functions used to store the genre
-
-
-
+// Structures and functions used to store the genre
 
 // Função que atualiza o tempo de reprodução de cada gênero
-
-
-
 void updateGenreTime(GenreCount** genreCount, int* genreCountSize, Genre genre, Duration duration) {
     int genreIndex = -1;
     for (int i = 0; i < *genreCountSize; i++) { // Verifica se o gênero já foi registrado
@@ -298,13 +279,6 @@ Genre getMostHeardGenre(GenreCount* genreCount, int genreCountSize) {
     return mostHeardGenre;
 }
 
-
-
-
-
-
-
-
 AlbumListenData* updateAlbumData(AlbumListenData* albumData, int* albumCount, int album_id, Duration duration) {
     int index = -1;
 
@@ -322,7 +296,7 @@ AlbumListenData* updateAlbumData(AlbumListenData* albumData, int* albumCount, in
         if (!new_albumData) {
             printf("Erro ao alocar memória para AlbumListenData!\n");
             free(albumData);
-            exit(1);
+            return NULL;
         }
         albumData = new_albumData;
         albumData[*albumCount].album_id = album_id;
@@ -412,15 +386,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     if (history == NULL) {
         writeNewLine(output);
         closeOutputFile(output);
-
-        freeMusicList(listenedList);
-        free(artistData);
-        free(musicDay);
-        free(genreCount);
-        free(albumData);
-        free(hourCount);
-        deleteHistoryByUser(history);
-
+        freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
         return;
     }
 
@@ -458,14 +424,32 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
             Duration duration = getHistoryDuration(ptr);
             artistData = updateArtistData(artistData, &artistCount, artist_id, music_id, duration);
 
+            if (mallocErrorCheck(artistData)){
+                writeNewLine(output);
+                closeOutputFile(output);
+                freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
+                return;
+            }
+
             updateMusicDay(ptr, &musicDay, &musicDaysCount);
+            if (mallocErrorCheck(musicDay)){
+                writeNewLine(output);
+                closeOutputFile(output);
+                freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
+                return;
+            }
 
             Genre genre = getMusicGenre(music);
             updateGenreTime(&genreCount, &genreCountSize, genre, duration);
 
             int album_id = getMusicAlbumID(music);
             albumData = updateAlbumData(albumData, &albumCount, album_id, duration);
-
+            if (mallocErrorCheck(albumData)){
+                writeNewLine(output);
+                closeOutputFile(output);
+                freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
+                return;
+            }
 
             Duration hourDuration = getHistoryTimestamp(ptr).hour;
             int hourInt = hourDuration.hours;
@@ -486,14 +470,7 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     if (artistData == NULL){
         writeNewLine(output);
         closeOutputFile(output);
-
-        freeMusicList(listenedList);
-        free(artistData);
-        free(musicDay);
-        free(genreCount);
-        free(albumData);
-        free(hourCount);
-        deleteHistoryByUser(history);
+        freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
         return;
     }
 
@@ -506,10 +483,9 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
 
     int nArtists = getCMDnArtists(cmd);
 
-
-
     const char* mostHeardGenreString = genreToString(mostHeardGenre);
-    writeQ6Geral(output, cmd, listenTime, mostListenedDay, nMusics, mostListenedArtist2, mostHeardGenreString, mostListenedAlbum, mostListenedHour);
+
+    q6Output(output, cmd, listenTime, mostListenedDay, nMusics, mostListenedArtist2, mostHeardGenreString, mostListenedAlbum, mostListenedHour);
 
     for(int i=0; i<nArtists && i<artistCount; i++){
         ArtistListenData mostListenedArtist = artistData[i];
@@ -517,11 +493,30 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
         int nMusicsArtist = mostListenedArtist.totalMusic;
         Duration listenedTimeArtist = mostListenedArtist.totalTime;
 
-        writeQ6Artists(output, cmd, mostListenedArtist2, nMusicsArtist, listenedTimeArtist);
+        q6NArtistsOutput(output, cmd, mostListenedArtist2, nMusicsArtist, listenedTimeArtist);
     }
 
-  
     closeOutputFile(output);
+    freeQ6Data(history, listenedList, artistData, musicDay, genreCount, albumData, hourCount);
+}
+
+Duration calculateListenTime (History* history, Duration listenTime){
+    Duration currentDuration = getHistoryDuration(history);
+
+    int hours = currentDuration.hours;
+    int min = currentDuration.minutes;
+    int sec = currentDuration.seconds;
+
+    listenTime.hours += hours;
+    listenTime.minutes += min;
+    listenTime.seconds += sec;
+
+    listenTime = correctTime (listenTime);
+
+    return listenTime;
+}
+
+void freeQ6Data (History* history, ListenedMusicNode* listenedList, ArtistListenData* artistData, MusicDay* musicDay, GenreCount* genreCount, AlbumListenData* albumData, HourCount* hourCount) {
     freeMusicList(listenedList);
     free(artistData);
     free(musicDay);
@@ -531,4 +526,32 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
     deleteHistoryByUser(history);
 }
 
+void q6Output (Output* output, CMD* cmd, Duration listenTime, Date mostListenedDay, int nMusics, int mostListenedArtist, const char* mostHeardGenreString, int mostListenedAlbum, int mostListenedHour) {
+    char duration[15], musics[15], topArtist[15], topDay[15], topGenre[15], topAlbum[15], topHour[15];
 
+    snprintf (duration, sizeof(duration), "%02d:%02d:%02d", listenTime.hours, listenTime.minutes, listenTime.seconds);
+    snprintf (musics, sizeof(musics), "%d", nMusics);
+    snprintf (topArtist, sizeof(topArtist), "A%07d", mostListenedArtist);
+    snprintf (topDay, sizeof(topDay), "%04d/%02d/%02d", mostListenedDay.year, mostListenedDay.month, mostListenedDay.day);
+    snprintf (topGenre, sizeof(topGenre), "%s", mostHeardGenreString);
+    snprintf (topAlbum, sizeof(topAlbum), "AL%06d", mostListenedAlbum);
+    snprintf (topHour, sizeof(topHour), "%02d", mostListenedHour);
+
+    char* lines [7] = {duration, musics, topArtist, topDay, topGenre, topAlbum, topHour};
+
+    setOutput (output, lines, 7);
+    writeQuerys (output, cmd);
+}
+
+void q6NArtistsOutput (Output* output, CMD* cmd, int mostListenedArtist, int nMusicsArtist, Duration listenedTimeArtist) {
+    char artist[15], musics[15], duration[15];
+
+    snprintf (artist, sizeof(artist), "A%07d", mostListenedArtist);
+    snprintf (musics, sizeof(musics), "%d", nMusicsArtist);
+    snprintf (duration, sizeof(duration), "%02d:%02d:%02d", listenedTimeArtist.hours, listenedTimeArtist.minutes, listenedTimeArtist.seconds);
+
+    char* lines [3] = {artist, musics, duration};
+
+    setOutput (output, lines, 3);
+    writeQuerys (output, cmd);
+}
