@@ -18,7 +18,9 @@ typedef struct q1feeder {
 } Q1Feeder;
 
 /**
- * @brief
+ * @brief Lists the summary of a user or artist, depending on the identifier received by argument.
+ * This function checks whether the ID received belongs to a @c User or an @c Artist , then proceeds to gather
+ * the necessary information for whichever the case is.
  * 
  * @param cmd A pointer to the command struct.
  * @param mngr A pointer to the main manager.
@@ -71,7 +73,7 @@ double totalRecipe (AlmightyManager* mngr, Artist* artist);
  * 
  * @param key The music ID to which the history entry is associated.
  * @param value The first history entry associated to said music.
- * @param data A pointer to a Q1Feeder.
+ * @param data A pointer to a @c Q1Feeder.
  */
 void singleArtist (gpointer key, gpointer value, gpointer data);
 
@@ -80,7 +82,7 @@ void singleArtist (gpointer key, gpointer value, gpointer data);
  * 
  * @param key The music ID to which the history entry is associated.
  * @param value The first history entry associated to said music.
- * @param data A pointer to a Q1Feeder.
+ * @param data A pointer to a @c Q1Feeder.
  */
 void collectiveArtist (gpointer key, gpointer value, gpointer data);
 

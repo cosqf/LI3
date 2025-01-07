@@ -51,7 +51,7 @@ void query4 (CMD* cmd, HistoryManager* historyManager, MusicManager* musicManage
  * Updates a hash table grouped by weeks, mapping artist IDs to their listening times.
  *
  * @param history Pointer to the history struct.
- * @param musicManager Pointer to the MusicManager for artist lookup.
+ * @param musicManager Pointer to the @c MusicManager for artist lookup.
  * @param hashWithWeeks Pointer to the weekly hash table to store the artist and listening times.
  */
 void sortHistoryByWeek(History* history, MusicManager* musicManager, GHashTable* hashWithWeeks);
@@ -69,8 +69,8 @@ void updateHashWithWeeks(GHashTable* bigTable, Date date, Tuple tuple);
  * @brief Counts how often artists appear in the weekly top 10, optionally applying a date filter.
 
  * @param key Pointer to the week's start date.
- * @param value Pointer to the ArtistList for that week.
- * @param dataFeed Pointer to feederHistory with filter settings and results.
+ * @param value Pointer to the @c ArtistList for that week.
+ * @param dataFeed Pointer to @c feederHistory with filter settings and results.
  * @return TRUE to stop early if the date exceeds the range; FALSE otherwise.
  */
 gboolean callbackHistoryQuery4(gpointer key, gpointer value, gpointer dataFeed);
@@ -95,7 +95,7 @@ void freeArtistList (ArtistList* list);
 /**
  * @brief Creates a @c guint to set the hash key as from a @c Date.
  * 
- * @param key A pointer to a Date.
+ * @param key A pointer to a @c Date.
  * 
  * @return A @c guint to be used as key in a hash table.
  */

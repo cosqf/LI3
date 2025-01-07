@@ -23,7 +23,9 @@ typedef struct {
 } q3Data;
 
 /**
- * @brief
+ * @brief Determines the most popular music genre in a given age group.
+ * This function iterates over every @c User , first checking if they fit the desired age range, and if so,
+ * processing their liked musics list to determine the most recurrent music genre in said age group.
  * 
  * @param cmd A pointer to the command struct.
  * @param u_mngr A pointer to a user manager.
@@ -33,7 +35,7 @@ typedef struct {
 void query3 (CMD *cmd, UserManager *u_mngr, MusicManager *m_mngr, int cmdCounter);
 
 /**
- * @brief 
+ * @brief This function processes a user's liked musics list, keeping an array with counters for each genre.
  * 
  * @param key Unused parameter.
  * @param value A pointer to a User.

@@ -271,12 +271,12 @@ void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCount
  * @brief Frees all the additional structures created for the resolution of query 6.
 
  * @param history Pointer to the history struct.
- * @param listenedList Pointer to a ListenedMusicNode struct.
- * @param artistData Pointer to an ArtistListenData struct.
- * @param musicDay Pointer to a MusicDay struct.
- * @param genreCount Pointer to a GenreCount struct.
- * @param albumData Pointer to a AlbumListenData struct.
- * @param hourCount Pointer to an HourCount struct.
+ * @param listenedList Pointer to a @c ListenedMusicNode .
+ * @param artistData Pointer to an @c ArtistListenData .
+ * @param musicDay Pointer to a @c MusicDay .
+ * @param genreCount Pointer to a @c GenreCount .
+ * @param albumData Pointer to a @c AlbumListenData .
+ * @param hourCount Pointer to an @c HourCount .
  */
 void freeQ6Data (History* history, ListenedMusicNode* listenedList, ArtistListenData* artistData, MusicDay* musicDay, GenreCount* genreCount, AlbumListenData* albumData, HourCount* hourCount);
 
