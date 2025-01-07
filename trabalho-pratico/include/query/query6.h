@@ -258,12 +258,18 @@ HourCount* updateHourCount(HourCount* hours, int* count, Duration duration, int 
 int findMostListenedHour(HourCount* hours, int count);
 
 /**
- * @brief Counts how often artists appear in the weekly top 10, optionally applying a date filter.
-
- * @param key Pointer to the week's start date.
- * @param value Pointer to the ArtistList for that week.
- * @param dataFeed Pointer to feederHistory with filter settings and results.
- * @return TRUE to stop early if the date exceeds the range; FALSE otherwise.
+ * @brief Processes the command to generate detailed listening statistics for a user in a given year.
+ * This function analises a user's listening history and processes it to calculate the statistics,
+ * If the user has no history in the given year it gies as output and empty file, otherwise it
+ * uses all the auxiliary function to calculate the request statistics, wich are the listen Time, 
+ * the number or diffent musics played, the favorite artist, the day the user listened to the most music,
+ * the favorite genre, the favority album and the hour that has the biggest total time of music played.
+ * If asked it writes too the list of the N favorite artists of that user
+ * 
+ * @param cmd A pointer to the comand struct
+ * @param h_mngr A pointer to the history manager
+ * @param m_mngr A pointer to the music manager
+ * @param cmdCounter A counter with the number of the command
  */
 void query6(CMD* cmd, HistoryManager* h_mngr, MusicManager* m_mngr, int cmdCounter);
 
