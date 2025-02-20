@@ -3,3 +3,7 @@
 * Filipa Cosquete Santos - A106837 - cosqf
 * Cátia Alexandra Ribeiro da Eira - A107382 - catiaeira
 * Andreia Alves Cardoso - A106915 - andreiacardoso13
+
+Nota:
+* Fase 1: 19
+* Final: 18
